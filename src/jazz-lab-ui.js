@@ -1,5 +1,5 @@
 import {voiceStudies,earQuestion,studioStudies,checkStudioChoice,checkJazzChord,
- analyzeVoiceLeading,closestValidVoicing,skillRecommendations,lessonGoals,motionSentence} from "./jazz-lab.js";
+ analyzeVoiceLeading,closestValidVoicing,skillRecommendations,lessonGoals,motionSentence,earMastery,nextEarReview} from "./jazz-lab.js";
 import {lessons} from "./curriculum.js";
 import {readArchive,storeArchive,withAttempt,progressByExercise} from "./progress-store.js";
 import {midiLabel} from "./voicing.js";
@@ -41,9 +41,9 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   });
  }
  function readStats(){
-  const state=archive();if(!state)return {events:[],wrong:[]};
+  const state=archive();if(!state)return {events:[],wrong:[],ear:[]};
   const events=state.events.filter(x=>x.exerciseId.startsWith("jazzlab:"));
-  return {events,wrong:skillRecommendations(state,5)};
+  return {events,wrong:skillRecommendations(state,5),ear:earMastery(state)};
  }
  function showHome(){
   const stats=readStats();
@@ -55,7 +55,16 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
     {id:"voice",title:"Conduite des voix",desc:lessonGoals.voicing},
     {id:"ear",title:"Éducation de l’oreille",desc:lessonGoals.ear},
     {id:"studio",title:"Réarmoniser une phrase",desc:lessonGoals.studio}
-   ].map(item=>'<button class="lab-tile" data-lab-mode="'+item.id+'"><strong>'+e(item.title)+'</strong><span>'+e(item.desc)+'</span></button>').join("")+'</div></section>';
+   ].map(item=>'<button class="lab-tile" data-lab-mode="'+item.id+'"><strong>'+e(item.title)+'</strong><span>'+e(item.desc)+'</span></button>').join("")+'</div>'+
+   '<section class="lab-mastery"><h2>Écoute : maîtrise des cinq couleurs</h2>'+
+   '<p class="muted">Une couleur devient acquise après deux réussites dans deux tonalités différentes. Une erreur récente déclenche une révision.</p>'+
+   '<div class="lab-master-grid">'+stats.ear.map(g=>
+     '<div class="lab-master-item"><strong>'+e(g.label)+'</strong>'+
+     '<span>'+g.successes+' réussite(s) · '+g.tonalities.length+' tonalité(s) · '+
+     (g.mastered?'acquis':g.needsReview?'à revoir':g.due?'à pratiquer':'révision plus tard')+'</span></div>'
+   ).join("")+'</div>'+
+   '<div class="row">'+button("Entraînement de l’oreille adapté à mon niveau","labTargetEar","primary")+'</div></section>'+
+   '</section>';
   if(stats.wrong.length){
    body+='<section class="card"><h2>À retravailler</h2><p class="muted">Ces exercices n’étaient pas corrects lors de ta dernière tentative. Un ancien succès reste enregistré : il n’est pas effacé.</p>'+
    '<div class="row">'+stats.wrong.map(item=>'<button class="btn quiet" data-retry="'+e(item.exerciseId)+'">'+
@@ -63,6 +72,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   }
   shell(body);
   app.querySelectorAll("[data-lab-mode]").forEach(b=>b.onclick=()=>start(b.dataset.labMode));
+  document.getElementById("labTargetEar").onclick=()=>chooseEar(nextEarReview(archive(),-1));
   app.querySelectorAll("[data-retry]").forEach(b=>b.onclick=()=>{
    const id=b.dataset.retry;
    if(id.startsWith("jazzlab:ear:ear-"))chooseEar(Number(id.slice("jazzlab:ear:ear-".length)));
@@ -189,7 +199,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   });
   else{
    document.getElementById("earReview").onclick=()=>play(exercise.midis);
-   document.getElementById("earNext").onclick=()=>chooseEar(earIndex+1);
+   document.getElementById("earNext").onclick=()=>chooseEar(nextEarReview(archive(),earIndex));
   }
  }
  function showStudio(){
