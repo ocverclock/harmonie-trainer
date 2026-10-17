@@ -1,4 +1,4 @@
-import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=3";
+import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=4";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
 import {constructionLevels,constructionDifficulties,difficultyOf,levelOf,demonstrationMidis} from "./practice-random.js?v=4";
 import {constructionSetupHTML} from "./construction-setup.js?v=1";
