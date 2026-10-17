@@ -178,8 +178,10 @@ function secondaryView(){
 }
 function resetSecondary(){choice=-1;revealed=false;activeFrame=0;isolated=-1;lessonScrollPos=null;secondaryView()}
 function stats(){
- const a=readScores();shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
- '<p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
+ const a=readScores();let v=[];try{const records=JSON.parse(localStorage.getItem("harmonie-voicing-results-v1")||"[]");v=Array.isArray(records)?records:[]}catch(e){}
+ shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
+ '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
+ '<h3>II–V–I : mes voicings</h3><p>'+v.length+' cadence(s) terminée(s)</p><p>'+(v.length?v.slice(-10).reverse().map(function(s){return s.correct+'/3 accords justes'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  button("Effacer la progression","eraseHistory","quiet")+'</section>');
  document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);stats()}};
 }
