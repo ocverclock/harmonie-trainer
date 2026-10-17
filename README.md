@@ -70,7 +70,7 @@ Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](
 Les trois chantiers sont consignés dans le **[journal des agents et décisions](docs/AGENT_WORK_LOG.md)**. Le 17 octobre 2026, l'utilisateur a donné une **autorisation explicite de publication du parcours complet** ; cette autorisation est spécifique au travail décrit dans la PR correspondante. Toute autre future évolution majeure devra être validée selon la règle habituelle.
 
 
-## Enrichissement des cours (V0.6 — en développement)
+## Enrichissement des cours (V0.6 — publié)
 
 - Chacun des quatre chapitres présente maintenant **une introduction pédagogique**, son intérêt, le principe à connaître et l'objectif d'apprentissage.
 - Avant les exercices de chaque leçon : **pourquoi**, **explication**, **exemple résolu**, **deux écoutes comparatives** et **question de compréhension**.
@@ -79,10 +79,10 @@ Les trois chantiers sont consignés dans le **[journal des agents et décisions]
 - Les nouveaux exercices utilisent explicitement des tonalités telles que Ré majeur, Si♭, Mi♭, La♭, Ré♭, Fa♯ majeur/mineur et Si mineur. Les notes sont toujours situées dans le clavier MIDI 48–83.
 - Les orthographes théoriques sont indiquées dans le corrigé pour les variantes (`Mi♯` ou `Do♭` selon tonalité), même si le clavier MIDI utilise les mêmes touches enharmoniques.
 
-L'évolution de la sauvegarde/export JSON fait l'objet d'un audit séparé et **n'est pas encore livrée**. Voir [audits pédagogie et sauvegarde](https://github.com/ocverclock/harmonie-trainer/pull/7). Recette Safari iPhone et iPad à effectuer sur appareils réels.
+L'évolution du suivi et des sauvegardes est publiée en V0.7. Voir les [PR #8 (cours)](https://github.com/ocverclock/harmonie-trainer/pull/8) et [#9 (sauvegarde)](https://github.com/ocverclock/harmonie-trainer/pull/9). Recette Safari iPhone et iPad à effectuer sur appareils réels.
 
 
-## Suivi de progression V2 et sauvegardes portables (proposition V0.7)
+## Suivi de progression V2 et sauvegardes portables (V0.7 — publié)
 
 - « Reprendre mon travail » retrouve le **dernier exercice visité**, et non la première leçon incomplète ; si le curseur est introuvable après une mise à jour, le système revient au parcours normal.
 - Les nouvelles tentatives sont archivées dans `harmonie-progress-v2`, indexées par **ID d'exercice stable et tonalité** ; le statut « déjà réussi » et le résultat de la dernière tentative restent distincts.
@@ -92,3 +92,10 @@ L'évolution de la sauvegarde/export JSON fait l'objet d'un audit séparé et **
 - Contrôles : migration V1, validation des fichiers, dédoublonnage des tentatives, préservation des réussites et refus de contenus invalides ; tests dans `tests/progress-store.test.js`.
 
 **Limites connues :** les événements détaillés sont plafonnés à 3 000 dans le navigateur, sans effacer les acquis historiques importés ; la fusion de deux appareils utilise des UUID de tentatives et consolide les acquis historiques par maximum, sans prétendre résoudre toutes les divergences de parcours. La validation Safari iPhone/iPad reste à réaliser. Pas de serveur ni de compte.
+
+## Publication vérifiée — 17 octobre 2026
+
+- Les PR **#8 puis #9** ont été fusionnées sur `main` (commits de fusion `7cb2f8a` et `c0225d5`).
+- Les suites de tests des deux PR sont vertes ; le workflow [Pages deployment smoke check](https://github.com/ocverclock/harmonie-trainer/actions/runs/39058070676) a réussi en accédant à la page publique et en téléchargeant le nouvel `index.html`, les modules de cours, de tonalités, de progression et du clavier.
+- Version testable : https://ocverclock.github.io/harmonie-trainer/ — onglet **Parcours**, puis **Exporter mes progrès** / **Importer une sauvegarde** dans le tableau du parcours.
+- **Non vérifié dans ce contrôle** : gestes tactiles sur Safari iPhone, fonctionnement audio sur appareil réel, sélection/import de fichier via l'app Fichiers sur iOS, et parcours utilisateur complet dans un navigateur. Le contrôle Pages confirme la disponibilité HTTP des ressources, pas l'absence de tout défaut d'interface.
