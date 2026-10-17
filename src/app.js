@@ -183,7 +183,7 @@ function stats(){
  '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  '<h3>II–V–I : mes voicings</h3><p>'+v.length+' cadence(s) terminée(s)</p><p>'+(v.length?v.slice(-10).reverse().map(function(s){return s.correct+'/3 accords justes'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  button("Effacer la progression","eraseHistory","quiet")+'</section>');
- document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);stats()}};
+ document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);try{localStorage.removeItem("harmonie-voicing-results-v1")}catch(e){}stats()}};
 }
 function render(){
  if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="voicings"){if(voicingUI)voicingUI.render();else beginVoicing();}else if(screen==="result")results();else stats();
