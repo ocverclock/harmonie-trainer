@@ -4,7 +4,7 @@ import {secondary} from "../src/music.js";
 import {chordTones} from "../src/voicing.js";
 import {PIANO_START,PIANO_END,noteX} from "../src/piano-layout.js";
 import {voiceStudies,analyzeVoiceLeading,closestValidVoicing,checkJazzChord,earQuestion,
- earQualities,studioStudies,checkStudioChoice,skillRecommendations,motionSentence} from "../src/jazz-lab.js";
+ earQualities,studioStudies,checkStudioChoice,skillRecommendations,motionSentence,earMastery,nextEarReview} from "../src/jazz-lab.js";
 import {seedFromLegacy,withAttempt,progressByExercise,mergeArchives,validateArchive,backupJSON,parseBackup}
  from "../src/progress-store.js";
 import {lessons} from "../src/curriculum.js";
@@ -76,6 +76,10 @@ test("ear pedagogy spans all five qualities and chromatic roots without leaking 
 test("four original reharmonization studies accept several functions with honest feedback",()=>{
  assert.equal(studioStudies.length,4);
  for(const study of studioStudies){
+  assert.equal(study.melody.length,3);
+  assert.ok(study.melody.every(m=>m>=PIANO_START&&m<=PIANO_END));
+  assert.ok(study.before.midis.some(m=>m%12===study.melody[0]%12));
+  assert.ok(study.target.midis.some(m=>m%12===study.melody[2]%12));
   assert.ok(midiOk(study.before.midis));
   assert.ok(midiOk(study.target.midis));
   assert.equal(study.options.length,3);
@@ -84,6 +88,7 @@ test("four original reharmonization studies accept several functions with honest
   for(const [index,opt] of study.options.entries()){
    assert.ok(midiOk(opt.midis));
    assert.equal(checkStudioChoice(study,index).correct,opt.valid);
+   assert.equal(checkStudioChoice(study,index).melodyFits,opt.midis.some(m=>m%12===study.melody[1]%12));
    assert.ok(checkStudioChoice(study,index).why.length>=28);
   }
   assert.throws(()=>checkStudioChoice(study,10));
@@ -106,4 +111,44 @@ test("jazz workshop attempts are preserved in the existing portable progress arc
  const merged=mergeArchives(failed,imported);
  assert.equal(merged.events.length,2);
  assert.equal(skillRecommendations(merged)[0].exerciseId,"jazzlab:ear:ear-0");
+});
+
+test("spaced practice recognizes mastery across two distinct tonalities",()=>{
+ const empty=seedFromLegacy(lessons,{});
+ const cases=Array.from({length:60},(_,i)=>earQuestion(i))
+  .filter(q=>q.quality==="maj7");
+ const first=cases[0],second=cases.find(q=>q.tonality!==first.tonality);
+ assert.ok(second);
+ const index=q=>Number(q.id.slice(4));
+ function attempt(state,q,ok,time,id){
+  return withAttempt(state,{id:"jazzlab",exercises:[{id:"jazzlab:ear:"+q.id,tonality:q.tonality}]},
+   0,q.midis,ok,time,id);
+ }
+ let state=attempt(empty,first,true,"2026-10-17T08:00:00.000Z","ear-master-1");
+ let status=earMastery(state,new Date("2026-10-17T12:00:00Z")).find(x=>x.id==="maj7");
+ assert.equal(status.mastered,false);
+ assert.equal(status.tonalities.length,1);
+ state=attempt(state,second,true,"2026-10-17T11:00:00.000Z","ear-master-2");
+ status=earMastery(state,new Date("2026-10-18T12:00:00Z")).find(x=>x.id==="maj7");
+ assert.equal(status.mastered,true);
+ assert.equal(status.due,false);
+ assert.equal(status.tonalities.length,2);
+ assert.ok(status.dueAt.startsWith("2026-10-24"));
+ assert.ok(nextEarReview(state,index(first))!==index(first));
+ state=attempt(state,second,false,"2026-10-19T11:00:00.000Z","ear-master-3");
+ status=earMastery(state,new Date("2026-10-19T12:00:00Z")).find(x=>x.id==="maj7");
+ assert.equal(status.mastered,false);
+ assert.equal(status.needsReview,true);
+ assert.equal(status.successes,2,"Failure must not erase prior successes");
+});
+test("ear workbench recommends new tonalities to avoid memorizing a single root",()=>{
+ const archive=seedFromLegacy(lessons,{});
+ const first=nextEarReview(archive,-1);
+ const q=earQuestion(first);
+ const next=withAttempt(archive,{id:"jazzlab",exercises:[{id:"jazzlab:ear:"+q.id,tonality:q.tonality}]},
+ 0,q.midis,true,"2026-10-17T08:00:00Z","first");
+ const second=nextEarReview(next,first);
+ assert.notEqual(second,first);
+ assert.equal(earQuestion(second).quality,q.quality);
+ assert.notEqual(earQuestion(second).tonality,q.tonality);
 });
