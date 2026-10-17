@@ -6,7 +6,7 @@ if(!validateBank())throw new Error("Corpus musical invalide");
 let screen="home",level=1,session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
 let secondaryIndex=0,choice=-1,revealed=false,activeFrame=0,isolated=-1,voiceModule=null,voiceError=false;
 let audioCtx=null,resizeHandle=0,lessonScrollPos=null;
-let voicingUI=null,courseUI=null;
+let voicingUI=null,courseUI=null,jazzLabUI=null;
 const storage="harmonie-sessions-v2";
 function escapeText(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function readScores(){try{let a=JSON.parse(localStorage.getItem(storage)||"[]");return Array.isArray(a)?a:[]}catch(e){return []}}
@@ -14,12 +14,12 @@ function storeScores(a){try{localStorage.setItem(storage,JSON.stringify(a.slice(
 function button(label,id,kind,disabled){return '<button id="'+id+'" class="btn '+(kind||'quiet')+'"'+(disabled?' disabled':'')+'>'+label+'</button>'}
 function shell(body){
  app.innerHTML='<div class="wrap"><header class="top"><div class="brand"><span>♫</span> Harmonie Trainer</div><nav class="nav" aria-label="Navigation">'+
- ['home:Accueil','course:Parcours','secondary:II–V–I secondaires','voicings:Mes voicings','quiz:Accords','stats:Progression'].map(function(item){
+ ['home:Accueil','course:Parcours','jazz:Atelier jazz','secondary:II–V–I secondaires','voicings:Mes voicings','quiz:Accords','stats:Progression'].map(function(item){
   let parts=item.split(":");return '<button data-nav="'+parts[0]+'" class="'+(screen===parts[0]?'active':'')+'">'+parts[1]+'</button>';
  }).join("")+'</nav></header><main>'+body+'</main><footer class="footer">Prototype pédagogique — aucune donnée transmise. Les scores sont stockés sur cet appareil.</footer></div>';
  app.querySelectorAll("[data-nav]").forEach(function(b){b.onclick=function(){
   let n=b.dataset.nav;
-  if(n==="quiz"){screen="home";render()}else if(n==="voicings"){beginVoicing()}else if(n==="course"){beginCourse()}else{screen=n;render()}
+  if(n==="quiz"){screen="home";render()}else if(n==="voicings"){beginVoicing()}else if(n==="course"){beginCourse()}else if(n==="jazz"){beginJazzLab()}else{screen=n;render()}
  }});
 }
 function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1,selectionMode="pitchClass",voicePalette=[]){
@@ -62,7 +62,7 @@ function noteLabel(n){return names[n%12]}
 function home(){
  let a=readScores();
  shell('<section class="card"><div class="eyebrow">Harmonie en pratique</div><h1>Comprendre les accords.<br>Voir comment les voix bougent.</h1><p class="muted">Réponds d’abord à une question pour trouver le II–V–I secondaire. Ensuite, découvre la solution en couleurs, avec les traits de déplacement au-dessus du clavier.</p>'+
- '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
+ '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Atelier jazz : voix, oreille, harmonisation","openJazzLab","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
  '<section class="card"><h2>Choisir un niveau d’accords</h2><div class="grid">'+[
@@ -72,6 +72,7 @@ function home(){
  document.getElementById("openSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()};
  document.getElementById("openChords").onclick=function(){start(level)};
  document.getElementById("openVoicings").onclick=function(){beginVoicing()};
+ document.getElementById("openJazzLab").onclick=()=>beginJazzLab();
  app.querySelectorAll("[data-level]").forEach(function(b){b.onclick=function(){start(Number(b.dataset.level))}});
  app.querySelectorAll("[data-preview]").forEach(function(b){b.onclick=function(){play([Number(b.dataset.preview)])}});
 }
@@ -85,6 +86,15 @@ async function beginCourse(){
   });}
   if(screen==="course")courseUI.start();
  }catch(error){console.error("Parcours indisponible",error);screen="home";home();alert("Impossible de charger le parcours. Actualise la page.");}
+}
+async function beginJazzLab(mode="home"){
+ screen="jazz";
+ try{
+  if(!jazzLabUI){const mod=await import("./jazz-lab-ui.js?v=1");jazzLabUI=mod.createJazzLabUI({
+   app,shell,piano,play,escapeText,button,isActive:()=>screen==="jazz"
+  });}
+  if(screen==="jazz")jazzLabUI.start(mode);
+ }catch(error){console.error("Atelier jazz indisponible",error);screen="home";home();alert("Impossible de charger l'atelier jazz. Actualise la page.");}
 }
 async function beginVoicing(index=null){
  screen="voicings";
@@ -195,14 +205,16 @@ function stats(){
  shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
  '<h3>Parcours d’harmonisation</h3><p>'+c.mastered+' / <span id="stats-course-total">'+c.total+'</span> exercices maîtrisés</p>'+button('Ouvrir le parcours','goCourseFromStats','primary')+
  '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
+ '<h3>Atelier jazz : conduites, oreille et réharmonisations</h3><p>La progression est conservée dans la sauvegarde JSON V2 du parcours.</p>'+button('Ouvrir l’atelier jazz','goJazzFromStats','quiet')+
  '<h3>II–V–I : mes voicings</h3><p>'+v.length+' cadence(s) terminée(s)</p><p>'+(v.length?v.slice(-10).reverse().map(function(s){return s.correct+'/3 accords justes'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  button("Effacer la progression","eraseHistory","quiet")+'</section>');
  document.getElementById("goCourseFromStats").onclick=beginCourse;
+ document.getElementById("goJazzFromStats").onclick=()=>beginJazzLab();
  import("./curriculum.js").then(module=>{const x=app.querySelector("#stats-course-total");if(x)x.textContent=String(module.TOTAL_EXERCISES)}).catch(()=>{});
  document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);try{localStorage.removeItem("harmonie-voicing-results-v1");localStorage.removeItem("harmonie-parcours-v1")}catch(e){}stats()}};
 }
 function render(){
- if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="voicings"){if(voicingUI)voicingUI.render();else beginVoicing();}else if(screen==="course"){if(courseUI)courseUI.render();else beginCourse();}else if(screen==="result")results();else stats();
+ if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="voicings"){if(voicingUI)voicingUI.render();else beginVoicing();}else if(screen==="course"){if(courseUI)courseUI.render();else beginCourse();}else if(screen==="jazz"){if(jazzLabUI)jazzLabUI.render();else beginJazzLab();}else if(screen==="result")results();else stats();
 }
 window.addEventListener("resize",function(){clearTimeout(resizeHandle);resizeHandle=setTimeout(function(){if(screen==="secondary"&&revealed)secondaryView();else if(screen==="voicings"&&voicingUI)voicingUI.render()},140)});
 render();
