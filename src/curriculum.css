@@ -41,3 +41,17 @@
 }
 .aligned-lesson .pianoKey.black.correction-extra::before{bottom:44px}
 .viz-aligned .correctionWrong,.viz-aligned .correctionRight{pointer-events:none}
+
+
+/* Explanations are deliberately before the exercise, never hidden inside a result. */
+.course-why{font-size:15px;line-height:1.65;margin-bottom:9px;color:#263c59}
+.course-lecture{line-height:1.7;max-width:85ch;color:#38506a;margin-bottom:12px}
+.lesson-theory{border:1px solid #d8e5f4;border-radius:17px;padding:clamp(15px,2.5vw,24px);margin:18px 0 23px;background:linear-gradient(140deg,#f6faff,#eaf3ff)}
+.lesson-theory h3{margin:16px 0 7px;font-size:17px;color:#1a416f}
+.lesson-theory p{line-height:1.7;max-width:84ch;margin-bottom:12px}
+.lesson-theory .eyebrow{margin-top:0}
+.lesson-theory .row{margin:14px 0}
+.course-check{margin-top:16px;border:1px solid #cedeed;background:white;border-radius:10px;padding:12px 15px}
+.course-check summary{font-weight:750;color:#174e90;cursor:pointer;line-height:1.5}
+.course-check p{margin:10px 0 0;color:#314763}
+@media(max-width:650px){.lesson-theory{padding:15px}.lesson-theory h3{font-size:16px}.lesson-theory .row .btn{flex:1}.course-lecture{font-size:14px}}

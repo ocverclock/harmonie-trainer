@@ -78,7 +78,7 @@ function home(){
 async function beginCourse(){
  screen="course";
  try{
-  if(!courseUI){const mod=await import("./curriculum-ui.js?v=1");courseUI=mod.createCurriculumUI({
+  if(!courseUI){const mod=await import("./curriculum-ui.js?v=2");courseUI=mod.createCurriculumUI({
    app,shell,piano,play,escapeText,button,
    openVoicing:()=>beginVoicing(),
    openSecondary:()=>{screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()}
@@ -190,14 +190,15 @@ function secondaryView(){
 }
 function resetSecondary(){choice=-1;revealed=false;activeFrame=0;isolated=-1;lessonScrollPos=null;secondaryView()}
 function stats(){
- const a=readScores();let v=[];let c={mastered:0,total:52};try{const records=JSON.parse(localStorage.getItem("harmonie-voicing-results-v1")||"[]");v=Array.isArray(records)?records:[]}catch(e){}
+ const a=readScores();let v=[];let c={mastered:0,total:"…"};try{const records=JSON.parse(localStorage.getItem("harmonie-voicing-results-v1")||"[]");v=Array.isArray(records)?records:[]}catch(e){}
  try{const mod=JSON.parse(localStorage.getItem("harmonie-parcours-v1")||"{}");c.mastered=Object.values(mod).filter(x=>x?.correct).length}catch(e){}
  shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
- '<h3>Parcours d’harmonisation</h3><p>'+c.mastered+' / '+c.total+' exercices maîtrisés</p>'+button('Ouvrir le parcours','goCourseFromStats','primary')+
+ '<h3>Parcours d’harmonisation</h3><p>'+c.mastered+' / <span id="stats-course-total">'+c.total+'</span> exercices maîtrisés</p>'+button('Ouvrir le parcours','goCourseFromStats','primary')+
  '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  '<h3>II–V–I : mes voicings</h3><p>'+v.length+' cadence(s) terminée(s)</p><p>'+(v.length?v.slice(-10).reverse().map(function(s){return s.correct+'/3 accords justes'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  button("Effacer la progression","eraseHistory","quiet")+'</section>');
  document.getElementById("goCourseFromStats").onclick=beginCourse;
+ import("./curriculum.js").then(module=>{const x=app.querySelector("#stats-course-total");if(x)x.textContent=String(module.TOTAL_EXERCISES)}).catch(()=>{});
  document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);try{localStorage.removeItem("harmonie-voicing-results-v1");localStorage.removeItem("harmonie-parcours-v1")}catch(e){}stats()}};
 }
 function render(){

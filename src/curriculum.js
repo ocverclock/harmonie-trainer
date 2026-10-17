@@ -1,3 +1,4 @@
+import {appendTonalityExercises} from "./tonality-variants.js";
 /* Exercices et explications originaux, inspirés uniquement du programme public de Piano Jazz Concept. */
 export const lessons=[
   {
@@ -831,4 +832,5 @@ export function checkExercise(exercise,chosen){
  return {correct:submitted.length===target.length&&!repeatedPitchClasses&&missing.length===0&&extra.length===0,
          missing,extra,repeatedPitchClasses,expected:target};
 }
+appendTonalityExercises(lessons);
 export const TOTAL_EXERCISES=lessons.reduce((sum,l)=>sum+l.exercises.length,0);
