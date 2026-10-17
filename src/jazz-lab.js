@@ -124,3 +124,45 @@ export function motionSentence(motion){
   (m.semitones===0?" (commune)":" ("+(m.semitones>0?"+":"")+m.semitones+" demi-ton"+(Math.abs(m.semitones)>1?"s":"")+")"));
  return elements.join(" · ");
 }
+
+
+/** Spaced ear revision by chord quality and distinct keys, not just question index. */
+export function earMastery(archive,now=new Date()){
+ const records=new Map(earTypes.map(t=>[t.id,{id:t.id,label:t.label,
+  attempts:0,successes:0,tonalities:new Set(),lastAt:null,lastCorrect:null}]));
+ for(const ev of archive?.events||[]){
+  const matched=/^jazzlab:ear:ear-(\\d+)$/.exec(ev.exerciseId);
+  if(!matched)continue;
+  const q=earQuestion(Number(matched[1])),record=records.get(q.quality);
+  record.attempts++;
+  if(ev.correct){record.successes++;record.tonalities.add(q.tonality)}
+  if(!record.lastAt||ev.at>=record.lastAt){
+   record.lastAt=ev.at;record.lastCorrect=ev.correct;
+  }
+ }
+ return [...records.values()].map(r=>{
+  const mastered=r.successes>=2&&r.tonalities.size>=2&&r.lastCorrect===true;
+  const days=r.successes>=5?21:r.successes>=2?7:1;
+  const dueAt=r.lastAt&&r.lastCorrect?new Date(Date.parse(r.lastAt)+days*86400000).toISOString():null;
+  return {...r,tonalities:[...r.tonalities],mastered,due:!dueAt||Date.parse(dueAt)<=now.getTime(),dueAt,
+   needsReview:r.lastCorrect===false};
+ });
+}
+/** Select next quality needing consolidation, then a tonic not already mastered. */
+export function nextEarReview(archive,current=-1,now=new Date()){
+ const goals=earMastery(archive,now);
+ const ranked=[...goals].sort((a,b)=>
+  Number(b.needsReview)-Number(a.needsReview)||
+  Number(!b.mastered)-Number(!a.mastered)||
+  Number(b.due)-Number(a.due)||
+  a.successes-b.successes||
+  a.attempts-b.attempts);
+ const pool=Array.from({length:60},(_,i)=>earQuestion(i));
+ for(const goal of ranked){
+  const options=pool.filter(q=>q.quality===goal.id&&Number(q.id.slice(4))!==current);
+  const novel=options.find(q=>!goal.tonalities.includes(q.tonality));
+  if(novel)return Number(novel.id.slice(4));
+  if(options.length)return Number(options[0].id.slice(4));
+ }
+ return current<0?0:(current+1)%60;
+}
