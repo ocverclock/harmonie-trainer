@@ -79,7 +79,7 @@ function home(){
 async function beginCourse(){
  screen="course";
  try{
-  if(!courseUI){const mod=await import("./curriculum-ui.js?v=4");courseUI=mod.createCurriculumUI({
+  if(!courseUI){const mod=await import("./curriculum-ui.js?v=5");courseUI=mod.createCurriculumUI({
    app,shell,piano,play,escapeText,button,
    openVoicing:()=>beginVoicing(),
    openJazzLab:()=>beginJazzLab(),
@@ -212,7 +212,7 @@ function stats(){
  document.getElementById("goCourseFromStats").onclick=beginCourse;
  document.getElementById("goJazzFromStats").onclick=()=>beginJazzLab();
  import("./curriculum.js").then(module=>{const x=app.querySelector("#stats-course-total");if(x)x.textContent=String(module.TOTAL_EXERCISES)}).catch(()=>{});
- document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);try{localStorage.removeItem("harmonie-voicing-results-v1");localStorage.removeItem("harmonie-parcours-v1")}catch(e){}stats()}};
+ document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer toute la progression locale, y compris les exercices d’atelier jazz ? Exporte d’abord une sauvegarde depuis Parcours si tu veux conserver ces données.")){storeScores([]);try{localStorage.removeItem("harmonie-voicing-results-v1");localStorage.removeItem("harmonie-parcours-v1");localStorage.removeItem("harmonie-progress-v2")}catch(e){}stats()}};
 }
 function render(){
  if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="voicings"){if(voicingUI)voicingUI.render();else beginVoicing();}else if(screen==="course"){if(courseUI)courseUI.render();else beginCourse();}else if(screen==="jazz"){if(jazzLabUI)jazzLabUI.render();else beginJazzLab();}else if(screen==="result")results();else stats();
