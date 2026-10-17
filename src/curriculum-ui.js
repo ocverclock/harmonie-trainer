@@ -20,7 +20,7 @@ export function courseStats(progress){
  }
  return {mastered,lessonsDone,total:TOTAL_EXERCISES,lessons:lessons.length};
 }
-export function createCurriculumUI({app,shell,piano,play,escapeText,button,openVoicing,openSecondary}){
+export function createCurriculumUI({app,shell,piano,play,escapeText,button,openVoicing,openSecondary,openJazzLab}){
  let overview=true,lessonIdx=0,exerciseIdx=0,selected=[],result=null,scrollPos=0,reviewOrder=null;
  let archive=null,storageWarning="",backupNotice="";
  function refreshArchive(){
@@ -54,7 +54,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
    (storageWarning?'<p class="feedback" role="alert">'+e(storageWarning)+'</p>':'')+
    (backupNotice?'<p class="explain" role="status">'+e(backupNotice)+'</p>':'')+
    '<div class="row">'+button("Reprendre mon travail","resumeCourse","primary")+
-    button("QCM II–V–I","currSecondary","quiet")+button("Mes voicings","currVoicings","quiet")+'</div>'+
+    button("QCM II–V–I","currSecondary","quiet")+button("Mes voicings","currVoicings","quiet")+button("Atelier jazz","currJazzLab","quiet")+'</div>'+
    '<div class="course-backup"><h3>Conserver mes acquis</h3><p class="muted">Les résultats restent sur cet appareil. Exporte une sauvegarde JSON pour les retrouver sur un autre navigateur, iPhone ou ordinateur.</p>'+
    '<div class="row">'+button("Exporter mes progrès","courseExport","quiet")+button("Importer une sauvegarde","courseImport","quiet")+'</div>'+
    '<input id="courseImportFile" class="sr-only-input" type="file" accept=".json,application/json" aria-label="Choisir un fichier de sauvegarde JSON">'+
@@ -122,6 +122,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
   };
   document.getElementById("currSecondary").onclick=openSecondary;
   document.getElementById("currVoicings").onclick=openVoicing;
+  document.getElementById("currJazzLab").onclick=openJazzLab;
  }
  function showLesson(){
   const lesson=lessons[lessonIdx],exercise=lesson.exercises[exerciseIdx],theory=lessonCourses[lesson.id];
