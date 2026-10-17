@@ -67,6 +67,19 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — Intégration du parcours complet — ÉTAT : développement terminé, PR/CI à vérifier
+- **Validation explicite de l'utilisateur** : « Va jusqu'à publier, tout est bon là. Je valide l'ensemble avec le programme d'Étienne ». Cette autorisation couvre l'intégration, la fusion et la publication du parcours pédagogique ainsi que les corrections visuelles et ajustements mobiles liés au périmètre discuté ; elle remplace l'attente de validation initialement prévue pour ce chantier précis, sans autoriser les modifications futures sans rapport.
+- **Branche** : `feature/parcours-harmonisation-complet`. PR à renseigner une fois créée ; fusion et GitHub Pages à confirmer par constat.
+- **Fichiers nouveaux** : `src/curriculum.js`, `src/curriculum-ui.js`, `src/curriculum.css`, `src/mobile.css`, `tests/curriculum.test.js`.
+- **Fichiers modifiés** : `src/app.js`, `src/voicing.js`, `src/voicing-ui.js`, `src/voices.js`, `index.html`, `package.json`, `README.md`, présent journal.
+- **Pédagogie** : 21 leçons, 52 exercices originaux. Modes « position exacte » (octaves imposées) et « libre » (renversements permis), suivi local des exercices réussis, écoute du jeu et de la correction, affichage rouge des notes manquantes/erronées. Conservation du QCM et du module Mes voicings.
+- **Correction visuelle** : en cas de réponse erronée, cercles rouges sur les points du diagramme et sur les touches ; exemple F3 joué au lieu de F♯3 → proposition F♯3 sans exclure les autres octaves justes.
+- **Mobile** : barre de navigation responsive, commandes tactiles et un seul scroll diagramme/clavier conservé ; le rendu Safari iPhone, iPad et VoiceOver ne sont pas encore testés sur appareil physique.
+- **Contrôles exécutés** : vérification syntaxique JavaScript sur les modules concernés ; vérification programmatique des 52 corrections théoriques, de la distinction positions/renversements, du cas F3→F♯3 et de la génération des repères rouges sur le diagramme. Aucun échec lors de ces contrôles. **CI `npm test` sur GitHub non encore confirmée à cette étape.**
+- **Provenance** : sommaire public d'Étienne Guéreau uniquement, exercices indépendants ; aucune partition/vidéo payante copiée.
+- **Suite** : ouvrir PR, attendre le résultat CI, fusionner sous cette autorisation explicite, puis vérifier la disponibilité GitHub Pages et corriger si nécessaire.
+
+
 ### 2026-10-17 — Coordination initiale — ÉTAT : cahiers des charges préparés, pas encore de PR
 - Issues créées : #1 correction en rouge, #2 progression pédagogique, #3 optimisation mobile.
 - Vérification GitHub : les trois issues sont **ouvertes et sans assigné**, et aucune PR ouverte n'a été trouvée lors du relevé.
