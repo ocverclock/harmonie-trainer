@@ -5,8 +5,8 @@ Application de formation musicale tactile pour iPhone, iPad et navigateurs moder
 ## Jouer
 https://ocverclock.github.io/harmonie-trainer/
 
-## Version en cours — parcours complet 0.5
-- 21 leçons originales et 52 exercices actifs dans l’onglet « Parcours » : positions de tétrades, accords de sixte, notes-guides, enchaînements majeurs/mineurs, sus4 et sus4(♭9), neuvièmes, treizièmes, transpositions, II–V–I secondaires, substitutions tritoniques, voicings sans fondamentale et collections à sept sons.
+## Version publiée — parcours complet 0.10
+- 21 leçons originales et 89 exercices actifs dans l’onglet « Parcours » : positions de tétrades, accords de sixte, notes-guides, enchaînements majeurs/mineurs, sus4 et sus4(♭9), neuvièmes, treizièmes, transpositions, II–V–I secondaires, substitutions tritoniques, voicings sans fondamentale et collections à sept sons.
 - Deux évaluations adaptées aux consignes : « position exacte » (touches/octaves exigées) et « libre » (classes de hauteurs sans imposer le renversement). Erreurs et corrections matérialisées en rouge sur le clavier.
 - Suivi des exercices maîtrisés par leçon dans le stockage local du navigateur. Les exercices faux se retravaillent sans blocage.
 - Mode « Mes voicings » : notes fausses entourées en rouge et propositions de remplacement dans le registre choisi, tant sur le schéma que sur le clavier. Les octaves suggérées ne deviennent pas obligatoires.
@@ -117,3 +117,17 @@ Sur l'accueil, sélectionner une **difficulté** puis une **famille d'accords** 
 - **Défi** : mêmes familles harmoniques mais sélection renforcée de tonalités moins familières (notamment Ré♭, Mi♭, Sol♭, La♭, Si) et de touches noires, sans indice initial. Le score reste sur 100 et aucune sanction chronométrée n'est introduite.
 
 Les **trois familles existantes** (triades, 7e, avancés) restent séparées de la difficulté : jusqu'à **9 parcours de construction distincts**. Chaque nouveau score contient `difficulty` et `level` ; les sessions anciennes restent consultables comme « ancien » sans leur attribuer rétrospectivement une nouvelle difficulté. L'ancien appel `sessionFor(level)` fonctionne toujours avec `standard` par défaut. Le piano reste inchangé.
+
+
+## Atelier jazz interactif — V0.10 publiée
+
+La navigation propose **Atelier jazz**, également accessible depuis la page d'accueil, le Parcours et Progression.
+
+- **Conduite des voix** : cinq cadences de trois accords à quatre notes construits par l'élève. À chaque accord suivant, les touches qu'il a réellement jouées restent visibles par un repère discret. Le correcteur distingue la justesse de l'accord des mouvements des voix, quantifie notes communes, demi-tons, grands sauts et déplacement total, et propose un autre voicing valide à écouter pour comparer l'économie du mouvement, sans imposer un renversement unique.
+- **Oreille harmonique** : cinq qualités (maj7, m7, dominante 7, demi-diminué et sus4) écoutées sans dévoiler les notes à l'avance. Les questions changent de tonalité. La maîtrise demande au moins deux réussites dans deux tonalités distinctes ; les erreurs récentes et révisions sont visibles dans l'atelier.
+- **Réarmonisation guidée** : quatre petites mélodies **originales**, avec choix entre plusieurs dominantes et substitutions qui peuvent fonctionner musicalement. L'élève écoute la mélodie et les différentes solutions. Ce n'est pas encore un éditeur libre de mélodies.
+- Les tentatives utilisent le même **registre versionné V2** que le Parcours et sont incluses dans l'export/import JSON existant. Le clavier réaliste, les modes QCM, Mes voicings et les choix de difficulté **Guidé / Standard / Challenge** restent disponibles.
+
+**Tests vérifiés :** [CI musicale](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945686), [test Chromium mobile/tablette](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945655), [déploiement Pages](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945488) et [vérification HTTP des modules publiés](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945670) : tous en succès.
+
+**Reste à valider sur matériel réel :** gestes tactiles et audio Safari iPhone/iPad, import/export depuis l'application Fichiers, rendu VoiceOver. Les voix sont comparées du grave vers l'aigu, ce qui ne simule pas exactement un doigté humain ; les exercices de réharmonisation sont guidés et non une création de mélodie libre.
