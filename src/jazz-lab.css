@@ -25,3 +25,18 @@
 .lab-panel .feedback p{line-height:1.6}
 @media(max-width:780px){.lab-grid{grid-template-columns:1fr}.lab-tile{min-height:94px}.lab-steps .btn{flex:1}.lab-panel .row .btn{min-height:44px}}
 @media(max-width:440px){.lab-options{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-studio-line>div{padding:11px 4px}.lab-studio-line>span{font-size:18px}}
+
+
+.lab-melody{border:1px solid #d4e3f0;background:#f8fbff;padding:12px 16px;border-radius:13px;margin:16px 0}
+.lab-melody .eyebrow{margin:0 0 8px}
+.lab-melody-notes{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:10px 0}
+.lab-melody-notes span:not([aria-hidden]){display:flex;flex-direction:column;align-items:center;min-width:58px;padding:9px 12px;border:1px solid #dae6f2;background:white;border-radius:10px}
+.lab-melody-notes small{font-size:11px;color:#6f8096}
+.lab-melody-notes strong{font-size:17px;color:#1a558d}
+.lab-melody-notes span[aria-hidden]{font-size:17px;color:#7692ab}
+.lab-master-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:9px;margin:12px 0 18px}
+.lab-master-item{background:#f3f7fd;padding:12px 14px;border:1px solid #d8e4f0;border-radius:11px;display:flex;flex-direction:column;gap:5px}
+.lab-master-item strong{font-size:15px;color:#194a78}
+.lab-master-item span{font-size:12px;color:#4c6280;line-height:1.5}
+.lab-mastery{margin-top:23px}
+.lab-mastery h2{font-size:19px}
