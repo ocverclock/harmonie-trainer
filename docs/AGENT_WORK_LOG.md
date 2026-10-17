@@ -67,6 +67,20 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — Ateliers jazz pédagogiques V0.10 — ÉTAT : publiés, tests automatisés verts
+- L'utilisateur a demandé de poursuivre le programme pédagogique jusqu'à une version testable/publiée.
+- **PR d'origine #11** : code terminé et tests Node / Chromium réussis mais GitHub l'a déclarée en conflit après une évolution simultanée de `main` (nouvelles difficultés de constructions). Elle a été **fermée sans fusion** pour éviter d'effacer du travail récent.
+- **PR intégrée #13** : https://github.com/ocverclock/harmonie-trainer/pull/13 — reconstitution sur `main` récent, intégration des nouveaux ateliers **sans perte des modes Guidé / Standard / Challenge**, fusion `6966bd45b7ea981895e47b0819815e7e7923ab7c`.
+- **Pédagogie musicale** : moteur `src/jazz-lab.js` et UI `src/jazz-lab-ui.js` avec cinq cadences construites à la main, suivi comparatif des quatre voix grave→aigu, position MIDI précédente discrète, séparation exacte entre note juste et conduite fluide, suggestion d'une réalisation valide par recherche du mouvement le plus court.
+- **Oreille** : cinq qualités d'accord à identifier sans afficher les notes, progressions dans diverses tonalités, contrôle des erreurs récentes, révision adaptative, maîtrise à partir de deux tonalités distinctes.
+- **Réarmonisation** : quatre mini-phrases originales, chacune avec une mélodie de trois notes et plusieurs options harmoniquement recevables (dominantes, backdoor, substitution tritonique). Réponses expliquées et audibles. **Pas encore d'éditeur de mélodies libres.**
+- **Sauvegarde** : les résultats des ateliers sont intégrés au `harmonie-progress-v2` exportable/importable. La commande d'effacement avertit et efface également V2 pour rendre la remise à zéro cohérente.
+- **Contrôles PR #13** : deux suites réussies avant fusion, `Check Harmonie Trainer` run `39063875470`, `Test jazz pedagogy in a real browser` run `39063875449`.
+- **Contrôles sur `main`** : `Check Harmonie Trainer` `39063945686` **success** ; Chromium aux fenêtres **375×812** et **1024×768** `39063945655` **success** (saisie, repères de voix précédents, oreille, mélodie, archive JSON et navigation) ; GitHub Pages `39063945488` **success** ; Pages smoke `39063945670` **success**, nouvel `index.html` et scripts `app.js?v=11`, `jazz-lab.js`, `jazz-lab-ui.js?v=1`, CSS et clavier chargés.
+- **Dépendances / limites** : aucun essai sur iPhone Safari réel ou iPadOS réel, ni VoiceOver, ni restauration iCloud/Fichiers inter-appareils ; pas de MIDI physique ni suivi de doigtés, ni harmonisation d'une mélodie totalement libre. La correction de mouvement suppose l'ordre registre grave→aigu, sans imposer la correspondance réelle entre mains/doigts.
+- **URL testable** : https://ocverclock.github.io/harmonie-trainer/ — ouvrir « Atelier jazz ».
+
+
 ### 2026-10-17 — V0.8 : constructions aléatoires et mémoire du voicing — ÉTAT : publiée et contrôlée
 - **Demande :** plus de variété dans les exercices de construction ; pendant la construction d'un nouvel accord dans « Mes voicings », repères discrets des notes MIDI réellement jouées dans l'accord précédent.
 - **PR #10 :** https://github.com/ocverclock/harmonie-trainer/pull/10 — fusionnée dans `main`, commit `3edc56a16bbd7c3e74f9e6d9c831be030a1e1148`.
