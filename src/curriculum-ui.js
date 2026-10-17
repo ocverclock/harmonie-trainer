@@ -1,4 +1,6 @@
 import {lessons,checkExercise,midiName,TOTAL_EXERCISES} from "./curriculum.js";
+import {chapterCourses,lessonCourses,validateCourseNotes} from "./course-notes.js";
+if(!validateCourseNotes(lessons))throw new Error("Cours théoriques incomplets : une leçon manque.");
 
 const STORE="harmonie-parcours-v1";
 const PARTS={1:"Fondations et positions",2:"Conduite des voix",3:"Harmonie jazz et enrichissements",4:"Mise en pratique"};
@@ -29,14 +31,19 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
  function showOverview(){
   const stats=courseStats(progress);
   let body='<section class="card"><div class="eyebrow">École Ocverclock · cursus jazz</div><h1>Parcours d’harmonisation</h1>'+
-   '<p class="muted">21 leçons progressives et 52 exercices actifs. Construis les notes sur le vrai clavier : aucun QCM ne peut deviner à ta place.</p>'+
+   '<p class="muted">21 leçons progressives et '+TOTAL_EXERCISES+' exercices actifs. Construis les notes sur le vrai clavier : aucun QCM ne peut deviner à ta place.</p>'+
    '<p class="course-count"><strong>'+stats.mastered+'/'+stats.total+'</strong> exercices maîtrisés · '+stats.lessonsDone+'/'+stats.lessons+' leçons complètes</p>'+
    '<div class="row">'+button("Reprendre mon travail","resumeCourse","primary")+
     button("QCM II–V–I","currSecondary","quiet")+button("Mes voicings","currVoicings","quiet")+'</div>'+
    '<p class="subtle" style="margin-top:12px">Parcours indépendant inspiré du sommaire public d’Étienne Guéreau (Piano Jazz Concept). Aucun cours payant n’est reproduit. Progression enregistrée sur cet appareil.</p></section>';
   for(const part of [1,2,3,4]){
    const indices=lessons.map((l,i)=>({l,i})).filter(x=>x.l.part===part);
-   body+='<section class="card"><h2>'+e(PARTS[part])+'</h2><div class="course-grid">'+indices.map(({l,i})=>{
+   const theory=chapterCourses[part];
+   body+='<section class="card"><p class="eyebrow">Cours du chapitre '+part+'</p><h2>'+e(PARTS[part])+'</h2>'+ 
+   '<p class="course-why"><strong>Pourquoi l’étudier ?</strong> '+e(theory.why)+'</p>'+
+   '<p class="course-lecture">'+e(theory.body)+'</p>'+
+   '<p class="subtle"><strong>Objectif :</strong> '+e(theory.goal)+'</p>'+
+   '<div class="course-grid">'+indices.map(({l,i})=>{
     const mastery=l.exercises.filter((x,j)=>progress[keyFor(l,j)]?.correct).length;
     return '<button class="course-lesson" data-course="'+i+'"><small>Leçon '+(i+1)+' · '+mastery+'/'+l.exercises.length+' maîtrisés</small>'+
      '<strong>'+e(l.title)+'</strong><span>'+e(l.summary)+'</span></button>';
@@ -52,13 +59,20 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
   document.getElementById("currVoicings").onclick=openVoicing;
  }
  function showLesson(){
-  const lesson=lessons[lessonIdx],exercise=lesson.exercises[exerciseIdx];
+  const lesson=lessons[lessonIdx],exercise=lesson.exercises[exerciseIdx],theory=lessonCourses[lesson.id];
   const grade=result,notes=selected.slice().sort((a,b)=>a-b);
   const done=lesson.exercises.filter((ex,i)=>progress[keyFor(lesson,i)]?.correct).length;
   let body='<section class="card"><div class="row between"><span class="badge">'+e(titleBadge(lesson))+'</span>'+
    '<span class="subtle">'+done+'/'+lesson.exercises.length+' maîtrisés</span></div>'+
    '<h2 style="margin-top:18px">'+e(lesson.title)+'</h2>'+
-   '<p class="muted">'+e(lesson.summary)+'</p><div class="explain">'+e(lesson.principle)+'</div>'+
+   '<p class="muted">'+e(lesson.summary)+'</p>'+
+   '<section class="lesson-theory" aria-label="Cours préalable à l’exercice"><p class="eyebrow">Comprendre avant de jouer</p>'+
+   '<h3>Pourquoi cette notion ?</h3><p>'+e(theory.why)+'</p>'+
+   '<h3>Comment ça fonctionne</h3><p>'+e(theory.concept)+'</p>'+
+   '<h3>Exemple guidé</h3><p>'+e(theory.example)+'</p>'+
+   '<div class="row">'+button("Écouter l’exemple","lessonHearTheory","quiet")+button("Écouter la comparaison","lessonCompareTheory","quiet")+'</div>'+
+   '<details class="course-check"><summary>Petite question avant l’exercice : '+e(theory.question)+'</summary><p>'+e(theory.answer)+'</p></details></section>'+
+   '<div class="explain">'+e(lesson.principle)+'</div>'+
    '<div class="row course-navline">'+button("← Toutes les leçons","courseAll","quiet")+
    button("Leçon précédente","coursePrevLesson","quiet",lessonIdx===0)+
    button("Leçon suivante","courseNextLesson","quiet",lessonIdx===lessons.length-1)+'</div>'+
@@ -66,7 +80,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
     const ok=progress[keyFor(lesson,i)]?.correct;
     return '<button data-course-step="'+i+'" class="btn '+(exerciseIdx===i?'active':'')+'" aria-current="'+(exerciseIdx===i?'step':'false')+'">'+(i+1)+(ok?' ✓':'')+'</button>';
    }).join("")+'</div>'+
-   '<p class="eyebrow">Exercice '+(exerciseIdx+1)+' / '+lesson.exercises.length+'</p><div class="symbol course-symbol">'+e(exercise.name)+'</div>'+
+   '<p class="eyebrow">Exercice '+(exerciseIdx+1)+' / '+lesson.exercises.length+(exercise.tonality?' · Tonalité : '+e(exercise.tonality):'')+'</p><div class="symbol course-symbol">'+e(exercise.name)+'</div>'+
    '<p>'+e(exercise.task)+'</p>'+
    '<p class="muted">'+(exercise.mode==="free"?
       'Renversement libre : choisis '+exercise.midis.length+' notes distinctes, sans doubler une même note à l’octave.':
@@ -80,6 +94,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
   if(grade){
    body+='<div class="feedback '+(grade.correct?'correct':'')+'" role="status"><h3>'+(grade.correct?'Accord exact.':'Correction de ton accord')+'</h3>'+
     '<p>'+e(exercise.why)+'</p>'+
+    (exercise.spelling?'<p>Orthographe attendue : <strong>'+e(exercise.spelling)+'</strong>.</p>':'')+
     (!grade.correct?'<p>Attendu : <b>'+exercise.midis.map(midiName).join(' · ')+'</b>. '+
        (grade.missing.length?'Notes attendues entourées de rouge : '+grade.missing.map(midiName).join(', ')+'. ':'')+
        (grade.extra.length?'Notes à retirer marquées en rouge : '+grade.extra.map(midiName).join(', ')+'. ':'')+
@@ -90,6 +105,8 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
     '</div></div>';
   }
   body+='</section>';shell(body);
+  document.getElementById("lessonHearTheory").onclick=()=>play(theory.listen);
+  document.getElementById("lessonCompareTheory").onclick=()=>play(theory.compare);
   const pianoScroll=app.querySelector(".lesson-piano .piano-scroll");
   if(pianoScroll){pianoScroll.scrollLeft=scrollPos;pianoScroll.addEventListener("scroll",()=>{scrollPos=pianoScroll.scrollLeft},{passive:true})}
   if(grade){
