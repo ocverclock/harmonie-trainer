@@ -1,0 +1,57 @@
+name: Pages deployment smoke check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-smoke.yml'
+      - 'index.html'
+      - 'src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-live-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Confirm updated HTML and all essential course assets are live
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://ocverclock.github.io/harmonie-trainer"
+          html=$(mktemp)
+          ok=0
+          for attempt in $(seq 1 24); do
+            if curl -fsSL --connect-timeout 10 --max-time 20 -H "Cache-Control: no-cache" "$root/?commit=$GITHUB_SHA&attempt=$attempt" -o "$html"; then
+              if grep -Fq './src/app.js?v=8' "$html" && grep -Fq './src/curriculum.css?v=3' "$html"; then
+                echo "GitHub Pages serves the expected v0.7 HTML (attempt $attempt)"
+                ok=1
+                break
+              fi
+            fi
+            echo "Waiting for latest Pages deployment ($attempt/24)..."
+            sleep 10
+          done
+          if [[ "$ok" != 1 ]]; then
+            echo "::error::Pages is not yet serving the new 0.7 entry point"
+            exit 1
+          fi
+          for asset in \
+            'src/app.js?v=8' \
+            'src/curriculum-ui.js?v=3' \
+            'src/curriculum.js' \
+            'src/course-notes.js' \
+            'src/tonality-variants.js' \
+            'src/progress-store.js' \
+            'src/curriculum.css?v=3' \
+            'src/piano-layout.js'; do
+            tmp=$(mktemp)
+            curl -fsSL --connect-timeout 10 --max-time 20 "$root/$asset" -o "$tmp"
+            test -s "$tmp"
+            echo "Loaded $asset ($(wc -c <"$tmp") bytes)"
+            rm -f "$tmp"
+          done
+          echo "Public Pages loads the new course, progress store and existing piano assets."
