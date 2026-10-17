@@ -56,3 +56,7 @@ GitHub Actions lance les tests à chaque push sur `main`.
 - Les déplacements ne sont **pas** utilisés pour sanctionner une construction d'accord juste. Les positions grave → aigu servent de correspondances visibles entre étapes et ne revendiquent pas être un réarrangement algorithmique optimal.
 - Le score (nombre d'accords justes sur trois) est enregistré localement, distinct des sessions d'accords. Les tests de théorie sont dans `tests/voicing.test.js`.
 
+
+## Suivi des agents et validation
+
+Les trois chantiers ont des issues distinctes et un journal pérenne : **[Journal des agents et décisions à valider](docs/AGENT_WORK_LOG.md)**. Les travaux de code doivent rester sur des branches/PR séparées jusqu'à la validation explicite de l'utilisateur ; chaque PR doit renseigner les tests, les choix et les blocages avant demande de fusion.
