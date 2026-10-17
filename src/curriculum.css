@@ -55,3 +55,12 @@
 .course-check summary{font-weight:750;color:#174e90;cursor:pointer;line-height:1.5}
 .course-check p{margin:10px 0 0;color:#314763}
 @media(max-width:650px){.lesson-theory{padding:15px}.lesson-theory h3{font-size:16px}.lesson-theory .row .btn{flex:1}.course-lecture{font-size:14px}}
+
+
+/* Explicit portable backups: never imply cloud synchronisation. */
+.course-backup{margin:20px 0 4px;padding:15px 18px;background:#f7fafe;border:1px solid #d1dfe9;border-radius:15px}
+.course-backup h3{font-size:17px;margin:0 0 7px}
+.course-backup p{max-width:75ch;font-size:14px;line-height:1.55;margin-bottom:14px}
+.course-backup .btn{min-height:44px}
+.sr-only-input{position:absolute!important;inline-size:1px!important;block-size:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:650px){.course-backup{padding:14px}.course-backup .row .btn{flex:1}}
