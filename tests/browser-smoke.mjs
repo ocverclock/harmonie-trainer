@@ -12,6 +12,9 @@ try{
   await page.goto("http://127.0.0.1:8765/",{waitUntil:"networkidle"});
   assert.equal(await page.locator(".brand").count(),1,"Home must load");
   await page.getByRole("button",{name:"Atelier jazz : voix, oreille, harmonisation"}).click();
+  await page.locator(".lab-tile").first().waitFor({state:"visible",timeout:12000}).catch(async error=>{
+   throw Error("Lab failed to load: "+errors.join(" | ")+"; page="+(await page.locator("main").innerText()).slice(0,400)+"; "+error.message);
+  });
   assert.equal(await page.locator(".lab-tile").count(),3);
   await page.locator('[data-lab-mode="voice"]').click();
   assert.ok((await page.locator(".lab-panel h1").innerText()).length>4);
@@ -44,6 +47,7 @@ try{
   await page.locator("#labHome").click();
 
   await page.getByRole("button",{name:"Parcours"}).click();
+  await page.locator("#courseExport").waitFor({state:"visible",timeout:10000});
   await page.locator("#courseExport").click();
   const archiveRaw=await page.evaluate(()=>localStorage.getItem("harmonie-progress-v2"));
   const archive=JSON.parse(archiveRaw);
