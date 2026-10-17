@@ -131,7 +131,7 @@ export function earMastery(archive,now=new Date()){
  const records=new Map(earTypes.map(t=>[t.id,{id:t.id,label:t.label,
   attempts:0,successes:0,tonalities:new Set(),lastAt:null,lastCorrect:null}]));
  for(const ev of archive?.events||[]){
-  const matched=/^jazzlab:ear:ear-(\\d+)$/.exec(ev.exerciseId);
+  const matched=/^jazzlab:ear:ear-(\d+)$/.exec(ev.exerciseId);
   if(!matched)continue;
   const q=earQuestion(Number(matched[1])),record=records.get(q.quality);
   record.attempts++;
