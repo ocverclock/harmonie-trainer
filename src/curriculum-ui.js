@@ -1,5 +1,7 @@
 import {lessons,checkExercise,midiName,TOTAL_EXERCISES} from "./curriculum.js";
 import {chapterCourses,lessonCourses,validateCourseNotes} from "./course-notes.js";
+import {readArchive,storeArchive,withCursor,withAttempt,stableExerciseId,progressByExercise,
+ mergeArchives,parseBackup,backupJSON,restoreLegacyView} from "./progress-store.js";
 if(!validateCourseNotes(lessons))throw new Error("Cours théoriques incomplets : une leçon manque.");
 
 const STORE="harmonie-parcours-v1";
@@ -19,10 +21,20 @@ export function courseStats(progress){
 }
 export function createCurriculumUI({app,shell,piano,play,escapeText,button,openVoicing,openSecondary}){
  let overview=true,lessonIdx=0,exerciseIdx=0,selected=[],result=null,scrollPos=0;
+ let archive=null,storageWarning="",backupNotice="";
+ function refreshArchive(){
+  try{archive=readArchive(localStorage,lessons);storageWarning="";return archive}
+  catch(error){archive=null;storageWarning="Suivi V2 indisponible : "+error.message;return null}
+ }
+ function writeArchive(next){
+  try{storeArchive(localStorage,next);archive=next;storageWarning="";return true}
+  catch(error){storageWarning="Attention : la sauvegarde de progression a échoué. "+error.message;return false}
+ }
+ refreshArchive();
  let progress=loadProgress();
  const e=escapeText;
  function start(index=null){
-  progress=loadProgress();
+  progress=loadProgress();refreshArchive();
   if(index===null){overview=true}else{overview=false;lessonIdx=Math.max(0,Math.min(lessons.length-1,index));exerciseIdx=0}
   selected=[];result=null;scrollPos=0;render();
  }
@@ -30,11 +42,21 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
  function titleBadge(lesson){return "Chapitre "+(lessonIdx+1)+"/"+lessons.length+" · "+PARTS[lesson.part]}
  function showOverview(){
   const stats=courseStats(progress);
+  const records=archive?progressByExercise(archive):{};
+  const practicedTonality=new Set(Object.values(records).flatMap(r=>Object.keys(r.byTonality||{})).filter(k=>k!=="unspecified"));
+  const needsReview=Object.values(records).filter(r=>r.lastCorrect===false&&r.attempts>0).length;
   let body='<section class="card"><div class="eyebrow">École Ocverclock · cursus jazz</div><h1>Parcours d’harmonisation</h1>'+
    '<p class="muted">21 leçons progressives et '+TOTAL_EXERCISES+' exercices actifs. Construis les notes sur le vrai clavier : aucun QCM ne peut deviner à ta place.</p>'+
    '<p class="course-count"><strong>'+stats.mastered+'/'+stats.total+'</strong> exercices maîtrisés · '+stats.lessonsDone+'/'+stats.lessons+' leçons complètes</p>'+
+   '<p class="subtle">'+practicedTonality.size+' tonalité(s) étudiée(s) et '+needsReview+' compétence(s) à revoir selon la dernière tentative.</p>'+
+   (storageWarning?'<p class="feedback" role="alert">'+e(storageWarning)+'</p>':'')+
+   (backupNotice?'<p class="explain" role="status">'+e(backupNotice)+'</p>':'')+
    '<div class="row">'+button("Reprendre mon travail","resumeCourse","primary")+
     button("QCM II–V–I","currSecondary","quiet")+button("Mes voicings","currVoicings","quiet")+'</div>'+
+   '<div class="course-backup"><h3>Conserver mes acquis</h3><p class="muted">Les résultats restent sur cet appareil. Exporte une sauvegarde JSON pour les retrouver sur un autre navigateur, iPhone ou ordinateur.</p>'+
+   '<div class="row">'+button("Exporter mes progrès","courseExport","quiet")+button("Importer une sauvegarde","courseImport","quiet")+'</div>'+
+   '<input id="courseImportFile" class="sr-only-input" type="file" accept=".json,application/json" aria-label="Choisir un fichier de sauvegarde JSON">'+
+   '</div>'+
    '<p class="subtle" style="margin-top:12px">Parcours indépendant inspiré du sommaire public d’Étienne Guéreau (Piano Jazz Concept). Aucun cours payant n’est reproduit. Progression enregistrée sur cet appareil.</p></section>';
   for(const part of [1,2,3,4]){
    const indices=lessons.map((l,i)=>({l,i})).filter(x=>x.l.part===part);
@@ -52,20 +74,65 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
   shell(body);
   app.querySelectorAll("[data-course]").forEach(b=>b.onclick=()=>pickLesson(Number(b.dataset.course)));
   document.getElementById("resumeCourse").onclick=()=>{
+   const cursor=archive?.cursor;
+   if(cursor){
+    const i=lessons.findIndex(l=>l.id===cursor.lessonId);
+    if(i>=0){
+     const j=lessons[i].exercises.findIndex((x,index)=>stableExerciseId(lessons[i],index)===cursor.exerciseId);
+     if(j>=0){overview=false;lessonIdx=i;exerciseIdx=j;selected=[];result=null;scrollPos=0;render();return}
+    }
+   }
    const i=lessons.findIndex(l=>l.exercises.some((ex,j)=>!progress[keyFor(l,j)]?.correct));
    pickLesson(i===-1?0:i);
+  };
+  document.getElementById("courseExport").onclick=()=>{
+   try{
+    const data=backupJSON(archive||readArchive(localStorage,lessons));
+    const blob=new Blob([data],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;link.download="harmonie-progression-"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+    backupNotice="Sauvegarde préparée. Vérifie sa présence dans tes téléchargements ou l’app Fichiers.";
+    showOverview();
+   }catch(error){backupNotice="Export impossible : "+error.message;showOverview()}
+  };
+  document.getElementById("courseImport").onclick=()=>document.getElementById("courseImportFile").click();
+  document.getElementById("courseImportFile").onchange=async ev=>{
+   const file=ev.target.files?.[0];if(!file)return;
+   try{
+    if(file.size>2_000_000)throw Error("Fichier trop volumineux.");
+    const incoming=parseBackup(await file.text());
+    const current=archive||readArchive(localStorage,lessons);
+    const merged=mergeArchives(current,incoming);
+    const newEvents=merged.events.length-current.events.length;
+    const oldCount=Object.keys(current.legacy).length;
+    const newLegacy=Math.max(0,Object.keys(merged.legacy).length-oldCount);
+    const prompt="Importer cette sauvegarde ? "+newEvents+" nouvelle(s) tentative(s), "+newLegacy+" acquis historiques supplémentaires. Les résultats actuels seront conservés.";
+    if(!confirm(prompt))return;
+    if(!writeArchive(merged))throw Error("Écriture du fichier de progression refusée.");
+    const restored=restoreLegacyView(localStorage,lessons,merged);
+    progress=loadProgress();
+    backupNotice="Sauvegarde importée et fusionnée sans effacer les acquis : "+restored+" réussite(s) restaurée(s).";
+    showOverview();
+   }catch(error){backupNotice="Import refusé ou incomplet : "+error.message;showOverview()}
   };
   document.getElementById("currSecondary").onclick=openSecondary;
   document.getElementById("currVoicings").onclick=openVoicing;
  }
  function showLesson(){
   const lesson=lessons[lessonIdx],exercise=lesson.exercises[exerciseIdx],theory=lessonCourses[lesson.id];
+  if(archive&&(archive.cursor?.lessonId!==lesson.id||archive.cursor?.exerciseId!==stableExerciseId(lesson,exerciseIdx))){
+   writeArchive(withCursor(archive,lesson,exerciseIdx));
+  }
   const grade=result,notes=selected.slice().sort((a,b)=>a-b);
   const done=lesson.exercises.filter((ex,i)=>progress[keyFor(lesson,i)]?.correct).length;
   let body='<section class="card"><div class="row between"><span class="badge">'+e(titleBadge(lesson))+'</span>'+
    '<span class="subtle">'+done+'/'+lesson.exercises.length+' maîtrisés</span></div>'+
    '<h2 style="margin-top:18px">'+e(lesson.title)+'</h2>'+
    '<p class="muted">'+e(lesson.summary)+'</p>'+
+   (storageWarning?'<p class="feedback" role="alert">'+e(storageWarning)+'</p>':'')+
    '<section class="lesson-theory" aria-label="Cours préalable à l’exercice"><p class="eyebrow">Comprendre avant de jouer</p>'+
    '<h3>Pourquoi cette notion ?</h3><p>'+e(theory.why)+'</p>'+
    '<h3>Comment ça fonctionne</h3><p>'+e(theory.concept)+'</p>'+
@@ -130,7 +197,9 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
    result=checkExercise(exercise,selected);
    const k=keyFor(lesson,exerciseIdx),before=progress[k]||{attempts:0,correct:false};
    progress[k]={correct:before.correct||result.correct,attempts:(before.attempts||0)+1,at:new Date().toISOString()};
-   saveProgress(progress);render();
+   if(!saveProgress(progress))storageWarning="Attention : tes progrès n'ont pas été enregistrés dans le stockage local.";
+   if(archive)writeArchive(withAttempt(archive,lesson,exerciseIdx,selected,result.correct));
+   render();
   };
   app.querySelectorAll("[data-midi]").forEach(b=>b.onclick=()=>{
    if(result)return;
