@@ -1,6 +1,6 @@
 import {secondary,names} from "./music.js";
 import {evaluateVoicing,makeVoicingProgression,analyzeMotion,midiLabel,suggestCorrections} from "./voicing.js";
-import {diagram,voiceColors,frameCenter,movementSummary} from "./voices.js?v=3";
+import {diagram,voiceColors,frameCenter,movementSummary} from "./voices.js?v=4";
 
 export function createVoicingUI({app,shell,piano,play,escapeText,button}){
  let question=0,step=0,answers=[[],[],[]],revealed=false,display="mine",scrollPos=null;
