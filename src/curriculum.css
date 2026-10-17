@@ -26,3 +26,18 @@
 .lesson-piano .pianoKey:focus-visible{outline:3px solid #e88b10;outline-offset:-3px;z-index:7}
 @media(max-width:650px){.course-grid{grid-template-columns:1fr}.course-navline .btn{flex:1}.course-lesson{min-height:105px}
  .course-steps .btn{min-width:48px}}
+
+/* Voicings libres : repères rouges sur les mêmes touches que le diagramme. */
+.aligned-lesson .pianoKey.correction-expected::before{
+ content:"";position:absolute;left:50%;bottom:55px;transform:translateX(-50%);
+ width:31px;height:31px;border:4px solid #d51e2b;border-radius:50%;background:#fff9;
+ z-index:6;pointer-events:none;box-shadow:0 0 0 2px #fff
+}
+.aligned-lesson .pianoKey.black.correction-expected::before{bottom:44px}
+.aligned-lesson .pianoKey.correction-extra::before{
+ content:"×";position:absolute;left:50%;bottom:55px;transform:translateX(-50%);
+ width:28px;height:28px;border:3px solid #b91c1c;background:#fff;border-radius:50%;
+ font-size:23px;font-weight:900;line-height:19px;color:#b91c1c;z-index:6;pointer-events:none
+}
+.aligned-lesson .pianoKey.black.correction-extra::before{bottom:44px}
+.viz-aligned .correctionWrong,.viz-aligned .correctionRight{pointer-events:none}
