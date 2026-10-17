@@ -80,3 +80,15 @@ Les trois chantiers sont consignés dans le **[journal des agents et décisions]
 - Les orthographes théoriques sont indiquées dans le corrigé pour les variantes (`Mi♯` ou `Do♭` selon tonalité), même si le clavier MIDI utilise les mêmes touches enharmoniques.
 
 L'évolution de la sauvegarde/export JSON fait l'objet d'un audit séparé et **n'est pas encore livrée**. Voir [audits pédagogie et sauvegarde](https://github.com/ocverclock/harmonie-trainer/pull/7). Recette Safari iPhone et iPad à effectuer sur appareils réels.
+
+
+## Suivi de progression V2 et sauvegardes portables (proposition V0.7)
+
+- « Reprendre mon travail » retrouve le **dernier exercice visité**, et non la première leçon incomplète ; si le curseur est introuvable après une mise à jour, le système revient au parcours normal.
+- Les nouvelles tentatives sont archivées dans `harmonie-progress-v2`, indexées par **ID d'exercice stable et tonalité** ; le statut « déjà réussi » et le résultat de la dernière tentative restent distincts.
+- Les données originales `harmonie-parcours-v1` sont préservées pendant la migration et continuent d'alimenter les anciens indicateurs. Les 52 anciens exercices restent à leurs indices historiques ; les 37 nouveaux ont leur propre ID.
+- Le parcours propose « Exporter mes progrès » (fichier JSON daté) et « Importer une sauvegarde » (aperçu du nombre d'éléments, confirmation, fusion sans réinitialiser le stockage existant).
+- **Aucune synchronisation automatique** : l'utilisateur doit sauvegarder le fichier dans Fichiers / iCloud Drive ou un autre emplacement de son choix et le réimporter sur l'autre appareil. Les données peuvent être perdues si Safari efface le stockage et qu'aucun fichier n'a été exporté.
+- Contrôles : migration V1, validation des fichiers, dédoublonnage des tentatives, préservation des réussites et refus de contenus invalides ; tests dans `tests/progress-store.test.js`.
+
+**Limites connues :** les événements détaillés sont plafonnés à 3 000 dans le navigateur, sans effacer les acquis historiques importés ; la fusion de deux appareils utilise des UUID de tentatives et consolide les acquis historiques par maximum, sans prétendre résoudre toutes les divergences de parcours. La validation Safari iPhone/iPad reste à réaliser. Pas de serveur ni de compte.
