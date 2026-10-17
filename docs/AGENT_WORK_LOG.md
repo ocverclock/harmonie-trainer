@@ -67,6 +67,18 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — V0.8 : constructions aléatoires et mémoire du voicing — ÉTAT : publiée et contrôlée
+- **Demande :** plus de variété dans les exercices de construction ; pendant la construction d'un nouvel accord dans « Mes voicings », repères discrets des notes MIDI réellement jouées dans l'accord précédent.
+- **PR #10 :** https://github.com/ocverclock/harmonie-trainer/pull/10 — fusionnée dans `main`, commit `3edc56a16bbd7c3e74f9e6d9c831be030a1e1148`.
+- **Travail :** `src/practice-random.js` crée un pool de constructions sur de nouvelles fondamentales et qualités et diversifie les sessions de 10 questions en évitant des doublons enharmoniques ; `sessionFor` réutilise ce pool, tout en conservant les 28 définitions historiques.
+- **Parcours :** bouton « Mélanger pour réviser » pour revoir les exercices d'une leçon dans un ordre varié (acquis non maîtrisés d'abord), retour possible à l'ordre pédagogique. Aucun ID/exercice corrigé ni ancienne clé `harmonie-parcours-v1`/`harmonie-progress-v2` déplacés.
+- **Mes voicings :** sur les étapes 2 et 3, quatre petits anneaux gris pointillés indiquent les touches MIDI jouées sur l'accord précédent, y compris les notes communes ; le jeu en cours demeure en bleu. Le modèle correct n'est jamais révélé avant la validation ; les notes fantômes n'apparaissent pas au premier accord ou si l'étape précédente est incomplète. Accessibilité aria-label associée aux anneaux.
+- **Cadences :** ouverture libre sur un objectif aléatoire ; « Nouvelle cadence aléatoire » choisit un autre objectif que le précédent ; l'entrée depuis une question QCM conserve la destination de cette question.
+- **Tests :** nouvelle suite `tests/practice-random.test.js` couvrant pool, spelling des accords, ordre varié, stabilité du suivi, objectifs de cadence et notes MIDI précédentes ; GitHub Actions [Check Harmonie Trainer](https://github.com/ocverclock/harmonie-trainer/actions/runs/39061291457) = **success**.
+- **Publication :** [GitHub Pages](https://github.com/ocverclock/harmonie-trainer/actions/runs/39061290721) = **success** ; [Pages smoke check v0.8](https://github.com/ocverclock/harmonie-trainer/actions/runs/39061291313) = **success**. Vérification HTTP de la page mise en production et des modules `app.js?v=9`, `curriculum-ui.js?v=4`, `voicing-ui.js?v=3`, `practice-random.js`, `piano-layout.js`.
+- **Limites :** la validation tactile réelle sous Safari iPhone/iPad, la lisibilité des anneaux selon le zoom et la persistance de la révision mélangée entre redémarrages n'ont pas été testées sur appareils. Le mode guidé reste séquentiel par défaut.
+
+
 ### 2026-10-17 — V0.7 publiée : cours et sauvegardes testables — ÉTAT : code fusionné, Pages vérifiée
 - Autorisation utilisateur du 17 octobre 2026 : « Vas y et tu reviens vers moi quand c’est testable » ; mise en production des évolutions validées aux tests.
 - **PR #8 fusionnée** dans `main` avec un merge commit `7cb2f8a52068365d915d7d676021a66747bcefa7`. Contenu : 4 introductions de chapitres, 21 mini-cours, 37 exercices supplémentaires, passage de 52 à 89 exercices, versions de cache rafraîchies.
