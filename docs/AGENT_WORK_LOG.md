@@ -67,6 +67,16 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — V0.7 publiée : cours et sauvegardes testables — ÉTAT : code fusionné, Pages vérifiée
+- Autorisation utilisateur du 17 octobre 2026 : « Vas y et tu reviens vers moi quand c’est testable » ; mise en production des évolutions validées aux tests.
+- **PR #8 fusionnée** dans `main` avec un merge commit `7cb2f8a52068365d915d7d676021a66747bcefa7`. Contenu : 4 introductions de chapitres, 21 mini-cours, 37 exercices supplémentaires, passage de 52 à 89 exercices, versions de cache rafraîchies.
+- **PR #9 fusionnée ensuite** dans `main` avec `c0225d513f6b13414d5cd911b82bfd4cd4f513c7`. Contenu : registre de progression V2 non destructif, reprise, export JSON, import avec fusion et confirmation, conservation de V1.
+- **Tests de développement :** CI des deux PR en succès avant fusion ; réussite CI finale de #9 run `39053910434`.
+- **Contrôle de disponibilité Pages :** workflow [Pages deployment smoke check](https://github.com/ocverclock/harmonie-trainer/actions/runs/39058070676) **success**. Le job a obtenu le nouvel `index.html` (imports `app.js?v=8`, `curriculum.css?v=3`) puis récupéré sans erreur les scripts `app.js`, `curriculum-ui.js?v=3`, `curriculum.js`, `course-notes.js`, `tonality-variants.js`, `progress-store.js` et `piano-layout.js`. Il vérifie les réponses HTTP et la présence de contenu non vide, pas le comportement de l'application via un navigateur.
+- **Version testable** : https://ocverclock.github.io/harmonie-trainer/. Vérifier sur iPhone : ouvrir Parcours, lire un cours, jouer une variante avec touches noires, vérifier un accord, quitter/reprendre, puis exporter un JSON et essayer l'import depuis Fichiers. Les gestes audio, import iOS, VoiceOver et expérience tactile ne sont pas encore testés physiquement.
+- **Consigne** : aucune promesse de synchronisation automatique ; conserver le fichier de sauvegarde dans Fichiers / iCloud Drive, les données de navigateur peuvent disparaître. Les développements futurs (révision espacée, meilleure gestion des tonalités) restent distincts.
+
+
 ### 2026-10-17 — Enrichissement du parcours et sauvegarde v2 — ÉTAT : deux PR de développement, CI verte, en attente de validation visuelle
 - **PR #8 :** https://github.com/ocverclock/harmonie-trainer/pull/8 — branche `feature/mini-cours-et-tonalites-20261017`, basée sur `main`. 21 mini-cours originaux, 4 introductions de chapitre et 37 exercices supplémentaires (89 au total), notamment vrais renversements et tonalités utilisant des touches noires. **Les 52 exercices d'origine restent au même index** pour ne pas déplacer les anciennes clés du suivi.
 - **PR #9 :** https://github.com/ocverclock/harmonie-trainer/pull/9 — branche `feature/sauvegarde-acquis-v2-20261017`, basée sur la branche de #8. Nouveau module `src/progress-store.js`, reprise du dernier exercice, journal local par tonalité, export JSON et import contrôlé avec fusion et restauration non destructive du stockage `harmonie-parcours-v1`. Sans compte ni cloud.
