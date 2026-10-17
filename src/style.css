@@ -36,3 +36,24 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;
 .tip{margin-top:8px;font-size:13px;color:#697d92}.footer{color:#7a8ba1;font-size:12px;text-align:center;padding-top:14px}
 @media(max-width:650px){.wrap{padding:13px 9px 35px}.top{align-items:flex-start}.brand{font-size:22px}.nav{width:100%}.nav button{flex:1;font-size:13px;padding:9px}.card{border-radius:17px}.choiceGrid{grid-template-columns:1fr}.pianoKey.white{height:190px}.piano{height:195px}.pianoKey.black{height:115px}.score{font-size:48px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+
+/* Vertical temporal rows, horizontally aligned with the real key centers. */
+.aligned-scroll{width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:7px 0 16px;scrollbar-width:thin}
+.aligned-scroll:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.aligned-lesson{width:1116px;max-width:none;display:flex;flex-direction:column;gap:0}
+.viz-aligned{width:1092px;height:318px;margin-left:12px;overflow:hidden;border-radius:14px 14px 0 0;border-bottom:0}
+.viz-aligned svg{width:1092px;height:318px;display:block}
+.viz-aligned .pitchGuide{stroke:#c8d9ec;stroke-width:1;stroke-dasharray:3 9;opacity:.75}
+.viz-aligned .chordRow{fill:#e7eef888}
+.viz-aligned .chordRowActive{fill:#dceafe}
+.viz-aligned .chordRowLabel{font-size:14px;font-weight:850;fill:#173e85}
+.viz-aligned .path{fill:none;stroke-width:4;stroke-linecap:round}
+.viz-aligned .voice{stroke:white;stroke-width:3;filter:drop-shadow(0 3px 4px #243d5a40)}
+.viz-aligned .voiceIndex{font-size:13px;font-weight:850;fill:white;pointer-events:none}
+.viz-aligned .voicePitch{font-size:12px;font-weight:750;fill:#263c59;pointer-events:none}
+.aligned-lesson .piano-rack{border-radius:0 0 13px 13px;margin:0;width:1116px}
+.aligned-lesson .pianoKey.marked::after{content:none}
+.keyVoice{position:absolute;left:50%;bottom:39px;transform:translateX(-50%);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:white;background:var(--voice-color);font-size:12px;font-weight:850;border:3px solid white;box-shadow:0 2px 9px #12274455;pointer-events:none;z-index:1}
+.pianoKey.black .keyVoice{bottom:25px;width:25px;height:25px}
+@media(max-width:650px){.aligned-lesson{width:1116px}.viz-aligned{width:1092px;height:318px}.aligned-lesson .piano-rack{width:1116px}}
