@@ -1,9 +1,10 @@
 import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
+import {constructionDifficulties,difficultyOf} from "./practice-random.js";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
-let screen="home",level=1,session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
+let screen="home",level=1,constructionDifficulty="standard",session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
 let secondaryIndex=0,choice=-1,revealed=false,activeFrame=0,isolated=-1,voiceModule=null,voiceError=false;
 let audioCtx=null,resizeHandle=0,lessonScrollPos=null;
 let voicingUI=null,courseUI=null;
@@ -65,13 +66,19 @@ function home(){
  '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
- '<section class="card"><h2>Choisir un niveau d’accords</h2><div class="grid">'+[
+ '<section class="card"><h2>Choisir la difficulté</h2><p class="muted">Sélectionne le degré d’aide. Il s’applique aux triades, aux septièmes et aux accords avancés.</p>'+
+ '<div class="difficulty-grid" role="group" aria-label="Difficulté des constructions">'+Object.entries(constructionDifficulties).map(function(item){
+   const key=item[0],mode=item[1],active=constructionDifficulty===key;
+   return '<button type="button" data-difficulty="'+key+'" class="difficulty-choice '+(active?'active':'')+
+    '" aria-pressed="'+active+'"><strong>'+escapeText(mode.label)+'</strong><span>'+escapeText(mode.description)+'</span></button>';
+ }).join("")+'</div><h2 style="margin-top:24px">Choisir une famille d’accords</h2><div class="grid">'+[
   ["Triades","Majeures et mineures"],["Accords de septième","maj7, m7 et dominantes"],["Accords avancés","Diminués et demi-diminués"]
  ].map(function(x,i){return '<button class="btn level" data-level="'+(i+1)+'"><strong>Niveau '+(i+1)+' — '+x[0]+'</strong><small>'+x[1]+'</small></button>'}).join("")+'</div><p class="subtle">'+a.length+' session(s) enregistrée(s) sur cet appareil.</p></section>');
  document.getElementById("openCourse").onclick=function(){beginCourse()};
  document.getElementById("openSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()};
  document.getElementById("openChords").onclick=function(){start(level)};
  document.getElementById("openVoicings").onclick=function(){beginVoicing()};
+ app.querySelectorAll("[data-difficulty]").forEach(function(b){b.onclick=function(){constructionDifficulty=b.dataset.difficulty;home()}});
  app.querySelectorAll("[data-level]").forEach(function(b){b.onclick=function(){start(Number(b.dataset.level))}});
  app.querySelectorAll("[data-preview]").forEach(function(b){b.onclick=function(){play([Number(b.dataset.preview)])}});
 }
@@ -93,12 +100,17 @@ async function beginVoicing(index=null){
   if(screen==="voicings")voicingUI.start(index);
  }catch(error){console.error("Voicing mode could not load",error);screen="home";home();alert("Impossible de charger le module des voicings. Vérifie ta connexion puis actualise la page.");}
 }
-function start(l){level=l;session=sessionFor(level);questionIndex=0;selected=new Set();checked=null;score=0;screen="quiz";render()}
+function start(l){level=l;session=sessionFor(level,Math.random,constructionDifficulty);questionIndex=0;selected=new Set();checked=null;score=0;screen="quiz";render()}
 function quiz(){
  const ex=session[questionIndex];
- let body='<section class="card"><div class="row between"><span class="badge">Niveau '+level+'</span><span class="muted">Question '+(questionIndex+1)+'/10</span></div>'+
- '<p class="eyebrow" style="margin-top:20px">Construis l’accord</p><div class="symbol">'+escapeText(ex.symbol)+'</div><p class="muted">Appuie sur toutes ses notes. L’octave et l’ordre n’influencent pas la réponse.</p>'+
- piano(selected,[],true)+'<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider","validate","primary",!!checked||!selected.size)+'</div>';
+ let body='<section class="card"><div class="row between"><span class="badge">Accords · Niveau '+level+' · '+escapeText(difficultyOf(constructionDifficulty).label)+'</span><span class="muted">Question '+(questionIndex+1)+'/10</span></div>'+
+ '<p class="eyebrow" style="margin-top:20px">Construis l’accord</p><div class="symbol">'+escapeText(ex.symbol)+'</div>'+
+ '<p class="muted">Appuie sur toutes ses notes. L’octave et l’ordre n’influencent pas la réponse.</p>'+
+ (constructionDifficulty==="guided"?'<div class="explain" role="note"><strong>Repère pour construire :</strong> degrés '+escapeText(degrees[ex.quality])+
+   '. Commence par la fondamentale '+escapeText(ex.root.replaceAll("b","♭").replaceAll("#","♯"))+
+   ', puis trouve les autres degrés.<div class="row" style="margin-top:10px">'+button("Écouter la fondamentale","hearRoot","quiet")+'</div></div>':'')+
+ (constructionDifficulty==="challenge"?'<p class="subtle">Défi : tonalités moins familières et davantage de touches noires. Les intervalles apparaîtront après validation.</p>':'')+
+ piano(selected,[],true)+'<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider","validate","primary",!!checked||!selected.size)+button("Changer de niveau","backToLevels","quiet")+'</div>';
  if(checked){
   let missing=checked.missing.map(noteLabel).join(", "),extra=checked.extra.map(noteLabel).join(", ");
   body+='<div class="feedback '+(checked.correct?'correct':'')+'" role="status"><strong>'+(checked.correct?'Exact !':'Pas encore.')+'</strong>'+
@@ -112,6 +124,8 @@ function quiz(){
   if(checked)return;quiz.scrollX=scroll.scrollLeft;
   let pc=Number(b.dataset.midi)%12;selected.has(pc)?selected.delete(pc):selected.add(pc);quiz();
  }});
+ document.getElementById("backToLevels").onclick=function(){screen="home";render()};
+ document.getElementById("hearRoot")?.addEventListener("click",function(){play([60+ex.expected[0]])});
  document.getElementById("clear").onclick=function(){selected.clear();quiz()};
  document.getElementById("hear").onclick=function(){play([...selected].map(function(x){return x+60}))};
  document.getElementById("validate").onclick=function(){if(!selected.size||checked)return;checked=grade(ex,[...selected]);if(checked.correct)score+=10;quiz()};
@@ -119,14 +133,15 @@ function quiz(){
   document.getElementById("correctSound").onclick=function(){play(ex.expected.map(function(n){return n+60}))};
   document.getElementById("next").onclick=function(){
    quiz.scrollX=0;
-   if(questionIndex===9){let history=readScores();history.push({level:level,score:score,at:new Date().toISOString()});storeScores(history);screen="result";render();}
+   if(questionIndex===9){let history=readScores();history.push({level:level,difficulty:constructionDifficulty,score:score,at:new Date().toISOString()});storeScores(history);screen="result";render();}
    else{questionIndex++;checked=null;selected=new Set();quiz()}
   };
  }
 }
 function results(){
- shell('<section class="card"><h2>Session terminée</h2><p class="score">'+score+'/100</p><p>'+score/10+' réponses justes sur 10.</p><div class="row">'+button("Rejouer","again","primary")+button("II–V–I secondaires","goSecondary","quiet")+'</div></section>');
+ shell('<section class="card"><h2>Session terminée</h2><p class="muted">Famille '+level+' · '+escapeText(difficultyOf(constructionDifficulty).label)+'</p><p class="score">'+score+'/100</p><p>'+score/10+' réponses justes sur 10.</p><div class="row">'+button("Rejouer","again","primary")+button("Changer de difficulté","goLevels","quiet")+button("II–V–I secondaires","goSecondary","quiet")+'</div></section>');
  document.getElementById("again").onclick=function(){start(level)};
+ document.getElementById("goLevels").onclick=function(){screen="home";render()};
  document.getElementById("goSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;render()};
 }
 function preloadDiagram(){
@@ -194,7 +209,7 @@ function stats(){
  try{const mod=JSON.parse(localStorage.getItem("harmonie-parcours-v1")||"{}");c.mastered=Object.values(mod).filter(x=>x?.correct).length}catch(e){}
  shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
  '<h3>Parcours d’harmonisation</h3><p>'+c.mastered+' / <span id="stats-course-total">'+c.total+'</span> exercices maîtrisés</p>'+button('Ouvrir le parcours','goCourseFromStats','primary')+
- '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
+ '<h3>Construction des accords</h3><p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+(s.difficulty?' · '+(constructionDifficulties[s.difficulty]?.label||s.difficulty):' (ancien)')+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  '<h3>II–V–I : mes voicings</h3><p>'+v.length+' cadence(s) terminée(s)</p><p>'+(v.length?v.slice(-10).reverse().map(function(s){return s.correct+'/3 accords justes'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
  button("Effacer la progression","eraseHistory","quiet")+'</section>');
  document.getElementById("goCourseFromStats").onclick=beginCourse;

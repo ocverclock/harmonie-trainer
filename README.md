@@ -107,3 +107,13 @@ L'évolution du suivi et des sauvegardes est publiée en V0.7. Voir les [PR #8 (
 - **Mes voicings** : lors de la construction du II ou du I suivant, quatre petits anneaux discrets rappellent les **touches réellement jouées dans l'accord précédent**, même pour les notes communes. Les touches choisies pour le nouvel accord restent visibles en bleu. Aucune note de la correction n'est révélée avant validation ; aucun repère au premier accord ou si l'accord précédent est incomplet.
 - En ouvrant librement **Mes voicings**, le départ change de cadence de façon aléatoire ; **Nouvelle cadence aléatoire** évite la répétition immédiate. Depuis le QCM, la cadence voulue par l'utilisateur reste imposée.
 - Aucune géométrie du clavier modifiée ; noms et couleurs des voix, diagramme et défilement partagé conservés. Tests : `tests/practice-random.test.js`.
+
+## Trois degrés de difficulté pour « Construire les accords » (v0.9)
+
+Sur l'accueil, sélectionner une **difficulté** puis une **famille d'accords** (triades, 7e, accords avancés). Le choix d'aide est indépendant du type d'accord et ne modifie pas les 89 exercices du Parcours ni leur progression.
+
+- **Découverte** : fondamentales usuelles (Do, Ré, Mi, Fa, Sol, La, Si♭), pas plus de deux touches noires par accord, rappel des degrés de construction et bouton pour écouter la fondamentale.
+- **Entraînement** : le comportement antérieur, sessions mélangées, 10 questions, tonalités variées, corrections après réponse.
+- **Défi** : mêmes familles harmoniques mais sélection renforcée de tonalités moins familières (notamment Ré♭, Mi♭, Sol♭, La♭, Si) et de touches noires, sans indice initial. Le score reste sur 100 et aucune sanction chronométrée n'est introduite.
+
+Les **trois familles existantes** (triades, 7e, avancés) restent séparées de la difficulté : jusqu'à **9 parcours de construction distincts**. Chaque nouveau score contient `difficulty` et `level` ; les sessions anciennes restent consultables comme « ancien » sans leur attribuer rétrospectivement une nouvelle difficulté. L'ancien appel `sessionFor(level)` fonctionne toujours avec `standard` par défaut. Le piano reste inchangé.
