@@ -1,14 +1,35 @@
 import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=3";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
-import {constructionDifficulties,difficultyOf} from "./practice-random.js?v=3";
+import {constructionLevels,constructionDifficulties,difficultyOf,levelOf,demonstrationMidis} from "./practice-random.js?v=4";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
-let screen="home",level=1,constructionDifficulty="standard",session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
+let screen="home",level=6,constructionDifficulty="standard",session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
 let secondaryIndex=0,choice=-1,revealed=false,activeFrame=0,isolated=-1,voiceModule=null,voiceError=false;
 let audioCtx=null,resizeHandle=0,lessonScrollPos=null;
 let voicingUI=null,courseUI=null,jazzLabUI=null;
 const storage="harmonie-sessions-v2";
+const constructionSettings="harmonie-construction-choice-v1";
+try{
+ const saved=JSON.parse(localStorage.getItem(constructionSettings)||"null");
+ if(saved&&constructionLevels.some(x=>x.id===saved.level)&&constructionDifficulties[saved.difficulty]){
+  level=saved.level;constructionDifficulty=saved.difficulty;
+ }
+}catch(e){}
+function keepConstructionChoice(){
+ try{localStorage.setItem(constructionSettings,JSON.stringify({level,difficulty:constructionDifficulty}))}catch(e){}
+}
+function returnToConstruction(){
+ screen="home";render();
+ app.querySelector("#constructionSettings")?.scrollIntoView({block:"start"});
+}
+function historicSessionLabel(s){
+ if(s.familyId&&s.schemaVersion>=3){
+  const family=constructionLevels.find(x=>x.id===s.level&&"level-"+x.id===s.familyId);
+  if(family)return "Niveau "+s.level+" — "+family.label+" · "+(constructionDifficulties[s.difficulty]?.label||s.difficulty);
+ }
+ return "Ancienne session (famille non enregistrée) · "+s.score+"/100";
+}
 function escapeText(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function readScores(){try{let a=JSON.parse(localStorage.getItem(storage)||"[]");return Array.isArray(a)?a:[]}catch(e){return []}}
 function storeScores(a){try{localStorage.setItem(storage,JSON.stringify(a.slice(-100)));return true}catch(e){return false}}
