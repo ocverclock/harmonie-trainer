@@ -113,6 +113,17 @@ export function randomizedChordSession(level,bank,qualities,random=Math.random,d
  }
  return chosen;
 }
+// Play a practical ascending register, rather than stacking 9ths/13ths in one octave.
+export function demonstrationMidis(exercise){
+ if(!exercise?.expected?.length)throw Error("Accord absent");
+ const result=[];let midi=48+exercise.expected[0];
+ for(const pc of exercise.expected){
+  while(normalized(midi)!==pc)midi++;
+  if(midi>PIANO_END)throw Error("Voicing au-delà du clavier");
+  result.push(midi);midi++;
+ }
+ return result;
+}
 export function challengeStats(session){
  const rare=new Set([1,3,6,8,11]);
  return {withBlack:session.filter(e=>e.expected.some(n=>BLACK.has(n))).length,
