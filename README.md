@@ -68,3 +68,15 @@ Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](
 ## Suivi des agents et validation
 
 Les trois chantiers sont consignés dans le **[journal des agents et décisions](docs/AGENT_WORK_LOG.md)**. Le 17 octobre 2026, l'utilisateur a donné une **autorisation explicite de publication du parcours complet** ; cette autorisation est spécifique au travail décrit dans la PR correspondante. Toute autre future évolution majeure devra être validée selon la règle habituelle.
+
+
+## Enrichissement des cours (V0.6 — en développement)
+
+- Chacun des quatre chapitres présente maintenant **une introduction pédagogique**, son intérêt, le principe à connaître et l'objectif d'apprentissage.
+- Avant les exercices de chaque leçon : **pourquoi**, **explication**, **exemple résolu**, **deux écoutes comparatives** et **question de compréhension**.
+- Distinction fondamentale : un **renversement** change la basse ; une **disposition / position** modifie l'espacement ou la succession des voix, parfois avec la même basse.
+- Le programme passe de **52 à 89 exercices** en ajoutant 37 activités (transpositions majeures/mineures, nouvelles touches noires et premiers renversements véritables). Les 52 exercices d'origine restent aux mêmes indices ; les clés de progression déjà sauvegardées dans le navigateur ne sont donc pas déplacées.
+- Les nouveaux exercices utilisent explicitement des tonalités telles que Ré majeur, Si♭, Mi♭, La♭, Ré♭, Fa♯ majeur/mineur et Si mineur. Les notes sont toujours situées dans le clavier MIDI 48–83.
+- Les orthographes théoriques sont indiquées dans le corrigé pour les variantes (`Mi♯` ou `Do♭` selon tonalité), même si le clavier MIDI utilise les mêmes touches enharmoniques.
+
+L'évolution de la sauvegarde/export JSON fait l'objet d'un audit séparé et **n'est pas encore livrée**. Voir [audits pédagogie et sauvegarde](https://github.com/ocverclock/harmonie-trainer/pull/7). Recette Safari iPhone et iPad à effectuer sur appareils réels.
