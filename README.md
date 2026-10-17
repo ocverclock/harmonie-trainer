@@ -114,9 +114,9 @@ Sur l'accueil, sélectionner une **difficulté** puis une **famille d'accords** 
 
 - **Découverte** : fondamentales usuelles (Do, Ré, Mi, Fa, Sol, La, Si♭), pas plus de deux touches noires par accord, rappel des degrés de construction et bouton pour écouter la fondamentale.
 - **Entraînement** : le comportement antérieur, sessions mélangées, 10 questions, tonalités variées, corrections après réponse.
-- **Défi** : mêmes familles harmoniques mais sélection renforcée de tonalités moins familières (notamment Ré♭, Mi♭, Sol♭, La♭, Si) et de touches noires, sans indice initial. Le score reste sur 100 et aucune sanction chronométrée n'est introduite.
+- **Défi** : trois **familles musicales nouvelles** : (1) sixte C6/Cm6 à **4 notes**, (2) neuvième C9/Cm9 à **4 notes** (quinte omise), (3) treizième C13 à **5 notes** (quinte et onzième omises). Les tonalités difficiles restent utilisées, sans révélation des notes avant validation.
 
-Les **trois familles existantes** (triades, 7e, avancés) restent séparées de la difficulté : jusqu'à **9 parcours de construction distincts**. Chaque nouveau score contient `difficulty` et `level` ; les sessions anciennes restent consultables comme « ancien » sans leur attribuer rétrospectivement une nouvelle difficulté. L'ancien appel `sessionFor(level)` fonctionne toujours avec `standard` par défaut. Le piano reste inchangé.
+En **Découverte** et **Entraînement**, les familles classiques restent triades, septièmes et accords avancés. En **Défi**, les trois cartes deviennent sixte, neuvième et treizième. Chaque score conserve `difficulty` et `level` : les anciennes sessions restent visibles, sans modification ni suppression.
 
 
 ## Atelier jazz interactif — V0.10 publiée
@@ -131,3 +131,13 @@ La navigation propose **Atelier jazz**, également accessible depuis la page d'a
 **Tests vérifiés :** [CI musicale](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945686), [test Chromium mobile/tablette](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945655), [déploiement Pages](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945488) et [vérification HTTP des modules publiés](https://github.com/ocverclock/harmonie-trainer/actions/runs/39063945670) : tous en succès.
 
 **Reste à valider sur matériel réel :** gestes tactiles et audio Safari iPhone/iPad, import/export depuis l'application Fichiers, rendu VoiceOver. Les voix sont comparées du grave vers l'aigu, ce qui ne simule pas exactement un doigté humain ; les exercices de réharmonisation sont guidés et non une création de mélodie libre.
+
+## Défi réellement avancé V0.11
+
+En mode **Défi**, les trois familles demandent explicitement :
+
+- **Niveau 1 — accords de sixte : 4 notes** : majeur 6 (1–3–5–6) et mineur 6 (1–♭3–5–6).
+- **Niveau 2 — voicings de neuvième : 4 notes** : 9 (1–3–♭7–9), m9 (1–♭3–♭7–9). La quinte est omise dans cette réalisation jazz, même si l’accord 9 théorique peut comporter cinq notes.
+- **Niveau 3 — voicings de treizième : 5 notes** : 13 (1–3–♭7–9–13), quinte et onzième omises. Par exemple **C13 = Do–Mi–Si♭–Ré–La**.
+
+La validation demande exactement 4 ou 5 notes distinctes selon la famille. La correction explique intervalles et omissions. Les modes Découverte et Entraînement restent inchangés, et les résultats antérieurs sont conservés.
