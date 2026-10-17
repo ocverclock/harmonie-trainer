@@ -53,20 +53,25 @@ export function randomizedChordSession(level,bank,qualities,random=Math.random){
  const levels=qualitiesByLevel[level];
  if(!levels)throw new RangeError("Unknown quiz level: "+level);
  const schedule=shuffle(levels,random);
+ // Prevent back-to-back identical chord qualities whenever alternatives exist.
+ for(let i=1;i<schedule.length;i++)if(schedule[i]===schedule[i-1]){
+  const swap=schedule.findIndex((type,j)=>j>i&&type!==schedule[i-1]&&(j===schedule.length-1||schedule[i]!==schedule[j+1]));
+  if(swap>i)[schedule[i],schedule[swap]]=[schedule[swap],schedule[i]];
+ }
  const pool=[...bank,...generated];
  const used=new Set(),chosen=[];
  for(const type of schedule){
-  const eligible=shuffle(pool.filter(e=>e.quality===type&&!used.has(e.symbol)),random);
+  const eligible=shuffle(pool.filter(e=>e.quality===type&&!used.has(type+":"+e.expected[0])),random);
   if(!eligible.length)throw Error("Not enough "+type+" construction exercises");
   const previous=chosen.at(-1);
   // Prefer changing both the tonic and the chord quality between two questions.
-  const alternatives=eligible.filter(e=>!previous||e.root!==previous.root);
+  const alternatives=eligible.filter(e=>!previous||e.expected[0]!==previous.expected[0]);
   const shortlist=alternatives.length?alternatives:eligible;
   const blackKeys=shortlist.filter(e=>e.expected.some(n=>BLACK.has(n)));
   const remaining=10-chosen.length;
   const needBlack=Math.max(0,5-chosen.filter(e=>e.expected.some(n=>BLACK.has(n))).length);
   const choices=needBlack>=remaining&&blackKeys.length?blackKeys:shortlist;
-  const selected=choices[0];used.add(selected.symbol);chosen.push(selected);
+  const selected=choices[0];used.add(type+":"+selected.expected[0]);chosen.push(selected);
  }
  return chosen;
 }
