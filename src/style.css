@@ -68,3 +68,19 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;
 .voicing-check .subtle{font-size:12px}
 .pianoKey.selected .keyText{color:#12458a}
 @media(max-width:650px){.voicing-corrections{grid-template-columns:1fr}.build-header .symbol{font-size:45px}}
+
+
+/* During construction of the next voicing, faint hollow rings show the physical
+   keys the student actually played in the previous chord (never the answer).
+   Rings remain visible on shared notes without replacing the current selection. */
+.pianoKey.previous-voicing::after{
+ content:"";position:absolute;left:50%;bottom:43px;transform:translateX(-50%);
+ width:19px;height:19px;border:2px dashed #7387a2;border-radius:50%;
+ background:transparent;box-shadow:0 0 0 2px #ffffffe0;opacity:.82;
+ pointer-events:none;z-index:2
+}
+.pianoKey.black.previous-voicing::after{bottom:23px;width:17px;height:17px;border-color:#b8cee9;box-shadow:0 0 0 1px #1c2e46}
+.pianoKey.previous-voicing.selected::after{opacity:1;border-color:#436d9e}
+.pianoKey.black.previous-voicing.selected::after{border-color:#fff}
+.previous-voicing-legend{margin:12px 0 8px;font-size:13px;line-height:1.5;color:#4c617c}
+.previous-voicing-symbol{display:inline-block;width:16px;height:16px;border:2px dashed #7387a2;border-radius:50%;vertical-align:-3px;margin-right:5px}
