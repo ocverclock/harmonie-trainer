@@ -5,9 +5,9 @@ import {suggestCorrections} from "../src/voicing.js";
 import {diagram} from "../src/voices.js";
 import {secondary} from "../src/music.js";
 
-test("21 progressive lessons have 52 original playable exercises",()=>{
+test("21 progressive lessons retain original exercises and add tonal variants",()=>{
  assert.equal(lessons.length,21);
- assert.equal(TOTAL_EXERCISES,52);
+ assert.equal(TOTAL_EXERCISES,89);
  const ids=new Set();
  for(const l of lessons){
   assert.ok(!ids.has(l.id));ids.add(l.id);
