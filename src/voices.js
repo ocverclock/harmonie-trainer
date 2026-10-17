@@ -1,42 +1,52 @@
+import {PIANO_WIDTH,PIANO_KEYS,noteX} from "./piano-layout.js";
+
 export const voiceColors=["#3b82f6","#22a06b","#e7a61e","#9654d7"];
+export const ROW_Y=[87,177,267];
+export const DIAGRAM_HEIGHT=318;
+
+// Time runs vertically from top to bottom. Pitch runs horizontally at the exact
+// X coordinate of the piano key. Notes held across chords therefore form a
+// perfectly vertical segment; altered notes move left or right.
+export function diagram(progress,active,solo){
+ const W=PIANO_WIDTH,H=DIAGRAM_HEIGHT;
+ let svg='<div class="viz viz-aligned"><svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trois accords superposés verticalement, chaque point aligné avec une touche du piano : '+progress.title+'">';
+ const centers=PIANO_KEYS.filter(k=>!k.black).map(k=>k.center);
+ for(const x of centers)svg+='<line class="pitchGuide" x1="'+x+'" x2="'+x+'" y1="38" y2="296"/>';
+ progress.frames.forEach(function(f,i){
+  const y=ROW_Y[i],activeRow=i===active;
+  svg+='<rect x="0" y="'+(y-29)+'" width="'+W+'" height="58" rx="13" class="chordRow '+(activeRow?'chordRowActive':'')+'"/>';
+  svg+='<text class="chordRowLabel" x="11" y="'+(y-39)+'">'+(i+1)+'. '+f.symbol+'</text>';
+ });
+ for(let voice=0;voice<4;voice++){
+  if(solo!==-1&&solo!==voice)continue;
+  const color=voiceColors[voice];
+  for(let row=0;row<progress.frames.length-1;row++){
+   const a=progress.frames[row].voices[voice];
+   const b=progress.frames[row+1].voices[voice];
+   const x0=noteX(a.midi),x1=noteX(b.midi),y0=ROW_Y[row],y1=ROW_Y[row+1];
+   const dy=(y1-y0)*0.38;
+   svg+='<path class="path" data-voice="'+voice+'" data-from="'+a.midi+'" data-to="'+b.midi+'" stroke="'+color+'" d="M '+x0+' '+y0+' C '+x0+' '+(y0+dy)+', '+x1+' '+(y1-dy)+', '+x1+' '+y1+'"/>';
+  }
+  progress.frames.forEach(function(f,i){
+   const v=f.voices[voice],x=noteX(v.midi),y=ROW_Y[i];
+   svg+='<circle class="voice" data-voice="'+voice+'" data-midi="'+v.midi+'" cx="'+x+'" cy="'+y+'" r="15" fill="'+color+'"/>';
+   svg+='<text class="voiceIndex" text-anchor="middle" x="'+x+'" y="'+(y+5)+'">'+(voice+1)+'</text>';
+   svg+='<text class="voicePitch" x="'+(x+18)+'" y="'+(y-16)+'">'+v.note+'</text>';
+  });
+ }
+ return svg+'</svg></div>';
+}
+
 export function movementSummary(progress,frame){
- if(frame===0)return "Observe les quatre notes de départ. Avance d’un accord pour voir quelles voix restent immobiles et lesquelles se déplacent.";
+ if(frame===0)return "Observe les quatre voix du premier accord. Les points des trois rangées sont alignés sur les vraies touches du piano juste au-dessous.";
  const a=progress.frames[frame-1],b=progress.frames[frame];
  return a.voices.map(function(v,i){
   const next=b.voices[i],difference=next.midi-v.midi;
   return "Voix "+(i+1)+" : "+v.note+" → "+next.note+" ("+(difference===0?"note commune":difference>0?"+"+difference+" demi-ton"+(difference>1?"s":""):difference+" demi-ton"+(difference < -1?"s":""))+")";
  }).join(" · ");
 }
-export function diagram(progress,active,solo,width){
- const compact=width<600,medium=width<1000;
- let visible;
- if(compact)visible=active<progress.frames.length-1?[active,active+1]:[active-1,active];
- else if(medium)visible=active<progress.frames.length-1?[active,active+1]:[active-1,active];
- else visible=progress.frames.map(function(f,i){return i});
- const W=compact?620:920,H=282;
- const xs=visible.length===2?[W*.25,W*.75]:visible.length===1?[W*.5]:[W*.16,W*.5,W*.84];
- const Y=function(midi){return 252-(midi-48)*8.1};
- let svg='<div class="viz"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Conduite des voix pour '+progress.title+'">';
- for(let midi of [52,55,59,62,65,69,72]) svg+='<path class="guide" d="M 35 '+Y(midi)+' H '+(W-35)+'"/>';
- visible.forEach(function(frameIndex,i){
-  let x=xs[i],frame=progress.frames[frameIndex];
-  svg+='<rect x="'+(x-75)+'" y="43" width="150" height="202" rx="18" fill="'+(frameIndex===active?'#dceafe':'#ffffff88')+'"/>';
-  svg+='<text class="title" x="'+x+'" y="27" text-anchor="middle">'+frame.symbol+'</text>';
- });
- for(let voice=0;voice<4;voice++){
-  if(solo!==-1&&solo!==voice)continue;
-  const col=voiceColors[voice];
-  for(let k=0;k<visible.length-1;k++){
-   if(visible[k+1]!==visible[k]+1)continue;
-   const a=progress.frames[visible[k]].voices[voice],b=progress.frames[visible[k+1]].voices[voice];
-   const x0=xs[k],x1=xs[k+1],y0=Y(a.midi),y1=Y(b.midi),diff=x1-x0;
-   svg+='<path class="path" stroke="'+col+'" d="M '+x0+' '+y0+' C '+(x0+diff*.34)+' '+y0+', '+(x0+diff*.66)+' '+y1+', '+x1+' '+y1+'"/>';
-  }
-  visible.forEach(function(frameIndex,k){
-   const v=progress.frames[frameIndex].voices[voice],x=xs[k],y=Y(v.midi);
-   svg+='<circle class="voice" cx="'+x+'" cy="'+y+'" r="15" fill="'+col+'"/>';
-   svg+='<text class="pitch" x="'+(x+20)+'" y="'+(y+5)+'">'+v.note+'</text>';
-  });
- }
- return svg+'</svg></div>';
+
+export function frameCenter(progress,frame){
+ const notes=progress.frames[frame].voices;
+ return (Math.min(...notes.map(v=>noteX(v.midi)))+Math.max(...notes.map(v=>noteX(v.midi))))/2;
 }
