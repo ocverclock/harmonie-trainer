@@ -1,7 +1,7 @@
-import {randomizedChordSession} from "./practice-random.js";
+import {randomizedChordSession} from "./practice-random.js?v=3";
 export const names = ["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"];
 export const pitch = {C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,F:5,"F#":6,Gb:6,"G#":8,Ab:8,G:7,A:9,"A#":10,Bb:10,B:11};
-export const qualities = {M:[0,4,7],m:[0,3,7],dim:[0,3,6],aug:[0,4,8],maj7:[0,4,7,11],m7:[0,3,7,10],dom7:[0,4,7,10],halfDim:[0,3,6,10]};
+export const qualities = {M:[0,4,7],m:[0,3,7],dim:[0,3,6],aug:[0,4,8],maj7:[0,4,7,11],m7:[0,3,7,10],dom7:[0,4,7,10],halfDim:[0,3,6,10],maj6:[0,4,7,9],min6:[0,3,7,9],dom9:[0,4,10,2],min9:[0,3,10,2],dom13:[0,4,10,2,9]};
 const definition=[
  ["C","M","C E G",1],["F","M","F A C",1],["G","M","G B D",1],["D","M","D F# A",1],["Bb","M","Bb D F",1],
  ["Am","m","A C E",1],["Dm","m","D F A",1],["Em","m","E G B",1],["Gm","m","G Bb D",1],["Cm","m","C Eb G",1],
@@ -15,7 +15,7 @@ export const exercises=definition.map(function(row){
  return {id:row[0],symbol:row[0],root:root,quality:row[1],level:row[3],
   spelling:row[2],expected:row[2].split(" ").map(function(note){return pitch[note]})};
 });
-export const degrees={M:"1 · 3 · 5",m:"1 · ♭3 · 5",dim:"1 · ♭3 · ♭5",aug:"1 · 3 · ♯5",maj7:"1 · 3 · 5 · 7",m7:"1 · ♭3 · 5 · ♭7",dom7:"1 · 3 · 5 · ♭7",halfDim:"1 · ♭3 · ♭5 · ♭7"};
+export const degrees={M:"1 · 3 · 5",m:"1 · ♭3 · 5",dim:"1 · ♭3 · ♭5",aug:"1 · 3 · ♯5",maj7:"1 · 3 · 5 · 7",m7:"1 · ♭3 · 5 · ♭7",dom7:"1 · 3 · 5 · ♭7",halfDim:"1 · ♭3 · ♭5 · ♭7",maj6:"1 · 3 · 5 · 6",min6:"1 · ♭3 · 5 · 6",dom9:"1 · 3 · ♭7 · 9 (sans quinte)",min9:"1 · ♭3 · ♭7 · 9 (sans quinte)",dom13:"1 · 3 · ♭7 · 9 · 13 (sans quinte ni onzième)"};
 export function grade(exercise,selected) {
  const wanted=new Set(exercise.expected), actual=new Set(selected.map(function(n){return (n%12+12)%12}));
  const missing=[...wanted].filter(function(n){return !actual.has(n)});

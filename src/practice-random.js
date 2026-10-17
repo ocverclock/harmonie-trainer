@@ -9,9 +9,9 @@ const roots=[
 ];
 const natural={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
 const letters=["C","D","E","F","G","A","B"];
-const suffix={M:"",m:"m",maj7:"maj7",m7:"m7",dom7:"7",dim:"dim",aug:"aug",halfDim:"m7♭5"};
+const suffix={M:"",m:"m",maj7:"maj7",m7:"m7",dom7:"7",dim:"dim",aug:"aug",halfDim:"m7♭5",maj6:"6",min6:"m6",dom9:"9",min9:"m9",dom13:"13"};
 const degreeStep={M:[0,2,4],m:[0,2,4],dim:[0,2,4],aug:[0,2,4],
- maj7:[0,2,4,6],m7:[0,2,4,6],dom7:[0,2,4,6],halfDim:[0,2,4,6]};
+ maj7:[0,2,4,6],m7:[0,2,4,6],dom7:[0,2,4,6],halfDim:[0,2,4,6],maj6:[0,2,4,5],min6:[0,2,4,5],dom9:[0,2,6,1],min9:[0,2,6,1],dom13:[0,2,6,1,5]};
 const normalized=n=>(n%12+12)%12;
 export function shuffle(items,random=Math.random){
  const array=[...items];
@@ -30,14 +30,18 @@ function spellTone(root,interval,degree){
 }
 export function generatedChordPool(qualities){
  const result=[];
- for(const [quality,level] of [["M",1],["m",1],["maj7",2],["m7",2],["dom7",2],["dim",3],["aug",3],["halfDim",3]]){
+ for(const [quality,level] of [["M",1],["m",1],["maj7",2],["m7",2],["dom7",2],["dim",3],["aug",3],["halfDim",3],["maj6",1],["min6",1],["dom9",2],["min9",2],["dom13",3]]){
   for(const root of roots){
    const intervals=qualities[quality];
    const spelled=intervals.map((n,i)=>spellTone(root,n,degreeStep[quality][i]));
    if(spelled.some(s=>!s))continue;
    const symbol=root.name+suffix[quality];
    result.push({id:"random-"+quality+"-"+root.pc,symbol,root:root.name,
-    quality,level,spelling:spelled.join(" "),expected:intervals.map(n=>normalized(root.pc+n))});
+    quality,level,spelling:spelled.join(" "),expected:intervals.map(n=>normalized(root.pc+n)),
+    voicingExplanation:quality==="dom9"||quality==="min9"
+      ?"Voicing jazz de neuvième en 4 sons : quinte volontairement omise."
+      :quality==="dom13"?"Voicing jazz de treizième en 5 sons : quinte et onzième volontairement omises."
+      :quality==="maj6"||quality==="min6"?"Accord de sixte complet en 4 sons.":null});
   }
  }
  return result;
@@ -48,7 +52,7 @@ const CHALLENGE_ROOTS=new Set([1,3,6,8,11]);
 export const constructionDifficulties={
  guided:{label:"Découverte",description:"Tonalités familières, repères des degrés et possibilité d’écouter la fondamentale."},
  standard:{label:"Entraînement",description:"Toutes les tonalités, avec davantage de touches noires et sans aide préalable."},
- challenge:{label:"Défi",description:"Tonalités moins familières, beaucoup de touches noires et aucune aide avant la correction."}
+ challenge:{label:"Défi",description:"Vraies extensions jazz : accords 6 à 4 notes, 9 à 4 notes, 13 à 5 notes, sans indices."}
 };
 export function difficultyOf(mode){
  if(!Object.prototype.hasOwnProperty.call(constructionDifficulties,mode))throw new RangeError("Difficulté inconnue : "+mode);
@@ -68,7 +72,12 @@ export function randomizedChordSession(level,bank,qualities,random=Math.random,d
   2:["maj7","m7","dom7","maj7","m7","dom7","maj7","m7","dom7","maj7"],
   3:["dim","aug","halfDim","dim","aug","halfDim","M","m7","dom7","maj7"]
  };
- const levels=qualitiesByLevel[level];
+ const challengeByLevel={
+  1:["maj6","min6","maj6","min6","maj6","min6","maj6","min6","maj6","min6"],
+  2:["dom9","min9","dom9","min9","dom9","min9","dom9","min9","dom9","min9"],
+  3:Array(10).fill("dom13")
+ };
+ const levels=(difficulty==="challenge"?challengeByLevel:qualitiesByLevel)[level];
  if(!levels)throw new RangeError("Unknown quiz level: "+level);
  const schedule=shuffle(levels,random);
  // Prevent back-to-back identical chord qualities whenever alternatives exist.

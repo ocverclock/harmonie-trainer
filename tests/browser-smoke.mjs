@@ -54,6 +54,17 @@ try{
   assert.equal(archive.schemaVersion,2);
   assert.ok(archive.events.some(x=>x.exerciseId.startsWith("jazzlab:")));
   assert.equal(await page.locator("#currJazzLab").count(),1);
+  await page.getByRole("button",{name:"Accueil",exact:true}).click();
+  await page.locator('[data-difficulty="challenge"]').click();
+  assert.match(await page.locator('[data-level="1"]').innerText(),/sixte/i);
+  assert.match(await page.locator('[data-level="2"]').innerText(),/neuvième/i);
+  assert.match(await page.locator('[data-level="3"]').innerText(),/treizième/i);
+  for(const [level,noteCount] of [[1,4],[2,4],[3,5]]){
+   await page.locator('[data-level="'+level+'"]').click();
+   assert.equal(await page.locator("#validate").innerText(),"Valider ("+noteCount+" notes)");
+   assert.equal(await page.locator("#validate").isDisabled(),true);
+   await page.locator("#backToLevels").click();
+  }
   assert.deepEqual(errors,[],"No browser JS exceptions: "+errors.join("; "));
   console.log("Browser smoke passed at "+viewport.width+"x"+viewport.height+
    " (jazz voice movement, ear, melody, export, nav)");
