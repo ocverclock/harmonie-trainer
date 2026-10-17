@@ -43,7 +43,25 @@ export function generatedChordPool(qualities){
  return result;
 }
 const BLACK=new Set([1,3,6,8,10]);
-export function randomizedChordSession(level,bank,qualities,random=Math.random){
+const GUIDED_ROOTS=new Set([0,2,4,5,7,9,10]);
+const CHALLENGE_ROOTS=new Set([1,3,6,8,11]);
+export const constructionDifficulties={
+ guided:{label:"Découverte",description:"Tonalités familières, repères des degrés et possibilité d’écouter la fondamentale."},
+ standard:{label:"Entraînement",description:"Toutes les tonalités, avec davantage de touches noires et sans aide préalable."},
+ challenge:{label:"Défi",description:"Tonalités moins familières, beaucoup de touches noires et aucune aide avant la correction."}
+};
+export function difficultyOf(mode){
+ if(!Object.prototype.hasOwnProperty.call(constructionDifficulties,mode))throw new RangeError("Difficulté inconnue : "+mode);
+ return constructionDifficulties[mode];
+}
+export function challengeStats(session){
+ return {
+  withBlack:session.filter(e=>e.expected.some(n=>BLACK.has(n))).length,
+  rareRoots:session.filter(e=>CHALLENGE_ROOTS.has(e.expected[0])).length
+ };
+}
+export function randomizedChordSession(level,bank,qualities,random=Math.random,difficulty="standard"){
+ difficultyOf(difficulty);
  const generated=generatedChordPool(qualities);
  const qualitiesByLevel={
   1:["M","m","M","m","M","m","M","m","M","m"],
@@ -61,16 +79,34 @@ export function randomizedChordSession(level,bank,qualities,random=Math.random){
  const pool=[...bank,...generated];
  const used=new Set(),chosen=[];
  for(const type of schedule){
-  const eligible=shuffle(pool.filter(e=>e.quality===type&&!used.has(type+":"+e.expected[0])),random);
+  let eligible=shuffle(pool.filter(e=>e.quality===type&&!used.has(type+":"+e.expected[0])),random);
+  if(difficulty==="guided"){
+   const familiar=eligible.filter(e=>GUIDED_ROOTS.has(e.expected[0])&&
+    e.expected.filter(n=>BLACK.has(n)).length<=2);
+   if(familiar.length)eligible=familiar;
+  }
   if(!eligible.length)throw Error("Not enough "+type+" construction exercises");
   const previous=chosen.at(-1);
   // Prefer changing both the tonic and the chord quality between two questions.
   const alternatives=eligible.filter(e=>!previous||e.expected[0]!==previous.expected[0]);
   const shortlist=alternatives.length?alternatives:eligible;
-  const blackKeys=shortlist.filter(e=>e.expected.some(n=>BLACK.has(n)));
   const remaining=10-chosen.length;
-  const needBlack=Math.max(0,5-chosen.filter(e=>e.expected.some(n=>BLACK.has(n))).length);
-  const choices=needBlack>=remaining&&blackKeys.length?blackKeys:shortlist;
+  const blackTarget=difficulty==="challenge"?8:difficulty==="standard"?5:0;
+  const rareTarget=difficulty==="challenge"?5:0;
+  const blackSoFar=chosen.filter(e=>e.expected.some(n=>BLACK.has(n))).length;
+  const rareSoFar=chosen.filter(e=>CHALLENGE_ROOTS.has(e.expected[0])).length;
+  const requireBlack=blackTarget-blackSoFar>=remaining;
+  const requireRare=rareTarget-rareSoFar>=remaining;
+  const matching=(predicate,list)=>{const found=list.filter(predicate);return found.length?found:list};
+  let choices=shortlist;
+  if(requireRare)choices=matching(e=>CHALLENGE_ROOTS.has(e.expected[0]),choices);
+  if(requireBlack)choices=matching(e=>e.expected.some(n=>BLACK.has(n)),choices);
+  // For the harder modes, increase unfamiliar roots early even before a quota
+  // is mathematically urgent. The shuffle still decides which actual chord.
+  if(difficulty==="challenge"&&!requireRare&&chosen.length%2===0)
+   choices=matching(e=>CHALLENGE_ROOTS.has(e.expected[0]),choices);
+  if(difficulty==="challenge"&&!requireBlack&&chosen.length%3===0)
+   choices=matching(e=>e.expected.some(n=>BLACK.has(n)),choices);
   const selected=choices[0];used.add(type+":"+selected.expected[0]);chosen.push(selected);
  }
  return chosen;
