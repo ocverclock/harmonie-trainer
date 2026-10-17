@@ -26,8 +26,8 @@ jobs:
           ok=0
           for attempt in $(seq 1 24); do
             if curl -fsSL --connect-timeout 10 --max-time 20 -H "Cache-Control: no-cache" "$root/?commit=$GITHUB_SHA&attempt=$attempt" -o "$html"; then
-              if grep -Fq './src/app.js?v=10' "$html" && grep -Fq './src/style.css?v=6' "$html"; then
-                echo "GitHub Pages serves the expected v0.9 HTML (attempt $attempt)"
+              if grep -Fq './src/app.js?v=11' "$html" && grep -Fq './src/style.css?v=6' "$html"; then
+                echo "GitHub Pages serves the expected v0.10 HTML (attempt $attempt)"
                 ok=1
                 break
               fi
@@ -36,14 +36,17 @@ jobs:
             sleep 10
           done
           if [[ "$ok" != 1 ]]; then
-            echo "::error::Pages is not yet serving the new 0.9 entry point"
+            echo "::error::Pages is not yet serving the new 0.10 entry point"
             exit 1
           fi
           for asset in \
-            'src/app.js?v=10' \
-            'src/curriculum-ui.js?v=4' \
+            'src/app.js?v=11' \
+            'src/curriculum-ui.js?v=5' \
             'src/voicing-ui.js?v=3' \
             'src/practice-random.js' \
+            'src/jazz-lab.js' \
+            'src/jazz-lab-ui.js?v=1' \
+            'src/jazz-lab.css?v=1' \
             'src/curriculum.js' \
             'src/course-notes.js' \
             'src/tonality-variants.js' \
@@ -56,4 +59,4 @@ jobs:
             echo "Loaded $asset ($(wc -c <"$tmp") bytes)"
             rm -f "$tmp"
           done
-          echo "Public Pages loads the randomized exercises, memory-aided voicings, progress store and piano assets."
+          echo "Public Pages loads the modern jazz ear, voice-leading and reharmonization labs."
