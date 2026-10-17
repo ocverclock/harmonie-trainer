@@ -1,0 +1,28 @@
+/* Cursus : les touches du piano préexistant ne sont pas redessinées. */
+.course-count{font-size:16px;color:#263c59;margin:12px 0 18px}
+.course-count strong{font-size:23px;color:#205cc5}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px}
+.course-lesson{display:flex;flex-direction:column;gap:8px;min-height:135px;padding:17px;border:1px solid #d3deed;border-radius:13px;background:#f9fbff;text-align:left;line-height:1.4;color:#20334c}
+.course-lesson:hover,.course-lesson:focus-visible{border-color:#5283e1;background:#edf4ff}
+.course-lesson small{font-size:12px;color:#3065b5;font-weight:700}
+.course-lesson strong{font-size:16px}
+.course-lesson span{font-size:13px;color:#657b91}
+.course-steps{display:flex;gap:8px;margin:17px 0;flex-wrap:wrap}
+.course-steps .btn.active{background:#ddebff;border-color:#4180ec;font-weight:850}
+.course-navline{margin:17px 0}
+.course-symbol{font-size:clamp(25px,5vw,44px);overflow-wrap:anywhere}
+.lesson-piano{position:relative}
+.lesson-piano.show-correction .pianoKey.correction-expected::before{
+ content:"";position:absolute;width:29px;height:29px;left:50%;bottom:55px;transform:translateX(-50%);
+ border:4px solid #df242d;border-radius:50%;background:#ffffffb5;box-shadow:0 0 0 2px #fff;z-index:6;pointer-events:none
+}
+.lesson-piano.show-correction .pianoKey.black.correction-expected::before{bottom:43px;width:27px;height:27px}
+.lesson-piano.show-correction .pianoKey.correction-extra::before{
+ content:"×";position:absolute;width:26px;height:26px;left:50%;bottom:54px;transform:translateX(-50%);
+ border:3px solid #d7262c;border-radius:50%;background:#fff;color:#b91c1c;font-size:23px;
+ font-weight:900;line-height:19px;z-index:6;pointer-events:none
+}
+.lesson-piano.show-correction .pianoKey.black.correction-extra::before{bottom:42px}
+.lesson-piano .pianoKey:focus-visible{outline:3px solid #e88b10;outline-offset:-3px;z-index:7}
+@media(max-width:650px){.course-grid{grid-template-columns:1fr}.course-navline .btn{flex:1}.course-lesson{min-height:105px}
+ .course-steps .btn{min-width:48px}}
