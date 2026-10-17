@@ -1,6 +1,6 @@
-import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js";
+import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=3";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
-import {constructionDifficulties,difficultyOf} from "./practice-random.js";
+import {constructionDifficulties,difficultyOf} from "./practice-random.js?v=3";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
@@ -62,18 +62,21 @@ async function play(midis){
 function noteLabel(n){return names[n%12]}
 function home(){
  let a=readScores();
+ const chordFamilies=constructionDifficulty==="challenge"?
+  [["Accords de sixte","4 notes · 6 et m6"],["Voicings de neuvième","4 notes · 9 et m9, quinte omise"],
+   ["Voicings de treizième","5 notes · 13, quinte et onzième omises"]]:
+  [["Triades","Majeures et mineures"],["Accords de septième","maj7, m7 et dominantes"],
+   ["Accords avancés","Diminués et demi-diminués"]];
  shell('<section class="card"><div class="eyebrow">Harmonie en pratique</div><h1>Comprendre les accords.<br>Voir comment les voix bougent.</h1><p class="muted">Réponds d’abord à une question pour trouver le II–V–I secondaire. Ensuite, découvre la solution en couleurs, avec les traits de déplacement au-dessus du clavier.</p>'+
  '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Atelier jazz : voix, oreille, harmonisation","openJazzLab","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
- '<section class="card"><h2>Choisir la difficulté</h2><p class="muted">Sélectionne le degré d’aide. Il s’applique aux triades, aux septièmes et aux accords avancés.</p>'+
+ '<section class="card"><h2>Choisir la difficulté</h2><p class="muted">Choisis Découverte ou Entraînement pour les familles classiques, ou Défi pour construire réellement des accords de 6, 9 et 13.</p>'+
  '<div class="difficulty-grid" role="group" aria-label="Difficulté des constructions">'+Object.entries(constructionDifficulties).map(function(item){
    const key=item[0],mode=item[1],active=constructionDifficulty===key;
    return '<button type="button" data-difficulty="'+key+'" class="difficulty-choice '+(active?'active':'')+
     '" aria-pressed="'+active+'"><strong>'+escapeText(mode.label)+'</strong><span>'+escapeText(mode.description)+'</span></button>';
- }).join("")+'</div><h2 style="margin-top:24px">Choisir une famille d’accords</h2><div class="grid">'+[
-  ["Triades","Majeures et mineures"],["Accords de septième","maj7, m7 et dominantes"],["Accords avancés","Diminués et demi-diminués"]
- ].map(function(x,i){return '<button class="btn level" data-level="'+(i+1)+'"><strong>Niveau '+(i+1)+' — '+x[0]+'</strong><small>'+x[1]+'</small></button>'}).join("")+'</div><p class="subtle">'+a.length+' session(s) enregistrée(s) sur cet appareil.</p></section>');
+ }).join("")+'</div><h2 style="margin-top:24px">Choisir une famille d’accords</h2><div class="grid">'+chordFamilies.map(function(x,i){return '<button class="btn level" data-level="'+(i+1)+'"><strong>Niveau '+(i+1)+' — '+x[0]+'</strong><small>'+x[1]+'</small></button>'}).join("")+'</div><p class="subtle">'+a.length+' session(s) enregistrée(s) sur cet appareil.</p></section>');
  document.getElementById("openCourse").onclick=function(){beginCourse()};
  document.getElementById("openSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()};
  document.getElementById("openChords").onclick=function(){start(level)};
@@ -116,16 +119,18 @@ function quiz(){
  const ex=session[questionIndex];
  let body='<section class="card"><div class="row between"><span class="badge">Accords · Niveau '+level+' · '+escapeText(difficultyOf(constructionDifficulty).label)+'</span><span class="muted">Question '+(questionIndex+1)+'/10</span></div>'+
  '<p class="eyebrow" style="margin-top:20px">Construis l’accord</p><div class="symbol">'+escapeText(ex.symbol)+'</div>'+
- '<p class="muted">Appuie sur toutes ses notes. L’octave et l’ordre n’influencent pas la réponse.</p>'+
+ '<p class="muted">Appuie sur '+ex.expected.length+' notes distinctes. L’octave et l’ordre n’influencent pas la réponse.'+
+ (ex.voicingExplanation?' Construis le voicing demandé sans ajouter les degrés omis.':'')+'</p>'+
  (constructionDifficulty==="guided"?'<div class="explain" role="note"><strong>Repère pour construire :</strong> degrés '+escapeText(degrees[ex.quality])+
    '. Commence par la fondamentale '+escapeText(ex.root.replaceAll("b","♭").replaceAll("#","♯"))+
    ', puis trouve les autres degrés.<div class="row" style="margin-top:10px">'+button("Écouter la fondamentale","hearRoot","quiet")+'</div></div>':'')+
  (constructionDifficulty==="challenge"?'<p class="subtle">Défi : tonalités moins familières et davantage de touches noires. Les intervalles apparaîtront après validation.</p>':'')+
- piano(selected,[],true)+'<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider","validate","primary",!!checked||!selected.size)+button("Changer de niveau","backToLevels","quiet")+'</div>';
+ piano(selected,[],true)+'<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider ("+ex.expected.length+" notes)","validate","primary",!!checked||(constructionDifficulty==="challenge"?selected.size!==ex.expected.length:!selected.size))+button("Changer de niveau","backToLevels","quiet")+'</div>';
  if(checked){
   let missing=checked.missing.map(noteLabel).join(", "),extra=checked.extra.map(noteLabel).join(", ");
   body+='<div class="feedback '+(checked.correct?'correct':'')+'" role="status"><strong>'+(checked.correct?'Exact !':'Pas encore.')+'</strong>'+
   '<p>Notes de '+escapeText(ex.symbol)+' : <b>'+escapeText(ex.spelling)+'</b></p><p>Intervalles : '+degrees[ex.quality]+'</p>'+
+  (ex.voicingExplanation?'<p>'+escapeText(ex.voicingExplanation)+'</p>':'')+
   (!checked.correct?'<p>'+(missing?'Manquantes : '+missing+'. ':'')+(extra?'En trop : '+extra+'.':'')+'</p>':'')+
   button("Écouter l’accord juste","correctSound","quiet")+button(questionIndex===9?"Voir mon bilan":"Question suivante","next","primary")+'</div>';
  }
@@ -139,7 +144,8 @@ function quiz(){
  document.getElementById("hearRoot")?.addEventListener("click",function(){play([60+ex.expected[0]])});
  document.getElementById("clear").onclick=function(){selected.clear();quiz()};
  document.getElementById("hear").onclick=function(){play([...selected].map(function(x){return x+60}))};
- document.getElementById("validate").onclick=function(){if(!selected.size||checked)return;checked=grade(ex,[...selected]);if(checked.correct)score+=10;quiz()};
+ document.getElementById("validate").onclick=function(){if(!selected.size||checked||
+  (constructionDifficulty==="challenge"&&selected.size!==ex.expected.length))return;checked=grade(ex,[...selected]);if(checked.correct)score+=10;quiz()};
  if(checked){
   document.getElementById("correctSound").onclick=function(){play(ex.expected.map(function(n){return n+60}))};
   document.getElementById("next").onclick=function(){
