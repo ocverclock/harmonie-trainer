@@ -67,6 +67,16 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — Défi 6/9 à quatre sons, 13 à cinq sons — PUBLIÉ
+- **Correction demandée** : le niveau « Défi » ne devait pas seulement retirer les indices et choisir plus de touches noires ; l'utilisateur voulait **4 notes pour les accords 6 et 9 et 5 notes pour les accords 13**.
+- **PR [#15](https://github.com/ocverclock/harmonie-trainer/pull/15)** fusionnée dans `main` via commit `f6da839ac6678ac95e5a3bbec4945e4e9cd6c264` ; l'ancienne PR #14 avec conflit a été fermée au profit de la version portée sur le main récent.
+- **Défi niveau 1 :** C6/Cm6 et autres tonalités, 4 notes (1–3–5–6 ou 1–♭3–5–6).
+- **Défi niveau 2 :** C9/Cm9 et autres tonalités, voicing **4 notes** (1–3/♭3–♭7–9), quinte omise explicitement.
+- **Défi niveau 3 :** C13 et autres tonalités, voicing **5 notes** (1–3–♭7–9–13), quinte et onzième omises.
+- **Ergonomie :** cartes de familles spécifiques en Défi, nombre de notes affiché, validation bloquée jusqu'à 4 ou 5 touches distinctes, correction expliquant les intervalles et omissions. Découverte, Entraînement, clavier, historique et ateliers jazz inchangés.
+- **Vérifications :** CI musicale et tests d'interface Chromium téléphone/tablette verts sur PR #15 ; mêmes tests verts après fusion (runs `39064655311` et `39064655221`). GitHub Pages déployé (`39064655043`), [smoke Pages v0.11](https://github.com/ocverclock/harmonie-trainer/actions/runs/39064655227) **success**. Test physique Safari iPhone/iPad toujours à faire.
+
+
 ### 2026-10-17 — Ateliers jazz pédagogiques V0.10 — ÉTAT : publiés, tests automatisés verts
 - L'utilisateur a demandé de poursuivre le programme pédagogique jusqu'à une version testable/publiée.
 - **PR d'origine #11** : code terminé et tests Node / Chromium réussis mais GitHub l'a déclarée en conflit après une évolution simultanée de `main` (nouvelles difficultés de constructions). Elle a été **fermée sans fusion** pour éviter d'effacer du travail récent.
