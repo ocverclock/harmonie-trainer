@@ -141,3 +141,26 @@ En mode **Défi**, les trois familles demandent explicitement :
 - **Niveau 3 — voicings de treizième : 5 notes** : 13 (1–3–♭7–9–13), quinte et onzième omises. Par exemple **C13 = Do–Mi–Si♭–Ré–La**.
 
 La validation demande exactement 4 ou 5 notes distinctes selon la famille. La correction explique intervalles et omissions. Les modes Découverte et Entraînement restent inchangés, et les résultats antérieurs sont conservés.
+
+## Formation des accords V0.12 — 8 niveaux indépendants des tonalités
+
+**Nouveau fonctionnement :** choisir un **niveau de construction** puis une **difficulté de tonalités**, enfin appuyer sur « Commencer les 10 exercices ». Le niveau sélectionné ne change plus quand la difficulté change. La sélection initiale est **Niveau 6 : accords de neuvième, Intermédiaire**, telle que demandée.
+
+| Niveau | Structure (indépendante de la difficulté) | Notes |
+| --- | --- | --- |
+| 1 | Triades majeures / mineures | 3 |
+| 2 | Diminués / augmentés / sus4 | 3 |
+| 3 | maj7 / m7 | 4 |
+| 4 | 7 / m7♭5 / dim7 | 4 |
+| 5 | 6 / m6 | 4 |
+| 6 | 9 / m9 (quinte omise dans le voicing jazz) | 4 |
+| 7 | 13 / maj13 / m13 (quinte et onzième omises) | 5 |
+| 8 | 7♭9 / 7♯9 / 7♭13 (extensions altérées) | 4 à 5 |
+
+- **Facile** : choix parmi six fondamentales usuelles (Do, Ré, Fa, Sol, La, Si♭) ; degrés affichés et fondamentale audible.
+- **Intermédiaire** : fondamentales Ré, Mi♭, Mi, La♭, La, Si♭ sans indices.
+- **Difficile** : toutes les douze fondamentales, y compris Ré♭, Sol♭ et Si ; sans indices.
+- La correction évalue les **classes de notes**, pas un renversement imposé : octave et ordre sont libres. Pour les exercices sur des dispositions pianistiques réelles, utiliser « Mes voicings » ou « Atelier jazz ».
+- Les anciennes questions et leurs scores sont conservés dans `harmonie-sessions-v2`. Les nouvelles sessions enregistrent `schemaVersion:3`, `familyId`, `realizationId`, `difficulty` et `level` ; les anciennes restent étiquetées « famille non enregistrée » sans leur attribuer rétroactivement une nouvelle signification.
+- Les démonstrations des nouvelles extensions sont jouées dans un registre musical réparti sur les octaves, et non empilées dans la même octave.
+- Tests unitaires : toutes les 8 familles et 3 difficultés, théorie des notes et progression des tonalités ; tests Chromium mobile/tablette des choix indépendants et des 10 exercices jusqu'à l'enregistrement du résultat.
