@@ -67,6 +67,17 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — Publication autorisée et fusion GitHub — ÉTAT : fusionné sur main ; Pages à constater
+- **Accord utilisateur** : publication intégrale autorisée explicitement pendant la conversation du 17/10/2026.
+- **PR de livraison** : [#4](https://github.com/ocverclock/harmonie-trainer/pull/4), fusionnée par squash sur `main` ; commit de fusion **`f493958c42e886210b2f944e48a8f7dadfbb8049`**.
+- **CI vérifiée** : [run #39034617931](https://github.com/ocverclock/harmonie-trainer/actions/runs/39034617931), workflow « Check Harmonie Trainer », job `music-tests` **success**, étape `Verify musical theory and progressions` **success** (`npm test`).
+- **Contenu effectivement présent sur main après fusion** : `src/curriculum.js` (21 leçons, 52 exercices), `src/curriculum-ui.js`, correction visuelle `src/voicing-ui.js`, `src/voices.js`, styles responsive et tests.
+- **Ajustement post-fusion** : paramètres de cache des imports graphiques et du script d'entrée mis à jour, afin de charger les nouveaux cercles rouges au lieu d'anciens modules du navigateur.
+- **Issues de suivi** : #1 (correction visuelle) et #2 (cursus) fermées après fusion ; #3 (recette mobile) reste ouverte pour tests en conditions réelles.
+- **Automatisation** : tâche horaire « Harmonie — correction visuelle » désactivée après sa réalisation pour éviter une PR redondante. Aucun autre agent du projet n'a été déclaré actif.
+- **Vérification restant à effectuer** : GitHub Pages n'a pas pu être lu par l'outil Web (accès technique bloqué), donc ne pas prétendre qu'un chargement client en production a été constaté. Les tests Safari iPhone/iPad, audio, accessibilité et interactions restent à faire sur appareil.
+
+
 ### 2026-10-17 — Intégration du parcours complet — ÉTAT : développement terminé, PR/CI à vérifier
 - **Validation explicite de l'utilisateur** : « Va jusqu'à publier, tout est bon là. Je valide l'ensemble avec le programme d'Étienne ». Cette autorisation couvre l'intégration, la fusion et la publication du parcours pédagogique ainsi que les corrections visuelles et ajustements mobiles liés au périmètre discuté ; elle remplace l'attente de validation initialement prévue pour ce chantier précis, sans autoriser les modifications futures sans rapport.
 - **Branche** : `feature/parcours-harmonisation-complet`. PR à renseigner une fois créée ; fusion et GitHub Pages à confirmer par constat.
