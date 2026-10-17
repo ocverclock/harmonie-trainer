@@ -1,0 +1,35 @@
+name: Test jazz pedagogy in a real browser
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/browser-smoke.mjs'
+      - '.github/workflows/jazz-ui-smoke.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'src/**'
+      - 'tests/browser-smoke.mjs'
+      - '.github/workflows/jazz-ui-smoke.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run offline local web server and browser smoke tests
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/harmonie-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
+          node tests/browser-smoke.mjs
