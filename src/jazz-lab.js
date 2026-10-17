@@ -68,28 +68,28 @@ export function earQuestion(index){
 }
 export const earQualities=earTypes;
 export const studioStudies=[
- {id:"dominante-secondaire",title:"La dominante secondaire vers La mineur",tonality:"La mineur",
+ {id:"dominante-secondaire",melody:[64,62,60],title:"La dominante secondaire vers La mineur",tonality:"La mineur",
   before:{symbol:"Cmaj7",midis:[48,52,55,59]},target:{symbol:"Am7",midis:[57,60,64,67]},
   options:[
    {symbol:"E7",midis:[52,56,59,62],valid:true,why:"E7 est V de Am : Sol♯ est la sensible qui monte à La."},
    {symbol:"B♭7",midis:[58,62,65,68],valid:true,why:"B♭7 peut remplacer E7 par substitution tritonique ; la basse Si♭ approche La chromatiquement."},
    {symbol:"A7",midis:[57,61,64,67],valid:false,why:"A7 est surtout V de Ré ; il ne tonicise pas directement La mineur."}
   ]},
- {id:"backdoor",title:"La résolution backdoor en Do",tonality:"Do majeur",
+ {id:"backdoor",melody:[68,65,64],title:"La résolution backdoor en Do",tonality:"Do majeur",
   before:{symbol:"Fm7",midis:[53,56,60,63]},target:{symbol:"Cmaj7",midis:[48,52,55,59]},
   options:[
    {symbol:"B♭7",midis:[58,62,65,68],valid:true,why:"Fm7 → B♭7 → Cmaj7 est une arrivée backdoor ; La♭ de B♭7 peut descendre vers Sol."},
    {symbol:"G7",midis:[55,59,62,65],valid:true,why:"G7 reste la dominante directe de C ; il remplace la couleur backdoor par une cadence authentique."},
    {symbol:"E7",midis:[52,56,59,62],valid:false,why:"E7 tonicise surtout Am ; il n'est pas la résolution directe demandée vers C."}
   ]},
- {id:"triton",title:"Remplacer la dominante par son triton",tonality:"Do majeur",
+ {id:"triton",melody:[65,65,64],title:"Remplacer la dominante par son triton",tonality:"Do majeur",
   before:{symbol:"Dm7",midis:[50,53,57,60]},target:{symbol:"Cmaj7",midis:[48,52,55,59]},
   options:[
    {symbol:"D♭7",midis:[49,53,56,59],valid:true,why:"D♭7 partage le triton Fa–Do♭ (Si) de G7 et descend par demi-ton vers C."},
    {symbol:"G7",midis:[55,59,62,65],valid:true,why:"G7 est la dominante classique ; comparer son mouvement à celui de D♭7."},
    {symbol:"D7",midis:[50,54,57,60],valid:false,why:"D7 tonicise plutôt Sol, pas directement Do dans ce contexte."}
   ]},
- {id:"mineur",title:"Préparer une tonique mineure",tonality:"Ré mineur",
+ {id:"mineur",melody:[67,67,65],title:"Préparer une tonique mineure",tonality:"Ré mineur",
   before:{symbol:"Em7♭5",midis:[52,55,58,62]},target:{symbol:"Dm7",midis:[50,53,57,60]},
   options:[
    {symbol:"A7",midis:[57,61,64,67],valid:true,why:"A7 prépare Dm : Do♯, tierce de la dominante, monte à Ré."},
@@ -100,7 +100,8 @@ export const studioStudies=[
 export function checkStudioChoice(study,optionIndex){
  const opt=study?.options?.[optionIndex];
  if(!opt)throw Error("Unknown reharmonization choice");
- return {correct:opt.valid,why:opt.why,option:opt};
+ const melodyFits=opt.midis.some(n=>n%12===study.melody[1]%12);
+ return {correct:opt.valid&&melodyFits,why:opt.why,option:opt,melodyFits};
 }
 export function skillRecommendations(archive,limit=5){
  if(!archive||!Array.isArray(archive.events))return [];
