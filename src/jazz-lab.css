@@ -1,0 +1,27 @@
+/* New workbench inherits the existing piano geometry and touch behavior. */
+.lab-panel h1{font-size:clamp(23px,4vw,32px);margin:16px 0 10px}
+.lab-panel .lab-symbol{font-size:clamp(28px,6vw,46px)}
+.lab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 4px}
+.lab-tile{border:1px solid #cbdced;background:#f7faff;border-radius:15px;padding:18px;text-align:left;min-height:145px;display:flex;flex-direction:column;gap:10px;line-height:1.45;color:#243d5b}
+.lab-tile strong{font-size:18px;color:#194981}
+.lab-tile span{font-size:14px}
+.lab-tile:hover,.lab-tile:focus-visible{border-color:#527dc1;background:#eef5ff;outline-offset:2px}
+.lab-stat{font-size:15px;margin:14px 0;color:#416085}
+.lab-stat strong{font-size:22px;color:#19579f}
+.lab-steps{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}
+.lab-steps .btn.active{background:#d8e9ff;border:2px solid #4179c0;font-weight:750}
+.lab-options{border:none;margin:22px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.lab-options legend{grid-column:1/-1;font-size:16px;font-weight:750;margin-bottom:12px}
+.lab-option{padding:13px 16px;min-height:48px;border-radius:12px;border:1px solid #baccdf;background:#fff;color:#1b3b59;line-height:1.35}
+.lab-option:not([disabled]):hover,.lab-option:not([disabled]):focus-visible{border-color:#2b65ae;background:#eaf3ff}
+.lab-option.picked{border:2px solid #2c66ac;background:#eaf3ff;font-weight:700}
+.lab-option[disabled]:not(.picked){opacity:.6}
+.lab-studio-line{display:flex;align-items:stretch;justify-content:space-between;gap:8px;margin:23px 0}
+.lab-studio-line>div{display:flex;flex:1;flex-direction:column;justify-content:center;gap:9px;background:#f0f6ff;padding:15px 10px;text-align:center;border-radius:13px;min-width:0}
+.lab-studio-line strong{font-size:clamp(15px,4vw,23px);color:#134774}
+.lab-studio-line small{font-size:12px;color:#546d89}
+.lab-studio-line>span{align-self:center;font-size:23px;color:#6791be}
+.lab-panel .feedback{margin-top:20px}
+.lab-panel .feedback p{line-height:1.6}
+@media(max-width:780px){.lab-grid{grid-template-columns:1fr}.lab-tile{min-height:94px}.lab-steps .btn{flex:1}.lab-panel .row .btn{min-height:44px}}
+@media(max-width:440px){.lab-options{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-studio-line>div{padding:11px 4px}.lab-studio-line>span{font-size:18px}}
