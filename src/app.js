@@ -6,6 +6,7 @@ if(!validateBank())throw new Error("Corpus musical invalide");
 let screen="home",level=1,session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
 let secondaryIndex=0,choice=-1,revealed=false,activeFrame=0,isolated=-1,voiceModule=null,voiceError=false;
 let audioCtx=null,resizeHandle=0,lessonScrollPos=null;
+let voicingUI=null;
 const storage="harmonie-sessions-v2";
 function escapeText(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function readScores(){try{let a=JSON.parse(localStorage.getItem(storage)||"[]");return Array.isArray(a)?a:[]}catch(e){return []}}
@@ -13,25 +14,25 @@ function storeScores(a){try{localStorage.setItem(storage,JSON.stringify(a.slice(
 function button(label,id,kind,disabled){return '<button id="'+id+'" class="btn '+(kind||'quiet')+'"'+(disabled?' disabled':'')+'>'+label+'</button>'}
 function shell(body){
  app.innerHTML='<div class="wrap"><header class="top"><div class="brand"><span>♫</span> Harmonie Trainer</div><nav class="nav" aria-label="Navigation">'+
- ['home:Accueil','secondary:II–V–I secondaires','quiz:Accords','stats:Progression'].map(function(item){
+ ['home:Accueil','secondary:II–V–I secondaires','voicings:Mes voicings','quiz:Accords','stats:Progression'].map(function(item){
   let parts=item.split(":");return '<button data-nav="'+parts[0]+'" class="'+(screen===parts[0]?'active':'')+'">'+parts[1]+'</button>';
  }).join("")+'</nav></header><main>'+body+'</main><footer class="footer">Prototype pédagogique — aucune donnée transmise. Les scores sont stockés sur cet appareil.</footer></div>';
  app.querySelectorAll("[data-nav]").forEach(function(b){b.onclick=function(){
   let n=b.dataset.nav;
-  if(n==="quiz"){screen="home";render()}else{screen=n;render()}
+  if(n==="quiz"){screen="home";render()}else if(n==="voicings"){beginVoicing()}else{screen=n;render()}
  }});
 }
-function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1){
+function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1,selectionMode="pitchClass",voicePalette=[]){
  const visibleVoices=voices.filter(function(v){return solo===-1||solo===v.id});
  const byMidi=new Map(visibleVoices.map(function(v){return [v.midi,v]}));
  const white=[],black=[];
  PIANO_KEYS.forEach(function(key){
   const midi=key.midi,pc=key.pc,voice=byMidi.get(midi);
   const highlighted=voices.length?!!voice:highlight.includes(midi);
-  const selected=chosen.has(pc);
+  const selected=selectionMode==="midi"?chosen.has(midi):chosen.has(pc);
   const note=names[pc]+(Math.floor(midi/12)-1);
   const label=key.black?names[pc]:(pc===0?'C'+(Math.floor(midi/12)-1):names[pc]);
-  const color=voice&&voiceModule?voiceModule.voiceColors[voice.id]:null;
+  const color=voice?(voicePalette[voice.id]||(voiceModule?voiceModule.voiceColors[voice.id]:null)):null;
   const marker=color?'<span class="keyVoice" style="--voice-color:'+color+'" aria-hidden="true">'+(voice.id+1)+'</span>':'';
   const aria=' aria-label="'+escapeText(note+(voice?' — voix '+(voice.id+1):''))+'" aria-pressed="'+(selected?'true':'false')+'"';
   const click=live?' data-midi="'+midi+'"':' data-preview="'+midi+'"';
@@ -61,7 +62,7 @@ function noteLabel(n){return names[n%12]}
 function home(){
  let a=readScores();
  shell('<section class="card"><div class="eyebrow">Harmonie en pratique</div><h1>Comprendre les accords.<br>Voir comment les voix bougent.</h1><p class="muted">Réponds d’abord à une question pour trouver le II–V–I secondaire. Ensuite, découvre la solution en couleurs, avec les traits de déplacement au-dessus du clavier.</p>'+
- '<div class="row">'+button("Travailler les II–V–I secondaires","openSecondary","primary")+button("Construire les accords","openChords","quiet")+'</div></section>'+
+ '<div class="row">'+button("Identifier les II–V–I (QCM)","openSecondary","primary")+button("Construire mes voicings","openVoicings","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
  '<section class="card"><h2>Choisir un niveau d’accords</h2><div class="grid">'+[
@@ -69,8 +70,16 @@ function home(){
  ].map(function(x,i){return '<button class="btn level" data-level="'+(i+1)+'"><strong>Niveau '+(i+1)+' — '+x[0]+'</strong><small>'+x[1]+'</small></button>'}).join("")+'</div><p class="subtle">'+a.length+' session(s) enregistrée(s) sur cet appareil.</p></section>');
  document.getElementById("openSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()};
  document.getElementById("openChords").onclick=function(){start(level)};
+ document.getElementById("openVoicings").onclick=function(){beginVoicing()};
  app.querySelectorAll("[data-level]").forEach(function(b){b.onclick=function(){start(Number(b.dataset.level))}});
  app.querySelectorAll("[data-preview]").forEach(function(b){b.onclick=function(){play([Number(b.dataset.preview)])}});
+}
+async function beginVoicing(index=0){
+ screen="voicings";
+ try{
+  if(!voicingUI){const mod=await import("./voicing-ui.js?v=1");voicingUI=mod.createVoicingUI({app,shell,piano,play,escapeText,button});}
+  if(screen==="voicings")voicingUI.start(index);
+ }catch(error){console.error("Voicing mode could not load",error);screen="home";home();alert("Impossible de charger le module des voicings. Vérifie ta connexion puis actualise la page.");}
 }
 function start(l){level=l;session=sessionFor(level);questionIndex=0;selected=new Set();checked=null;score=0;screen="quiz";render()}
 function quiz(){
@@ -139,7 +148,7 @@ function secondaryView(){
   }else body+='<p class="muted">'+(voiceError?'Visualisation momentanément indisponible. Actualise la page en ligne.':'Chargement de la visualisation…')+'</p>';
   body+='<div class="row">'+button("← Accord précédent","prevFrame","quiet",activeFrame===0)+button("Accord suivant →","nextFrame","primary",activeFrame===2)+'</div>';
  }
- body+='<div class="row between" style="margin-top:22px">'+button("Question précédente","prevQ","quiet",secondaryIndex===0)+button(secondaryIndex===secondary.length-1?"Recommencer le module":"Question suivante →","nextQ","primary")+'</div></section>';
+ body+='<div class="row between" style="margin-top:22px">'+button("Question précédente","prevQ","quiet",secondaryIndex===0)+button(secondaryIndex===secondary.length-1?"Recommencer le module":"Question suivante →","nextQ","primary")+'</div><div class="row" style="margin-top:12px">'+button("Construire moi-même les voicings de cette cadence","buildHere","quiet")+'</div></section>';
  shell(body);
  const aligned=app.querySelector(".aligned-scroll");
  if(aligned&&voiceModule){
@@ -165,6 +174,7 @@ function secondaryView(){
  }
  document.getElementById("prevQ").onclick=function(){if(secondaryIndex>0){secondaryIndex--;resetSecondary()}};
  document.getElementById("nextQ").onclick=function(){secondaryIndex=(secondaryIndex+1)%secondary.length;resetSecondary()};
+ document.getElementById("buildHere").onclick=function(){beginVoicing(secondaryIndex)};
 }
 function resetSecondary(){choice=-1;revealed=false;activeFrame=0;isolated=-1;lessonScrollPos=null;secondaryView()}
 function stats(){
@@ -174,7 +184,7 @@ function stats(){
  document.getElementById("eraseHistory").onclick=function(){if(confirm("Effacer tous les scores enregistrés ?")){storeScores([]);stats()}};
 }
 function render(){
- if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="result")results();else stats();
+ if(screen==="home")home();else if(screen==="quiz")quiz();else if(screen==="secondary")secondaryView();else if(screen==="voicings"){if(voicingUI)voicingUI.render();else beginVoicing();}else if(screen==="result")results();else stats();
 }
-window.addEventListener("resize",function(){clearTimeout(resizeHandle);resizeHandle=setTimeout(function(){if(screen==="secondary"&&revealed)secondaryView()},140)});
+window.addEventListener("resize",function(){clearTimeout(resizeHandle);resizeHandle=setTimeout(function(){if(screen==="secondary"&&revealed)secondaryView();else if(screen==="voicings"&&voicingUI)voicingUI.render()},140)});
 render();
