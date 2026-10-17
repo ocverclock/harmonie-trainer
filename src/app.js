@@ -78,7 +78,7 @@ function home(){
 async function beginCourse(){
  screen="course";
  try{
-  if(!courseUI){const mod=await import("./curriculum-ui.js?v=3");courseUI=mod.createCurriculumUI({
+  if(!courseUI){const mod=await import("./curriculum-ui.js?v=4");courseUI=mod.createCurriculumUI({
    app,shell,piano,play,escapeText,button,
    openVoicing:()=>beginVoicing(),
    openSecondary:()=>{screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()}
@@ -86,10 +86,10 @@ async function beginCourse(){
   if(screen==="course")courseUI.start();
  }catch(error){console.error("Parcours indisponible",error);screen="home";home();alert("Impossible de charger le parcours. Actualise la page.");}
 }
-async function beginVoicing(index=0){
+async function beginVoicing(index=null){
  screen="voicings";
  try{
-  if(!voicingUI){const mod=await import("./voicing-ui.js?v=2");voicingUI=mod.createVoicingUI({app,shell,piano,play,escapeText,button});}
+  if(!voicingUI){const mod=await import("./voicing-ui.js?v=3");voicingUI=mod.createVoicingUI({app,shell,piano,play,escapeText,button});}
   if(screen==="voicings")voicingUI.start(index);
  }catch(error){console.error("Voicing mode could not load",error);screen="home";home();alert("Impossible de charger le module des voicings. Vérifie ta connexion puis actualise la page.");}
 }

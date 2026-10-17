@@ -1,3 +1,4 @@
+import {randomizedChordSession} from "./practice-random.js";
 export const names = ["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"];
 export const pitch = {C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,F:5,"F#":6,Gb:6,"G#":8,Ab:8,G:7,A:9,"A#":10,Bb:10,B:11};
 export const qualities = {M:[0,4,7],m:[0,3,7],dim:[0,3,6],aug:[0,4,8],maj7:[0,4,7,11],m7:[0,3,7,10],dom7:[0,4,7,10],halfDim:[0,3,6,10]};
@@ -22,10 +23,7 @@ export function grade(exercise,selected) {
  return {correct:missing.length===0&&extra.length===0,missing:missing,extra:extra};
 }
 export function sessionFor(level,random=Math.random){
- let pool=exercises.filter(function(x){return x.level===level});
- function shuffle(items){let a=[...items];for(let i=a.length-1;i>0;i--){let j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
- if(level===3) return shuffle([...pool,...shuffle(exercises.filter(function(x){return x.level<3})).slice(0,4)]);
- return shuffle(pool).slice(0,10);
+ return randomizedChordSession(level,exercises,qualities,random);
 }
 function progression(id,title,items) {
  return {id:id,title:title,frames:items.map(function(row){
