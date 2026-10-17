@@ -1,4 +1,5 @@
 import {lessons,checkExercise,midiName,TOTAL_EXERCISES} from "./curriculum.js";
+import {shuffledLessonOrder} from "./practice-random.js";
 import {chapterCourses,lessonCourses,validateCourseNotes} from "./course-notes.js";
 import {readArchive,storeArchive,withCursor,withAttempt,stableExerciseId,progressByExercise,
  mergeArchives,parseBackup,backupJSON,restoreLegacyView} from "./progress-store.js";
@@ -20,7 +21,7 @@ export function courseStats(progress){
  return {mastered,lessonsDone,total:TOTAL_EXERCISES,lessons:lessons.length};
 }
 export function createCurriculumUI({app,shell,piano,play,escapeText,button,openVoicing,openSecondary}){
- let overview=true,lessonIdx=0,exerciseIdx=0,selected=[],result=null,scrollPos=0;
+ let overview=true,lessonIdx=0,exerciseIdx=0,selected=[],result=null,scrollPos=0,reviewOrder=null;
  let archive=null,storageWarning="",backupNotice="";
  function refreshArchive(){
   try{archive=readArchive(localStorage,lessons);storageWarning="";return archive}
@@ -34,6 +35,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
  let progress=loadProgress();
  const e=escapeText;
  function start(index=null){
+  reviewOrder=null;
   progress=loadProgress();refreshArchive();
   if(index===null){overview=true}else{overview=false;lessonIdx=Math.max(0,Math.min(lessons.length-1,index));exerciseIdx=0}
   selected=[];result=null;scrollPos=0;render();
@@ -123,6 +125,8 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
  }
  function showLesson(){
   const lesson=lessons[lessonIdx],exercise=lesson.exercises[exerciseIdx],theory=lessonCourses[lesson.id];
+  const order=reviewOrder||lesson.exercises.map((_,i)=>i);
+  const exercisePosition=order.indexOf(exerciseIdx);
   if(archive&&(archive.cursor?.lessonId!==lesson.id||archive.cursor?.exerciseId!==stableExerciseId(lesson,exerciseIdx))){
    writeArchive(withCursor(archive,lesson,exerciseIdx));
   }
@@ -140,14 +144,17 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
    '<div class="row">'+button("Écouter l’exemple","lessonHearTheory","quiet")+button("Écouter la comparaison","lessonCompareTheory","quiet")+'</div>'+
    '<details class="course-check"><summary>Petite question avant l’exercice : '+e(theory.question)+'</summary><p>'+e(theory.answer)+'</p></details></section>'+
    '<div class="explain">'+e(lesson.principle)+'</div>'+
+   '<div class="row course-mode-line">'+button("Mélanger pour réviser","courseShuffle","quiet")+
+   (reviewOrder?button("Revenir à l’ordre du cours","courseGuided","quiet"):'')+
+   '<span class="subtle">'+(reviewOrder?'Révision variée : acquis à retravailler en premier ; numéros d’exercices mélangés.':'Parcours guidé : exercices dans l’ordre pédagogique.')+'</span></div>'+
    '<div class="row course-navline">'+button("← Toutes les leçons","courseAll","quiet")+
    button("Leçon précédente","coursePrevLesson","quiet",lessonIdx===0)+
    button("Leçon suivante","courseNextLesson","quiet",lessonIdx===lessons.length-1)+'</div>'+
-   '<div class="course-steps" aria-label="Exercices de la leçon">'+lesson.exercises.map((ex,i)=>{
+   '<div class="course-steps" aria-label="Exercices de la leçon">'+order.map((i,slot)=>{
     const ok=progress[keyFor(lesson,i)]?.correct;
-    return '<button data-course-step="'+i+'" class="btn '+(exerciseIdx===i?'active':'')+'" aria-current="'+(exerciseIdx===i?'step':'false')+'">'+(i+1)+(ok?' ✓':'')+'</button>';
+    return '<button data-course-step="'+i+'" class="btn '+(exerciseIdx===i?'active':'')+'" aria-label="Exercice '+(slot+1)+': '+e(lesson.exercises[i].name)+(ok?', maîtrisé':'')+'" aria-current="'+(exerciseIdx===i?'step':'false')+'">'+(slot+1)+(ok?' ✓':'')+'</button>';
    }).join("")+'</div>'+
-   '<p class="eyebrow">Exercice '+(exerciseIdx+1)+' / '+lesson.exercises.length+(exercise.tonality?' · Tonalité : '+e(exercise.tonality):'')+'</p><div class="symbol course-symbol">'+e(exercise.name)+'</div>'+
+   '<p class="eyebrow">Exercice '+(exercisePosition+1)+' / '+lesson.exercises.length+(exercise.tonality?' · Tonalité : '+e(exercise.tonality):'')+'</p><div class="symbol course-symbol">'+e(exercise.name)+'</div>'+
    '<p>'+e(exercise.task)+'</p>'+
    '<p class="muted">'+(exercise.mode==="free"?
       'Renversement libre : choisis '+exercise.midis.length+' notes distinctes, sans doubler une même note à l’octave.':
@@ -168,12 +175,19 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
        (grade.repeatedPitchClasses?'Une même note a été doublée à une autre octave.':'')+'</p>':'<p>Tu peux aussi écouter le modèle et comparer les timbres.</p>')+
     '<div class="row">'+button("Écouter la correction","courseHearCorrect","quiet")+
     button("Recommencer cet exercice","courseRetry","quiet")+
-    button(exerciseIdx===lesson.exercises.length-1?"Voir les leçons":"Exercice suivant →","courseNext","primary")+
+    button(exercisePosition===order.length-1?"Voir les leçons":"Exercice suivant →","courseNext","primary")+
     '</div></div>';
   }
   body+='</section>';shell(body);
   document.getElementById("lessonHearTheory").onclick=()=>play(theory.listen);
   document.getElementById("lessonCompareTheory").onclick=()=>play(theory.compare);
+  document.getElementById("courseShuffle").onclick=()=>{
+   reviewOrder=shuffledLessonOrder(lesson,progress);
+   exerciseIdx=reviewOrder[0];selected=[];result=null;scrollPos=0;render();
+  };
+  if(reviewOrder)document.getElementById("courseGuided").onclick=()=>{
+   reviewOrder=null;selected=[];result=null;scrollPos=0;render();
+  };
   const pianoScroll=app.querySelector(".lesson-piano .piano-scroll");
   if(pianoScroll){pianoScroll.scrollLeft=scrollPos;pianoScroll.addEventListener("scroll",()=>{scrollPos=pianoScroll.scrollLeft},{passive:true})}
   if(grade){
@@ -213,7 +227,7 @@ export function createCurriculumUI({app,shell,piano,play,escapeText,button,openV
    document.getElementById("courseHearCorrect").onclick=()=>play(exercise.midis);
    document.getElementById("courseRetry").onclick=()=>{result=null;selected=[];render()};
    document.getElementById("courseNext").onclick=()=>{
-    if(exerciseIdx<lesson.exercises.length-1){exerciseIdx++;selected=[];result=null;scrollPos=0;render()}
+    if(exercisePosition<order.length-1){exerciseIdx=order[exercisePosition+1];selected=[];result=null;scrollPos=0;render()}
     else{overview=true;selected=[];result=null;scrollPos=0;render()}
    };
   }
