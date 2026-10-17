@@ -67,6 +67,16 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — Enrichissement du parcours et sauvegarde v2 — ÉTAT : deux PR de développement, CI verte, en attente de validation visuelle
+- **PR #8 :** https://github.com/ocverclock/harmonie-trainer/pull/8 — branche `feature/mini-cours-et-tonalites-20261017`, basée sur `main`. 21 mini-cours originaux, 4 introductions de chapitre et 37 exercices supplémentaires (89 au total), notamment vrais renversements et tonalités utilisant des touches noires. **Les 52 exercices d'origine restent au même index** pour ne pas déplacer les anciennes clés du suivi.
+- **PR #9 :** https://github.com/ocverclock/harmonie-trainer/pull/9 — branche `feature/sauvegarde-acquis-v2-20261017`, basée sur la branche de #8. Nouveau module `src/progress-store.js`, reprise du dernier exercice, journal local par tonalité, export JSON et import contrôlé avec fusion et restauration non destructive du stockage `harmonie-parcours-v1`. Sans compte ni cloud.
+- **CI GitHub Actions PR #8 :** run 39053144864, statut **success** (contrôlé).
+- **CI GitHub Actions PR #9 :** runs 39053670087 et 39053759116 en échec puis correction des tests ; run 39053814328 **success** (contrôlé). Les corrections concernaient la syntaxe d'un exemple de JSON invalide et les prototypes des dictionnaires après sérialisation, sans effacer les données des utilisateurs.
+- **Risques restants :** tests Node verts, mais **aucune recette Safari iPhone/iPad réelle**, ni restauration manuelle de fichier sur appareils différents, ni contrôle visuel de l'intégration des nouveaux mini-cours. L'export reste manuel et le navigateur peut effacer le stockage local ; aucune synchronisation cloud promise.
+- **Intégration :** fusionner #8 en premier, puis rebaser/retargeter #9 sur main avant sa fusion éventuelle ; ne jamais fusionner #9 seule. Les deux PR restent en brouillon et ne changent pas la page publique.
+- **Décision de publication de ces deux nouveaux lots :** en attente d'une validation de recette/autorisation applicable. L'accord donné précédemment concernait la publication du parcours initial V0.5.
+
+
 ### 2026-10-17 — Publication autorisée et fusion GitHub — ÉTAT : fusionné sur main ; Pages à constater
 - **Accord utilisateur** : publication intégrale autorisée explicitement pendant la conversation du 17/10/2026.
 - **PR de livraison** : [#4](https://github.com/ocverclock/harmonie-trainer/pull/4), fusionnée par squash sur `main` ; commit de fusion **`f493958c42e886210b2f944e48a8f7dadfbb8049`**.
