@@ -199,7 +199,10 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   body+='<div class="lab-studio-line"><div><small>Départ</small><strong>'+e(study.before.symbol)+'</strong></div>'+
    '<span aria-hidden="true">→</span><div><small>À choisir</small><strong>?</strong></div><span aria-hidden="true">→</span>'+
    '<div><small>Destination</small><strong>'+e(study.target.symbol)+'</strong></div></div>'+
-   '<p class="muted">Destination : '+e(study.tonality)+'. Cherche une dominante ou une substitution cohérente avec le mouvement vers la tonique.</p>'+
+   '<div class="lab-melody"><p class="eyebrow">Petite mélodie originale</p><div class="lab-melody-notes">'+study.melody.map((m,i)=>'<span><small>'+(i+1)+'</small><strong>'+e(midiLabel(m))+'</strong></span>').join('<span aria-hidden="true">→</span>')+'</div>'+
+   '<p class="subtle">La note centrale doit appartenir aux notes de l’accord choisi dans ce premier atelier. Les tensions mélodiques seront étudiées ensuite.</p>'+
+   button("Écouter la mélodie","studioMelody","quiet")+'</div>'+
+   '<p class="muted">Destination : '+e(study.tonality)+'. Cherche une dominante ou une substitution cohérente avec la mélodie et le mouvement vers la tonique.</p>'+
    '<fieldset class="lab-options"><legend>Quel accord place-tu entre les deux ?</legend>'+
    study.options.map((opt,i)=>'<button class="lab-option '+(i===studioAnswer?"picked":"")+
     '" data-studio="'+i+'" '+(studioAnswer!==null?"disabled":"")+'>'+e(opt.symbol)+'</button>').join("")+'</fieldset>';
@@ -214,6 +217,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
     button("Autre phrase →","studioNext","primary")+'</div></div>';
   }
   body+='</section>';shell(body);linkHome();
+  document.getElementById("studioMelody").onclick=()=>playSequence(study.melody.map(m=>[m]));
   if(!choice)app.querySelectorAll("[data-studio]").forEach(b=>b.onclick=()=>{
    studioAnswer=Number(b.dataset.studio);
    const verdict=checkStudioChoice(study,studioAnswer);
