@@ -78,7 +78,7 @@ function home(){
 async function beginCourse(){
  screen="course";
  try{
-  if(!courseUI){const mod=await import("./curriculum-ui.js?v=2");courseUI=mod.createCurriculumUI({
+  if(!courseUI){const mod=await import("./curriculum-ui.js?v=3");courseUI=mod.createCurriculumUI({
    app,shell,piano,play,escapeText,button,
    openVoicing:()=>beginVoicing(),
    openSecondary:()=>{screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()}
