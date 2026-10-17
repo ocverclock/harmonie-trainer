@@ -22,8 +22,8 @@ export function grade(exercise,selected) {
  const extra=[...actual].filter(function(n){return !wanted.has(n)});
  return {correct:missing.length===0&&extra.length===0,missing:missing,extra:extra};
 }
-export function sessionFor(level,random=Math.random){
- return randomizedChordSession(level,exercises,qualities,random);
+export function sessionFor(level,random=Math.random,difficulty="standard"){
+ return randomizedChordSession(level,exercises,qualities,random,difficulty);
 }
 function progression(id,title,items) {
  return {id:id,title:title,frames:items.map(function(row){
