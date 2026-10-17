@@ -82,6 +82,7 @@ async function beginCourse(){
   if(!courseUI){const mod=await import("./curriculum-ui.js?v=4");courseUI=mod.createCurriculumUI({
    app,shell,piano,play,escapeText,button,
    openVoicing:()=>beginVoicing(),
+   openJazzLab:()=>beginJazzLab(),
    openSecondary:()=>{screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()}
   });}
   if(screen==="course")courseUI.start();
