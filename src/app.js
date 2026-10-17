@@ -1,6 +1,6 @@
-import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js";
+import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=3";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
-import {constructionDifficulties,difficultyOf} from "./practice-random.js";
+import {constructionDifficulties,difficultyOf} from "./practice-random.js?v=3";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
