@@ -110,7 +110,7 @@ function results(){
 }
 function preloadDiagram(){
  if(voiceModule||voiceError)return;
- import("./voices.js").then(function(mod){voiceModule=mod;if(screen==="secondary"&&revealed)render()})
+ import("./voices.js?v=3").then(function(mod){voiceModule=mod;if(screen==="secondary"&&revealed)render()})
  .catch(function(){voiceError=true;if(screen==="secondary")render()});
 }
 function secondaryView(){
