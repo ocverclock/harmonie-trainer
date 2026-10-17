@@ -89,7 +89,7 @@ async function beginCourse(){
 async function beginVoicing(index=0){
  screen="voicings";
  try{
-  if(!voicingUI){const mod=await import("./voicing-ui.js?v=1");voicingUI=mod.createVoicingUI({app,shell,piano,play,escapeText,button});}
+  if(!voicingUI){const mod=await import("./voicing-ui.js?v=2");voicingUI=mod.createVoicingUI({app,shell,piano,play,escapeText,button});}
   if(screen==="voicings")voicingUI.start(index);
  }catch(error){console.error("Voicing mode could not load",error);screen="home";home();alert("Impossible de charger le module des voicings. Vérifie ta connexion puis actualise la page.");}
 }
@@ -131,7 +131,7 @@ function results(){
 }
 function preloadDiagram(){
  if(voiceModule||voiceError)return;
- import("./voices.js?v=3").then(function(mod){voiceModule=mod;if(screen==="secondary"&&revealed)render()})
+ import("./voices.js?v=4").then(function(mod){voiceModule=mod;if(screen==="secondary"&&revealed)render()})
  .catch(function(){voiceError=true;if(screen==="secondary")render()});
 }
 function secondaryView(){
