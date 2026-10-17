@@ -34,3 +34,13 @@ GitHub Actions lance les tests à chaque push sur `main`.
 ## Documents de projet
 - [Spécifications](https://docs.google.com/document/d/1NvPK5SX2wOk-WMPpHHmQ7TeAMdlAHomV5AcD_FoYZjc/edit)
 - [Consignes de développement pour IA](https://docs.google.com/document/d/1NxDHTKqsd39_yGCiLv1mVcA8gNan3oXxYHmoTXdmSaY/edit)
+
+## Synchronisation visuelle des voix (V0.3)
+
+- **Temps vertical :** les trois accords du II–V–I sont placés en trois rangées, du haut vers le bas.
+- **Hauteur horizontale :** chaque point est centré au-dessus de sa touche réelle, noire ou blanche.
+- **Couleur et numéro fixes :** une même voix garde exactement sa couleur et son numéro dans les boules, les courbes et sur le clavier de l’accord sélectionné.
+- **Un seul défilement tactile :** schéma et clavier bougent ensemble sur les petits écrans ; les boutons d’accord recentrent sur les notes concernées.
+- **Conservation du clavier :** géométrie blanche/noire et aspect général inchangés.
+- Géométrie partagée dans `src/piano-layout.js` ; tests de concordance dans `tests/music.test.js`.
+
