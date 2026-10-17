@@ -97,3 +97,26 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;
 .difficulty-choice.active{background:#eaf2ff;border-color:#2563eb;box-shadow:0 0 0 1px #2563eb18}
 .difficulty-choice.active strong{color:#164ca4}
 @media(max-width:700px){.difficulty-grid{grid-template-columns:1fr}.difficulty-choice{min-height:72px;padding:13px 15px;gap:4px}}
+
+
+/* Eight stable theory levels are independent of key-difficulty. */
+.construction-level-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0 22px}
+.construction-level-choice{border:1px solid #cbd9eb;background:#f9fbff;border-radius:13px;padding:13px 15px;
+ min-height:76px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;color:#27415d;line-height:1.4}
+.construction-level-choice strong{font-size:15px;color:#173c67}
+.construction-level-choice span{font-size:13px;color:#5f7690}
+.construction-level-choice.active{border:2px solid #2563eb;background:#eaf2ff}
+.construction-level-choice.active strong{color:#174a96}
+.construction-level-choice:focus-visible{outline:3px solid #7aa9ee;outline-offset:2px}
+.construction-recap{display:flex;flex-direction:column;gap:6px;padding:16px;margin:22px 0 12px;
+ border:1px solid #bbd1e9;border-radius:14px;background:#edf5ff;line-height:1.5}
+.construction-recap strong{font-size:17px;color:#173d78}
+.construction-recap span{font-size:15px}
+.construction-recap p{font-size:13px;margin:0;color:#536b87}
+#constructionSettings h3{margin:20px 0 12px;font-size:18px}
+#startConstruction{min-height:46px}
+@media(max-width:570px){.construction-level-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.construction-level-choice{padding:11px 9px;min-height:90px}
+.construction-level-choice strong{font-size:13px}
+.construction-level-choice span{font-size:12px}
+.construction-recap{margin-top:16px;padding:13px}}

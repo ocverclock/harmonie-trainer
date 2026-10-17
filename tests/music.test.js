@@ -17,11 +17,11 @@ test("équivalence octave et renversement",()=>{
  assert.deepEqual(grade(c,[60,64,67,71,62]).extra,[2]);
 });
 test("sessions et révisions",()=>{
- for(const level of [1,2,3]){
+ for(const level of [1,2,3,4,5,6,7,8]){
   const questions=sessionFor(level,()=>.21);
   assert.equal(questions.length,10);
   assert.equal(new Set(questions.map(x=>x.id)).size,10);
-  if(level===3)assert.equal(questions.filter(x=>x.level===3).length,6);
+  assert.ok(questions.every(x=>x.level===level));
  }
 });
 test("secondaires: réponse, notes et identité des voix",()=>{

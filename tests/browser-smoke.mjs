@@ -55,16 +55,47 @@ try{
   assert.ok(archive.events.some(x=>x.exerciseId.startsWith("jazzlab:")));
   assert.equal(await page.locator("#currJazzLab").count(),1);
   await page.getByRole("button",{name:"Accueil",exact:true}).click();
-  await page.locator('[data-difficulty="challenge"]').click();
-  assert.match(await page.locator('[data-level="1"]').innerText(),/sixte/i);
-  assert.match(await page.locator('[data-level="2"]').innerText(),/neuvième/i);
-  assert.match(await page.locator('[data-level="3"]').innerText(),/treizième/i);
-  for(const [level,noteCount] of [[1,4],[2,4],[3,5]]){
-   await page.locator('[data-level="'+level+'"]').click();
-   assert.equal(await page.locator("#validate").innerText(),"Valider ("+noteCount+" notes)");
-   assert.equal(await page.locator("#validate").isDisabled(),true);
+  await page.locator("#constructionSettings").waitFor({state:"visible"});
+  assert.equal(await page.locator('[data-level]').count(),8);
+  assert.equal(await page.locator('[data-difficulty]').count(),3);
+  assert.equal(await page.locator('[data-level="6"]').getAttribute("aria-pressed"),"true");
+  assert.equal(await page.locator('[data-difficulty="standard"]').getAttribute("aria-pressed"),"true");
+  for(const mode of ["guided","standard","challenge"]){
+   await page.locator('[data-difficulty="'+mode+'"]').click();
+   assert.equal(await page.locator('[data-level="6"]').getAttribute("aria-pressed"),"true",
+     "Changing tonality must not change family");
+   await page.locator("#startConstruction").click();
+   assert.match(await page.locator(".symbol").innerText(),/9/);
+   assert.equal(await page.locator("#validate").innerText(),"Valider (4 notes)");
    await page.locator("#backToLevels").click();
   }
+  for(const [lev,number] of [[1,3],[2,3],[3,4],[4,4],[5,4],[6,4],[7,5],[8,4]]){
+   await page.locator('[data-level="'+lev+'"]').click();
+   await page.locator("#startConstruction").click();
+   assert.match(await page.locator(".badge").first().innerText(),new RegExp("Niveau "+lev));
+   assert.match(await page.locator("#validate").innerText(),new RegExp("Valider \\("+number+" notes\\)|Valider \\(5 notes\\)"));
+   await page.locator("#backToLevels").click();
+  }
+  await page.locator('[data-level="6"]').click();
+  await page.locator('[data-difficulty="standard"]').click();
+  await page.locator("#startConstruction").click();
+  for(let i=0;i<10;i++){
+   assert.equal(await page.locator("#validate").isDisabled(),true);
+   for(const midi of [48,50,52,53])await page.locator('[data-midi="'+midi+'"]').click();
+   assert.equal(await page.locator("#validate").isDisabled(),false);
+   await page.locator("#validate").click();
+   assert.equal(await page.locator(".feedback").count(),1);
+   await page.locator("#next").click();
+  }
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem("harmonie-sessions-v2")||"[]"));
+  const mostRecent=saved.at(-1);
+  assert.equal(mostRecent.schemaVersion,3);
+  assert.equal(mostRecent.level,6);
+  assert.equal(mostRecent.familyId,"level-6");
+  assert.equal(mostRecent.difficulty,"standard");
+  assert.equal(await page.locator(".score").innerText().then(x=>x.endsWith("/100")),true);
+  await page.locator("#goLevels").click();
+  assert.equal(await page.locator('[data-level="6"]').getAttribute("aria-pressed"),"true");
   assert.deepEqual(errors,[],"No browser JS exceptions: "+errors.join("; "));
   console.log("Browser smoke passed at "+viewport.width+"x"+viewport.height+
    " (jazz voice movement, ear, melody, export, nav)");

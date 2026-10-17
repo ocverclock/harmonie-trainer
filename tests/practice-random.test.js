@@ -28,7 +28,7 @@ test("generate new chord constructions with correct enharmonic notes",()=>{
 });
 test("every constructed quiz gets 10 distinct playable chords, varied roots and black keys",()=>{
  const BLACK=new Set([1,3,6,8,10]);
- for(let level=1;level<=3;level++){
+ for(let level=1;level<=8;level++){
   const signatures=new Set();
   for(let seed=1;seed<=16;seed++){
    const session=sessionFor(level,seeded(seed));
