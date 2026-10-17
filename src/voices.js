@@ -7,7 +7,7 @@ export const DIAGRAM_HEIGHT=318;
 // Time runs vertically from top to bottom. Pitch runs horizontally at the exact
 // X coordinate of the piano key. Notes held across chords therefore form a
 // perfectly vertical segment; altered notes move left or right.
-export function diagram(progress,active,solo){
+export function diagram(progress,active,solo,annotations=[]){
  const W=PIANO_WIDTH,H=DIAGRAM_HEIGHT;
  let svg='<div class="viz viz-aligned"><svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trois accords superposés verticalement, chaque point aligné avec une touche du piano : '+progress.title+'">';
  const centers=PIANO_KEYS.filter(k=>!k.black).map(k=>k.center);
@@ -33,6 +33,21 @@ export function diagram(progress,active,solo){
    svg+='<text class="voiceIndex" text-anchor="middle" x="'+x+'" y="'+(y+5)+'">'+(voice+1)+'</text>';
    svg+='<text class="voicePitch" x="'+(x+18)+'" y="'+(y-16)+'">'+v.note+'</text>';
   });
+ }
+ // Red corrections overlay the user's colored voices; time and pitch alignment stay unchanged.
+ for(const correction of annotations){
+  const row=correction.row;
+  if(!Number.isInteger(row)||row<0||row>=ROW_Y.length)continue;
+  const y=ROW_Y[row];
+  for(const midi of correction.wrong||[]){
+   const x=noteX(midi);
+   svg+='<circle class="correctionWrong" data-wrong-midi="'+midi+'" cx="'+x+'" cy="'+y+'" r="22" fill="none" stroke="#d51e2b" stroke-width="4"/>';
+  }
+  for(const item of correction.suggested||[]){
+   const midi=item.midi,x=noteX(midi),name=["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"][midi%12]+(Math.floor(midi/12)-1);
+   svg+='<circle class="correctionRight" data-correct-midi="'+midi+'" cx="'+x+'" cy="'+y+'" r="16" fill="#fff" stroke="#d51e2b" stroke-width="4"/>'+
+        '<text class="correctionName" x="'+(x+15)+'" y="'+(y-19)+'" fill="#b91c1c" font-size="13" font-weight="850">'+name+'</text>';
+  }
  }
  return svg+'</svg></div>';
 }
