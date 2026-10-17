@@ -1,10 +1,11 @@
 import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js";
+import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
 let screen="home",level=1,session=[],questionIndex=0,selected=new Set(),checked=null,score=0;
 let secondaryIndex=0,choice=-1,revealed=false,activeFrame=0,isolated=-1,voiceModule=null,voiceError=false;
-let audioCtx=null,resizeHandle=0;
+let audioCtx=null,resizeHandle=0,lessonScrollPos=null;
 const storage="harmonie-sessions-v2";
 function escapeText(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function readScores(){try{let a=JSON.parse(localStorage.getItem(storage)||"[]");return Array.isArray(a)?a:[]}catch(e){return []}}
@@ -20,23 +21,25 @@ function shell(body){
   if(n==="quiz"){screen="home";render()}else{screen=n;render()}
  }});
 }
-function piano(chosen,highlight,live){
- const whiteW=52,blackW=36;let whites=[],blacks=[],count=0;
- for(let midi=48;midi<=83;midi++){
-  let pc=midi%12,isBlack=[1,3,6,8,10].includes(pc),note=names[pc]+(Math.floor(midi/12)-1);
-  let isSelected=chosen.has(pc),marked=highlight.includes(midi);
-  let attributes=' aria-label="'+escapeText(note)+'" aria-pressed="'+(isSelected?'true':'false')+'" ';
-  let click=live?'data-midi="'+midi+'"':'data-preview="'+midi+'"';
-  if(!isBlack){
-   let label=(pc===0?'C'+(Math.floor(midi/12)-1):names[pc]);
-   whites.push('<button class="pianoKey white '+(isSelected?'selected ':'')+(marked?'marked':'')+'" style="left:'+(count*whiteW)+'px" '+attributes+click+'><span class="keyText">'+label+'</span></button>');
-   count++;
-  }else{
-   let left=count*whiteW-blackW/2;
-   blacks.push('<button class="pianoKey black '+(isSelected?'selected ':'')+(marked?'marked':'')+'" style="left:'+left+'px" '+attributes+click+'><span class="keyText">'+names[pc]+'</span></button>');
-  }
- }
- return '<div class="piano-scroll"><div class="piano-rack"><div class="piano" style="width:'+(count*whiteW)+'px">'+whites.join("")+blacks.join("")+'</div></div></div>';
+function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1){
+ const visibleVoices=voices.filter(function(v){return solo===-1||solo===v.id});
+ const byMidi=new Map(visibleVoices.map(function(v){return [v.midi,v]}));
+ const white=[],black=[];
+ PIANO_KEYS.forEach(function(key){
+  const midi=key.midi,pc=key.pc,voice=byMidi.get(midi);
+  const highlighted=voices.length?!!voice:highlight.includes(midi);
+  const selected=chosen.has(pc);
+  const note=names[pc]+(Math.floor(midi/12)-1);
+  const label=key.black?names[pc]:(pc===0?'C'+(Math.floor(midi/12)-1):names[pc]);
+  const color=voice&&voiceModule?voiceModule.voiceColors[voice.id]:null;
+  const marker=color?'<span class="keyVoice" style="--voice-color:'+color+'" aria-hidden="true">'+(voice.id+1)+'</span>':'';
+  const aria=' aria-label="'+escapeText(note+(voice?' — voix '+(voice.id+1):''))+'" aria-pressed="'+(selected?'true':'false')+'"';
+  const click=live?' data-midi="'+midi+'"':' data-preview="'+midi+'"';
+  const result='<button class="pianoKey '+(key.black?'black ':'white ')+(selected?'selected ':'')+(highlighted?'marked':'')+'" style="left:'+key.left+'px"'+aria+click+'><span class="keyText">'+label+'</span>'+marker+'</button>';
+  (key.black?black:white).push(result);
+ });
+ const rack='<div class="piano-rack"><div class="piano" style="width:'+PIANO_WIDTH+'px">'+white.join('')+black.join('')+'</div></div>';
+ return embedded?rack:'<div class="piano-scroll">'+rack+'</div>';
 }
 async function play(midis){
  try{
@@ -123,35 +126,47 @@ function secondaryView(){
   body+='<div class="explain" role="status"><strong>'+(choice===q.answer?'Bonne réponse.':'Voici la bonne réponse.')+'</strong><p><b>'+escapeText(q.choices[q.answer])+'</b></p><p>'+escapeText(q.explanation)+'</p></div>'+
   '<div class="row between"><h3>Explication par les glissements</h3>'+button("Écouter cet accord","hearFrame","quiet")+'</div>';
   if(voiceModule){
-   body+=voiceModule.diagram(q.progression,activeFrame,isolated,document.documentElement.clientWidth)+
+   body+='<p class="muted">Les trois rangées d’accords descendent vers le clavier. Chaque boule numérotée est à la verticale de sa touche ; le numéro et la couleur restent identiques jusqu’au clavier.</p>'+
+    '<div class="piano-scroll aligned-scroll" role="region" aria-label="Glissements et piano, défilement horizontal commun" tabindex="0"><div class="aligned-lesson">'+
+     voiceModule.diagram(q.progression,activeFrame,isolated)+
+     piano(new Set(),f.voices.map(function(v){return v.midi}),false,f.voices,true,isolated)+
+    '</div></div>'+
+    '<p class="subtle">Fais glisser ce bloc horizontalement sur téléphone : le dessin et le clavier se déplacent ensemble.</p>'+
     '<div class="timeline">'+frames.map(function(fr,i){return '<button data-frame="'+i+'" class="btn '+(activeFrame===i?'active':'')+'">'+(i+1)+'. '+escapeText(fr.symbol)+'</button>'}).join("")+'</div>'+
     '<div class="legend">'+f.voices.map(function(v,i){return '<button data-voice="'+i+'" class="'+(isolated!==-1&&isolated!==i?'faded':'')+'"><span class="dot" style="background:'+voiceModule.voiceColors[i]+'"></span>Voix '+(i+1)+' · '+escapeText(v.note)+'</button>'}).join("")+'</div>'+
-    '<p class="explain">'+escapeText(voiceModule.movementSummary(q.progression,activeFrame))+'</p>';
+    '<p class="explain">'+escapeText(voiceModule.movementSummary(q.progression,activeFrame))+'</p>'+
+    '<p class="muted">Accord actif : <b>'+escapeText(f.symbol)+'</b> ('+f.voices.map(function(v){return escapeText(v.note)}).join(' · ')+'). Les points du clavier conservent exactement les couleurs des voix au-dessus.</p>';
   }else body+='<p class="muted">'+(voiceError?'Visualisation momentanément indisponible. Actualise la page en ligne.':'Chargement de la visualisation…')+'</p>';
-  body+='<p class="muted">Le clavier ci-dessous montre uniquement les notes de l’accord actif : <b>'+escapeText(f.symbol)+'</b> ('+f.voices.map(function(v){return escapeText(v.note)}).join(' · ')+').</p>'+
-  piano(new Set(),f.voices.map(function(v){return v.midi}),false)+
-  '<div class="row">'+button("← Accord précédent","prevFrame","quiet",activeFrame===0)+button("Accord suivant →","nextFrame","primary",activeFrame===2)+'</div>';
+  body+='<div class="row">'+button("← Accord précédent","prevFrame","quiet",activeFrame===0)+button("Accord suivant →","nextFrame","primary",activeFrame===2)+'</div>';
  }
  body+='<div class="row between" style="margin-top:22px">'+button("Question précédente","prevQ","quiet",secondaryIndex===0)+button(secondaryIndex===secondary.length-1?"Recommencer le module":"Question suivante →","nextQ","primary")+'</div></section>';
  shell(body);
+ const aligned=app.querySelector(".aligned-scroll");
+ if(aligned&&voiceModule){
+  if(lessonScrollPos===null){
+   const focus=voiceModule.frameCenter(q.progression,activeFrame)+12;
+   aligned.scrollLeft=Math.max(0,focus-aligned.clientWidth/2);
+  }else aligned.scrollLeft=lessonScrollPos;
+  aligned.addEventListener("scroll",function(){lessonScrollPos=aligned.scrollLeft},{passive:true});
+ }
  if(!revealed){
   app.querySelectorAll("[data-choice]").forEach(function(b){b.onclick=function(){choice=Number(b.dataset.choice);secondaryView()}});
   document.getElementById("eraseChoice").onclick=function(){choice=-1;secondaryView()};
   document.getElementById("confirmChoice").onclick=function(){
-   if(choice<0)return;revealed=true;activeFrame=0;isolated=-1;preloadDiagram();secondaryView();
+   if(choice<0)return;revealed=true;activeFrame=0;isolated=-1;lessonScrollPos=null;preloadDiagram();secondaryView();
   };
  }else{
   document.getElementById("hearFrame").onclick=function(){play(isolated===-1?frames[activeFrame].voices.map(function(v){return v.midi}):[frames[activeFrame].voices[isolated].midi])};
-  app.querySelectorAll("[data-frame]").forEach(function(b){b.onclick=function(){activeFrame=Number(b.dataset.frame);secondaryView()}});
+  app.querySelectorAll("[data-frame]").forEach(function(b){b.onclick=function(){activeFrame=Number(b.dataset.frame);lessonScrollPos=null;secondaryView()}});
   app.querySelectorAll("[data-voice]").forEach(function(b){b.onclick=function(){let n=Number(b.dataset.voice);isolated=isolated===n?-1:n;secondaryView()}});
   app.querySelectorAll("[data-preview]").forEach(function(b){b.onclick=function(){play([Number(b.dataset.preview)])}});
-  document.getElementById("prevFrame").onclick=function(){if(activeFrame>0){activeFrame--;secondaryView()}};
-  document.getElementById("nextFrame").onclick=function(){if(activeFrame<2){activeFrame++;secondaryView()}};
+  document.getElementById("prevFrame").onclick=function(){if(activeFrame>0){activeFrame--;lessonScrollPos=null;secondaryView()}};
+  document.getElementById("nextFrame").onclick=function(){if(activeFrame<2){activeFrame++;lessonScrollPos=null;secondaryView()}};
  }
  document.getElementById("prevQ").onclick=function(){if(secondaryIndex>0){secondaryIndex--;resetSecondary()}};
  document.getElementById("nextQ").onclick=function(){secondaryIndex=(secondaryIndex+1)%secondary.length;resetSecondary()};
 }
-function resetSecondary(){choice=-1;revealed=false;activeFrame=0;isolated=-1;secondaryView()}
+function resetSecondary(){choice=-1;revealed=false;activeFrame=0;isolated=-1;lessonScrollPos=null;secondaryView()}
 function stats(){
  const a=readScores();shell('<section class="card"><h2>Ma progression</h2><p class="muted">Sessions enregistrées uniquement sur cet appareil.</p>'+
  '<p>'+a.length+' session(s)</p><p>'+(a.length?a.slice(-10).reverse().map(function(s){return 'Niveau '+s.level+' : '+s.score+'/100'}).join(' · '):'Aucun résultat pour le moment.')+'</p>'+
