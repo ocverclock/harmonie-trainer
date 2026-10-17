@@ -1,4 +1,4 @@
-import {randomizedChordSession} from "./practice-random.js";
+import {randomizedChordSession} from "./practice-random.js?v=3";
 export const names = ["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"];
 export const pitch = {C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,F:5,"F#":6,Gb:6,"G#":8,Ab:8,G:7,A:9,"A#":10,Bb:10,B:11};
 export const qualities = {M:[0,4,7],m:[0,3,7],dim:[0,3,6],aug:[0,4,8],maj7:[0,4,7,11],m7:[0,3,7,10],dom7:[0,4,7,10],halfDim:[0,3,6,10],maj6:[0,4,7,9],min6:[0,3,7,9],dom9:[0,4,10,2],min9:[0,3,10,2],dom13:[0,4,10,2,9]};
