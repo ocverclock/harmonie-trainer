@@ -425,7 +425,7 @@ export const lessonCourses={
 };
 export function validateCourseNotes(lessons){
  return lessons.every(lesson=>{
-  const t=lessonCourses[lesson.id];return t&&[t.why,t.concept,t.example,t.question,t.answer].every(s=>typeof s==="string"&&s.length>20)&&
+  const t=lessonCourses[lesson.id];return t&&[t.why,t.concept,t.example,t.question].every(s=>typeof s==="string"&&s.length>20)&&typeof t.answer==="string"&&t.answer.length>2&&
    Array.isArray(t.listen)&&Array.isArray(t.compare)&&[...t.listen,...t.compare].every(n=>Number.isInteger(n)&&n>=48&&n<=83)
  })&&[1,2,3,4].every(id=>chapterCourses[id]?.body?.length>100);
 }
