@@ -1,6 +1,7 @@
 import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from "./music.js?v=3";
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
 import {constructionLevels,constructionDifficulties,difficultyOf,levelOf,demonstrationMidis} from "./practice-random.js?v=4";
+import {constructionSetupHTML} from "./construction-setup.js?v=1";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
@@ -83,28 +84,19 @@ async function play(midis){
 function noteLabel(n){return names[n%12]}
 function home(){
  let a=readScores();
- const chordFamilies=constructionDifficulty==="challenge"?
-  [["Accords de sixte","4 notes · 6 et m6"],["Voicings de neuvième","4 notes · 9 et m9, quinte omise"],
-   ["Voicings de treizième","5 notes · 13, quinte et onzième omises"]]:
-  [["Triades","Majeures et mineures"],["Accords de septième","maj7, m7 et dominantes"],
-   ["Accords avancés","Diminués et demi-diminués"]];
  shell('<section class="card"><div class="eyebrow">Harmonie en pratique</div><h1>Comprendre les accords.<br>Voir comment les voix bougent.</h1><p class="muted">Réponds d’abord à une question pour trouver le II–V–I secondaire. Ensuite, découvre la solution en couleurs, avec les traits de déplacement au-dessus du clavier.</p>'+
  '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Atelier jazz : voix, oreille, harmonisation","openJazzLab","quiet")+button("Construire les accords","openChords","quiet")+'</div></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
- '<section class="card"><h2>Choisir la difficulté</h2><p class="muted">Choisis Découverte ou Entraînement pour les familles classiques, ou Défi pour construire réellement des accords de 6, 9 et 13.</p>'+
- '<div class="difficulty-grid" role="group" aria-label="Difficulté des constructions">'+Object.entries(constructionDifficulties).map(function(item){
-   const key=item[0],mode=item[1],active=constructionDifficulty===key;
-   return '<button type="button" data-difficulty="'+key+'" class="difficulty-choice '+(active?'active':'')+
-    '" aria-pressed="'+active+'"><strong>'+escapeText(mode.label)+'</strong><span>'+escapeText(mode.description)+'</span></button>';
- }).join("")+'</div><h2 style="margin-top:24px">Choisir une famille d’accords</h2><div class="grid">'+chordFamilies.map(function(x,i){return '<button class="btn level" data-level="'+(i+1)+'"><strong>Niveau '+(i+1)+' — '+x[0]+'</strong><small>'+x[1]+'</small></button>'}).join("")+'</div><p class="subtle">'+a.length+' session(s) enregistrée(s) sur cet appareil.</p></section>');
+ constructionSetupHTML(level,constructionDifficulty,a.length,escapeText));
  document.getElementById("openCourse").onclick=function(){beginCourse()};
  document.getElementById("openSecondary").onclick=function(){screen="secondary";secondaryIndex=0;choice=-1;revealed=false;activeFrame=0;isolated=-1;render()};
- document.getElementById("openChords").onclick=function(){start(level)};
+ document.getElementById("openChords").onclick=returnToConstruction;
  document.getElementById("openVoicings").onclick=function(){beginVoicing()};
  document.getElementById("openJazzLab").onclick=()=>beginJazzLab();
- app.querySelectorAll("[data-difficulty]").forEach(function(b){b.onclick=function(){constructionDifficulty=b.dataset.difficulty;home()}});
- app.querySelectorAll("[data-level]").forEach(function(b){b.onclick=function(){start(Number(b.dataset.level))}});
+ app.querySelectorAll("[data-difficulty]").forEach(function(b){b.onclick=function(){constructionDifficulty=b.dataset.difficulty;keepConstructionChoice();returnToConstruction()}});
+ app.querySelectorAll("[data-level]").forEach(function(b){b.onclick=function(){level=Number(b.dataset.level);keepConstructionChoice();returnToConstruction()}});
+ document.getElementById("startConstruction").onclick=function(){start(level)};
  app.querySelectorAll("[data-preview]").forEach(function(b){b.onclick=function(){play([Number(b.dataset.preview)])}});
 }
 async function beginCourse(){
