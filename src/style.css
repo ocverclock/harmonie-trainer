@@ -57,3 +57,14 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;
 .keyVoice{position:absolute;left:50%;bottom:39px;transform:translateX(-50%);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:white;background:var(--voice-color);font-size:12px;font-weight:850;border:3px solid white;box-shadow:0 2px 9px #12274455;pointer-events:none;z-index:1}
 .pianoKey.black .keyVoice{bottom:25px;width:25px;height:25px}
 @media(max-width:650px){.aligned-lesson{width:1116px}.viz-aligned{width:1092px;height:318px}.aligned-lesson .piano-rack{width:1116px}}
+
+
+/* Free voicing construction mode: preserve existing realistic piano and question UI. */
+.build-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:16px 0 10px}
+.voicing-corrections{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:16px 0 26px}
+.voicing-check{border:1px solid #e6a0a0;background:#fff7f7;padding:14px;border-radius:15px;line-height:1.5;min-width:0}
+.voicing-check.passed{border-color:#9bd8b1;background:#f1fbf5}
+.voicing-check p{font-size:14px;margin:7px 0}
+.voicing-check .subtle{font-size:12px}
+.pianoKey.selected .keyText{color:#12458a}
+@media(max-width:650px){.voicing-corrections{grid-template-columns:1fr}.build-header .symbol{font-size:45px}}
