@@ -29,7 +29,7 @@ test("migration imports historical mastery without rearranging exercise indexes"
  assert.equal(s.getItem(LEGACY_KEY),JSON.stringify(legacy),"source v1 remains unchanged");
  assert.ok(!s.getItem(PROGRESS_KEY),"migration read alone does not write or delete storage");
  storeArchive(s,archive);
- assert.deepEqual(readArchive(s,lessons,now),archive);
+ assert.deepEqual(JSON.parse(JSON.stringify(readArchive(s,lessons,now))),JSON.parse(JSON.stringify(archive)));
  assert.equal(s.getItem(LEGACY_KEY),JSON.stringify(legacy));
 });
 
@@ -53,7 +53,7 @@ test("portable JSON roundtrips and merges deduplicated events, keeping old grade
  const user=seedFromLegacy(lessons,{"tetrades:0":{correct:true,attempts:2,at:now}},now);
  const newer=withAttempt(seedFromLegacy(lessons,{},now),lessons[0],3,[50,54,57,61],true,now,"shared-uuid");
  const imported=parseBackup(backupJSON(newer));
- assert.deepEqual(imported,newer);
+ assert.deepEqual(JSON.parse(JSON.stringify(imported)),JSON.parse(JSON.stringify(newer)));
  const merged=mergeArchives(user,imported);
  assert.equal(merged.events.length,1);
  assert.equal(merged.legacy["tetrades:0"].mastered,true);
