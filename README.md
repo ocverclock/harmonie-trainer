@@ -5,7 +5,11 @@ Application de formation musicale tactile pour iPhone, iPad et navigateurs moder
 ## Jouer
 https://ocverclock.github.io/harmonie-trainer/
 
-## Version en cours
+## Version en cours — parcours complet 0.5
+- 21 leçons originales et 52 exercices actifs dans l’onglet « Parcours » : positions de tétrades, accords de sixte, notes-guides, enchaînements majeurs/mineurs, sus4 et sus4(♭9), neuvièmes, treizièmes, transpositions, II–V–I secondaires, substitutions tritoniques, voicings sans fondamentale et collections à sept sons.
+- Deux évaluations adaptées aux consignes : « position exacte » (touches/octaves exigées) et « libre » (classes de hauteurs sans imposer le renversement). Erreurs et corrections matérialisées en rouge sur le clavier.
+- Suivi des exercices maîtrisés par leçon dans le stockage local du navigateur. Les exercices faux se retravaillent sans blocage.
+- Mode « Mes voicings » : notes fausses entourées en rouge et propositions de remplacement dans le registre choisi, tant sur le schéma que sur le clavier. Les octaves suggérées ne deviennent pas obligatoires.
 - Clavier de piano réaliste : touches noires au-dessus des blanches, défilement horizontal sur téléphone.
 - 28 accords de référence, 3 niveaux, sessions de 10 questions et correction musicale.
 - Module « II–V–I secondaires » : répondre d'abord à la question, valider, voir la réponse et l'explication, puis les points colorés, leurs trajectoires, les voix isolables et le clavier de l'accord actif.
@@ -24,8 +28,12 @@ npm test
 
 GitHub Actions lance les tests à chaque push sur `main`.
 
+## Inspiration pédagogique
+
+Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](https://www.pianojazzconcept.com/produit/les-bases-de-lharmonisation-2-2/) inspire l’ordre des notions. L’application, les exercices, les explications et les exemples sont indépendants et originaux ; aucun cours payant, fichier, partition ou standard arrangé de cette formation n’est reproduit.
+
 ## Limites et à vérifier
-- Version de développement ; le comportement réel du clavier et de l'audio sur iPhone/iPad reste à valider sur appareils.
+- Tests automatiques exécutés via `npm test` et CI de GitHub sur la pull request ; contrôle manuel de l’audio, du tactile et du rendu iPhone/iPad encore nécessaire.
 - La progression du module des II–V–I secondaires n'est pas encore conservée entre sessions.
 - Les correspondances de voix sont des exemples pédagogiques explicites, sans calcul de voicings optimisés.
 - La version actuelle n'est pas une application native App Store ; pas de garantie de disponibilité hors ligne.
@@ -59,4 +67,4 @@ GitHub Actions lance les tests à chaque push sur `main`.
 
 ## Suivi des agents et validation
 
-Les trois chantiers ont des issues distinctes et un journal pérenne : **[Journal des agents et décisions à valider](docs/AGENT_WORK_LOG.md)**. Les travaux de code doivent rester sur des branches/PR séparées jusqu'à la validation explicite de l'utilisateur ; chaque PR doit renseigner les tests, les choix et les blocages avant demande de fusion.
+Les trois chantiers sont consignés dans le **[journal des agents et décisions](docs/AGENT_WORK_LOG.md)**. Le 17 octobre 2026, l'utilisateur a donné une **autorisation explicite de publication du parcours complet** ; cette autorisation est spécifique au travail décrit dans la PR correspondante. Toute autre future évolution majeure devra être validée selon la règle habituelle.

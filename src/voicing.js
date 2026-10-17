@@ -56,3 +56,24 @@ export function analyzeMotion(progression){
  }
  return {total,stationary,large};
 }
+
+/** Suggested correction in the played register, not a mandatory octave or inversion. */
+export function suggestCorrections(symbol,midis,reference=[]){
+ const grade=evaluateVoicing(symbol,midis);
+ const expected=new Set(grade.expected),used=new Set(),wrong=[];
+ for(const midi of [...midis].sort((a,b)=>a-b)){
+  const pc=midi%12;
+  if(!expected.has(pc)||used.has(pc))wrong.push(midi);
+  else used.add(pc);
+ }
+ const suggested=grade.missing.map(pc=>{
+  const anchor=wrong.shift();
+  const ref=reference.find(n=>n%12===pc);
+  const near=Number.isInteger(anchor)?anchor:Number.isInteger(ref)?ref:60+pc;
+  const candidates=[];
+  for(let n=PIANO_START;n<=PIANO_END;n++)if(n%12===pc)candidates.push(n);
+  const midi=candidates.sort((a,b)=>Math.abs(a-near)-Math.abs(b-near))[0];
+  return {midi,replace:Number.isInteger(anchor)?anchor:null};
+ });
+ return {correct:grade.correct,wrong:[...new Set(midis.filter(n=>!expected.has(n%12))) ,...suggested.filter(x=>x.replace!==null&&expected.has(x.replace%12)).map(x=>x.replace)],suggested};
+}

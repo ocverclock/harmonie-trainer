@@ -1,5 +1,5 @@
 import {secondary,names} from "./music.js";
-import {evaluateVoicing,makeVoicingProgression,analyzeMotion,midiLabel} from "./voicing.js";
+import {evaluateVoicing,makeVoicingProgression,analyzeMotion,midiLabel,suggestCorrections} from "./voicing.js";
 import {diagram,voiceColors,frameCenter,movementSummary} from "./voices.js?v=3";
 
 export function createVoicingUI({app,shell,piano,play,escapeText,button}){
@@ -34,6 +34,7 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
     '<div class="row between" style="margin-top:18px">'+button("← Précédent","prevVoicing","quiet",step===0)+button(step===2?"Corriger mes trois accords":"Accord suivant →","nextVoicing","primary",chosen.size!==4)+'</div>';
   }else{
    const grades=frames.map((f,i)=>evaluateVoicing(f.symbol,answers[i]));
+   const correctionHints=frames.map((f,i)=>({row:i,...suggestCorrections(f.symbol,answers[i],f.voices.map(v=>v.midi))}));
    const correct=grades.filter(g=>g.correct).length;
    const mine=makeVoicingProgression(q,answers);
    const progress=display==="mine"?mine:q.progression;
@@ -51,8 +52,8 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
     }).join('')+'</div>'+
     '<h3>Comparer les glissements</h3><div class="row">'+button("Mon voicing","mineVoicings",display==="mine"?"primary":"quiet")+button("Exemple corrigé","referenceVoicings",display==="reference"?"primary":"quiet")+button("Écouter","playVoicing","quiet")+'</div>'+
     '<div class="timeline">'+frames.map((fr,i)=>'<button data-v-step="'+i+'" class="btn '+(i===step?'active':'')+'">'+(i+1)+'. '+escapeText(fr.symbol)+'</button>').join("")+'</div>'+
-    '<p class="muted">'+(display==="mine"?'Ton propre voicing est représenté, même si une note est incorrecte. Les voix sont numérotées du grave vers l’aigu à chaque accord.':'Voici un exemple de conduite de voix, mais d’autres répartitions peuvent être parfaitement correctes.')+'</p>'+
-    '<div class="piano-scroll aligned-scroll" role="region" tabindex="0" aria-label="Voicings et clavier synchronisés"><div class="aligned-lesson">'+diagram(progress,step,-1)+
+    '<p class="muted">'+(display==="mine"?'Ton tracé reste visible. Un cercle rouge signale la note erronée et un cercle rouge sur fond blanc propose une note corrigée dans ton registre. Ces octaves ne sont pas imposées : un autre renversement juste reste accepté.':'Voici un exemple de conduite de voix, mais d’autres répartitions peuvent être parfaitement correctes.')+'</p>'+
+    '<div class="piano-scroll aligned-scroll" role="region" tabindex="0" aria-label="Voicings et clavier synchronisés"><div class="aligned-lesson">'+diagram(progress,step,-1,display==="mine"?correctionHints:[])+
     piano(new Set(),active.voices.map(v=>v.midi),false,active.voices,true,-1,"pitchClass",voiceColors)+
     '</div></div>'+
     '<p class="subtle">Les couleurs et numéros correspondent exactement entre les boules, les courbes et les touches. Fais défiler cet ensemble horizontalement sur iPhone.</p>'+
@@ -63,6 +64,17 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
   }
   body+='</section>';
   shell(body);
+  if(revealed&&display==="mine"){
+   const hint=suggestCorrections(frames[step].symbol,answers[step],frames[step].voices.map(v=>v.midi));
+   for(const midi of hint.wrong){
+    const key=app.querySelector('.aligned-lesson .pianoKey[data-preview="'+midi+'"]');
+    if(key)key.classList.add("correction-extra");
+   }
+   for(const item of hint.suggested){
+    const key=app.querySelector('.aligned-lesson .pianoKey[data-preview="'+item.midi+'"]');
+    if(key)key.classList.add("correction-expected");
+   }
+  }
   const scroll=app.querySelector(".piano-scroll");
   if(scroll){
    if(scrollPos===null&&revealed)scroll.scrollLeft=Math.max(0,frameCenter(display==="mine"?makeVoicingProgression(q,answers):q.progression,step)+12-scroll.clientWidth/2);
