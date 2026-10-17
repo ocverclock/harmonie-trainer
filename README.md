@@ -107,3 +107,16 @@ L'évolution du suivi et des sauvegardes est publiée en V0.7. Voir les [PR #8 (
 - **Mes voicings** : lors de la construction du II ou du I suivant, quatre petits anneaux discrets rappellent les **touches réellement jouées dans l'accord précédent**, même pour les notes communes. Les touches choisies pour le nouvel accord restent visibles en bleu. Aucune note de la correction n'est révélée avant validation ; aucun repère au premier accord ou si l'accord précédent est incomplet.
 - En ouvrant librement **Mes voicings**, le départ change de cadence de façon aléatoire ; **Nouvelle cadence aléatoire** évite la répétition immédiate. Depuis le QCM, la cadence voulue par l'utilisateur reste imposée.
 - Aucune géométrie du clavier modifiée ; noms et couleurs des voix, diagramme et défilement partagé conservés. Tests : `tests/practice-random.test.js`.
+
+
+## Ateliers jazz modernes (V0.9 — en cours de vérification)
+
+Trois ateliers interactifs originaux sont accessibles depuis **Atelier jazz** (navigation, accueil et écran Parcours).
+
+1. **Conduite des voix** : cinq cadences II–V–I à réaliser soi-même, trois accords successifs de quatre notes dans le registre du clavier. Les notes que l'élève a jouées précédemment restent repérées par des cercles légers en pointillés. Après vérification, l'application distingue la *justesse des quatre notes* de la *fluidité du mouvement*, compare les voix du grave vers l'aigu et présente une disposition alternative à écouter qui minimise les déplacements dans la tessiture MIDI 48–83. Les voicings corrects ne sont **jamais pénalisés** parce qu'ils ne ressemblent pas à l'exemple. L'association des voix est faite par registre grave → aigu ; elle ne prétend pas suivre les doigtés réels.
+2. **Oreille harmonique** : reconnaissance de cinq qualités (maj7, m7, 7, m7♭5, sus4) jouées dans des tonalités changeantes, réponse proposée **après** écoute, puis explication des tierces, quintes et septièmes.
+3. **Réarmoniser une phrase** : quatre courtes études de dominante secondaire, substitution tritonique, backdoor et cadence mineure. Plusieurs solutions peuvent être valides, chacune avec sa justification et une comparaison à écouter. Les exemples sont originaux ; aucune partition payante du cours de référence n'est reprise.
+
+**Sauvegarde** : chaque réponse vérifiée est conservée dans le registre JSON V2 déjà exportable depuis Parcours. L'accueil de l'atelier rappelle les réponses récentes à retravailler ; une erreur ultérieure ne détruit pas un succès antérieur. Le bouton Effacer la progression demande confirmation et efface également V2, pour respecter son libellé « tous les scores ».
+
+**Reste à valider** : tests automatiques GitHub, disponibilité des fichiers Pages, audit visuel des nouveaux contrôles sur iPhone/iPad, audio tactile dans Safari et restauration JSON inter-appareils. Aucun backend ni compte utilisateur. Les exercices n'analysent pas encore une entrée MIDI physique ou une vraie mélodie saisie librement par l'élève.
