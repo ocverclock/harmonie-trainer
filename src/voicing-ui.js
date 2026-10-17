@@ -1,10 +1,11 @@
 import {secondary,names} from "./music.js";
+import {nextCadenceIndex,randomCadenceIndex,previousVoicingNotes} from "./practice-random.js";
 import {evaluateVoicing,makeVoicingProgression,analyzeMotion,midiLabel,suggestCorrections} from "./voicing.js";
 import {diagram,voiceColors,frameCenter,movementSummary} from "./voices.js?v=4";
 
 export function createVoicingUI({app,shell,piano,play,escapeText,button}){
  let question=0,step=0,answers=[[],[],[]],revealed=false,display="mine",scrollPos=null;
- function start(index=0){question=index;step=0;answers=[[],[],[]];revealed=false;display="mine";scrollPos=null;render()}
+ function start(index=null){question=index===null?randomCadenceIndex(secondary.length):index;step=0;answers=[[],[],[]];revealed=false;display="mine";scrollPos=null;render()}
  function saveScore(data){
   try{
    const key="harmonie-voicing-results-v1";
@@ -13,7 +14,7 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
    list.push(data);localStorage.setItem(key,JSON.stringify(list.slice(-100)));
   }catch(e){/* local score storage optional */}
  }
- function nextQuestion(){start((question+1)%secondary.length)}
+ function nextQuestion(){start(nextCadenceIndex(question,secondary.length))}
  function referenceLabel(frame,pc){
   const match=frame.voices.find(v=>v.midi%12===pc);
   return match?match.note.replace(/-?\d+$/,""):names[pc];
@@ -21,6 +22,7 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
  function render(){
   const q=secondary[question],frames=q.progression.frames;
   const frame=frames[step],chosen=new Set(answers[step]);
+  const previous=previousVoicingNotes(answers,step);
   let body='<section class="card"><div class="row between"><span class="badge">Mes voicings · cadence '+(question+1)+'/'+secondary.length+'</span><span class="subtle">Sans QCM · 3 accords</span></div>'+
    '<div class="eyebrow" style="margin-top:20px">Destination : '+escapeText(q.target)+'</div>'+
    '<h2>Construis tes propres voicings</h2><p class="muted">Les accords sont indiqués pour travailler leur construction. Choisis quatre hauteurs sur le clavier, librement dans les octaves proposées. Tu verras la correction après les trois accords, sans être obligé de copier le renversement de l’exemple.</p>';
@@ -29,6 +31,7 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
     '<div class="row between"><div><p class="eyebrow">Accord '+(step+1)+' / 3</p><div class="symbol">'+escapeText(frame.symbol)+'</div></div><span class="badge">'+chosen.size+' / 4 notes</span></div>'+
     '<p class="muted">Ton jeu : <b>'+(chosen.size?[...chosen].sort((a,b)=>a-b).map(midiLabel).join(' · '):'Aucune note sélectionnée')+'</b></p>'+
     piano(chosen,[],true,[],false,-1,"midi")+
+    (previous.length?'<p class="previous-voicing-legend"><span class="previous-voicing-symbol" aria-hidden="true"></span> Repères discrets : les 4 touches de <strong>'+escapeText(frames[step-1].symbol)+'</strong> que tu avais jouées. Les touches bleues sont ton accord actuel. Une note commune conserve les deux repères.</p>':'')+
     '<p class="subtle">Toucher une note permet de l’ajouter ou l’enlever. Les octaves sont conservées : C3 et C4 sont deux touches différentes.</p>'+
     '<div class="row">'+button("Effacer","eraseVoicing","quiet",chosen.size===0)+button("Écouter mon accord","listenVoicing","quiet",chosen.size===0)+'</div>'+
     '<div class="row between" style="margin-top:18px">'+button("← Précédent","prevVoicing","quiet",step===0)+button(step===2?"Corriger mes trois accords":"Accord suivant →","nextVoicing","primary",chosen.size!==4)+'</div>';
@@ -60,10 +63,22 @@ export function createVoicingUI({app,shell,piano,play,escapeText,button}){
     '<p class="explain">Mouvement total : <b>'+motion.total+' demi-tons</b> sur huit déplacements ; '+motion.stationary+' voix immobiles sur une transition.'+
     (motion.large?' '+motion.large+' saut(s) dépassent sept demi-tons : essaie aussi des renversements plus proches.':'')+
     ' Le mouvement ne fait pas perdre de points à un accord juste.</p>'+
-    '<div class="row">'+button("Rejouer cette cadence","retryVoicing","quiet")+button(question===secondary.length-1?"Recommencer le parcours":"Cadence suivante →","nextVoicingQuestion","primary")+'</div>';
+    '<div class="row">'+button("Rejouer cette cadence","retryVoicing","quiet")+button("Nouvelle cadence aléatoire →","nextVoicingQuestion","primary")+'</div>';
   }
   body+='</section>';
   shell(body);
+  if(!revealed&&previous.length){
+   // Ghosts are the four physical keys entered in the PREVIOUS chord, not the answer key.
+   // Keep the selected-note color; a faint dashed ring remains even for a common note.
+   for(const midi of previous){
+    const key=app.querySelector('.pianoKey[data-midi="'+midi+'"]');
+    if(!key)continue;
+    key.classList.add("previous-voicing");
+    key.setAttribute("data-previous-voicing","true");
+    key.setAttribute("aria-label",key.getAttribute("aria-label")+" — position jouée dans l’accord précédent");
+    key.title="Note de l’accord précédent : "+midiLabel(midi);
+   }
+  }
   if(revealed&&display==="mine"){
    const hint=suggestCorrections(frames[step].symbol,answers[step],frames[step].voices.map(v=>v.midi));
    for(const midi of hint.wrong){
