@@ -67,6 +67,18 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-17 — V0.12 publiée : 8 niveaux et tonalités indépendantes
+- **Demande validée :** « Accords de 9 · 4 notes, avec difficulté intermédiaire. Applique la refonte en respectant les 8 niveaux et la séparation entre structure et tonalité. »
+- **[PR #17](https://github.com/ocverclock/harmonie-trainer/pull/17)** fusionnée, commit `18b287567f076ac1f68394db1284284cdd97c20d`. Suit l'audit [issue #16](https://github.com/ocverclock/harmonie-trainer/issues/16).
+- **8 niveaux théoriques fixes :** (1) triades M/m 3 sons ; (2) dim/aug/sus4 3 ; (3) maj7/m7 4 ; (4) 7/m7♭5/dim7 4 ; (5) 6/m6 4 ; (6) 9/m9 4 (sans quinte) ; (7) 13/maj13/m13 5 (sans quinte/11) ; (8) 7♭9/7♯9/7♭13 4–5.
+- **3 difficultés indépendantes** : Facile = six fondamentales familières + formule visible ; Intermédiaire = Ré, Mi♭, Mi, La♭, La, Si♭ sans indices ; Difficile = toutes les douze fondamentales, sans indices. À l'ouverture : **niveau 6, Intermédiaire**, selon la validation utilisateur. La difficulté ne remplace jamais une formule par une autre.
+- **UX :** huit cartes de niveaux, trois cartes de difficultés, récapitulatif avant bouton « Commencer les 10 exercices », choix mémorisé dans `harmonie-construction-choice-v1`, retour à la sélection depuis un exercice.
+- **Historique :** aucune suppression de `harmonie-sessions-v2`. Anciennes sessions affichées « famille non enregistrée », puisqu'on ne peut retrouver avec certitude leur contenu réel ; nouvelles sessions ont `schemaVersion:3`, `familyId`, `realizationId`, `level`, `difficulty`.
+- **Audio :** les corrections de neuvièmes/treizièmes répartissent les notes dans des octaves appropriées, plutôt que de faire entendre une unique octave.
+- **Tests :** suite musicale réussie avant fusion ([run 39066013813](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066013813)), puis après fusion ([run 39066099898](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066099898)). Navigateur Chromium téléphone/tablette avant et après fusion : [39066013822](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066013822), [39066099903](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066099903), tous **success**. [GitHub Pages deployment](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066099716) et [smoke du site public V0.12](https://github.com/ocverclock/harmonie-trainer/actions/runs/39066099991) **success**, dont chargement de `construction-setup.js`, `music.js?v=4`, `practice-random.js?v=4`.
+- **Toujours à tester sur appareil réel :** gestes tactiles, audio Safari, import/export de sauvegarde depuis Fichiers sur iPhone/iPad. Les correcteurs d'accords travaillent en classes de hauteurs, sans imposer une position particulière : ces travaux sont disponibles dans les modules Voicings/Atelier jazz.
+
+
 ### 2026-10-17 — Défi 6/9 à quatre sons, 13 à cinq sons — PUBLIÉ
 - **Correction demandée** : le niveau « Défi » ne devait pas seulement retirer les indices et choisir plus de touches noires ; l'utilisateur voulait **4 notes pour les accords 6 et 9 et 5 notes pour les accords 13**.
 - **PR [#15](https://github.com/ocverclock/harmonie-trainer/pull/15)** fusionnée dans `main` via commit `f6da839ac6678ac95e5a3bbec4945e4e9cd6c264` ; l'ancienne PR #14 avec conflit a été fermée au profit de la version portée sur le main récent.
