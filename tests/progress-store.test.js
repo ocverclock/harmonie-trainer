@@ -69,7 +69,7 @@ test("portable JSON roundtrips and merges deduplicated events, keeping old grade
 });
 
 test("corrupted imports and blocked storage do not overwrite existing records",()=>{
- for(const s of ["", "not json", "{}", '{"format":"harmonie-trainer-progress","schemaVersion":2}"]){
+ for(const s of ["", "not json", "{}", '{"format":"harmonie-trainer-progress","schemaVersion":2}']){
   assert.throws(()=>parseBackup(s));
  }
  const s=storage({[LEGACY_KEY]:'{"tetrades:0":{"correct":true,"attempts":1}}'});
