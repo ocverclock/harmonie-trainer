@@ -1,0 +1,38 @@
+:root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#14243b;background:#eef3f9;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;min-width:320px;background:radial-gradient(circle at 8% 0%,#fff 0%,#f2f6fc 42%,#e7eef8 100%);min-height:100vh}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}button:disabled{opacity:.44;cursor:default}
+.wrap{max-width:1200px;margin:auto;padding:20px clamp(10px,2.5vw,32px) 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+.brand{font-weight:850;letter-spacing:-.7px;font-size:24px}.brand span{display:inline-grid;place-items:center;background:#122744;color:#fff;border-radius:11px;width:38px;height:38px;margin-right:7px}.nav{display:flex;gap:7px;flex-wrap:wrap}
+.btn,.nav button,.choice{border:1px solid #d1ddec;background:#fff;color:#18304d;border-radius:12px;padding:11px 15px;min-height:44px}
+.btn.primary,.nav button.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:700}.btn.primary:hover{background:#1d52c3}.btn.quiet{background:#f6f9fe}
+.card{background:#fff;border:1px solid #dde6f1;border-radius:22px;box-shadow:0 12px 32px #243d5a0d;padding:clamp(16px,2.4vw,28px);margin:16px 0}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;line-height:1.1}h2{font-size:clamp(22px,2.7vw,29px);letter-spacing:-.5px}h3{font-size:18px}.muted{color:#63758e;line-height:1.55}.subtle{font-size:13px;color:#6a7c93}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px}
+.level{text-align:left;min-height:100px}.level strong,.level small{display:block}.level small{font-size:13px;color:#6c809a;margin-top:8px}
+.eyebrow{text-transform:uppercase;letter-spacing:1.5px;color:#2563eb;font-size:12px;font-weight:800;margin-bottom:9px}
+.symbol{font-size:clamp(37px,7vw,60px);font-weight:800;margin-bottom:8px}.score{font-size:56px;font-weight:850;color:#2563eb}
+.badge{font-size:13px;padding:6px 12px;border-radius:999px;background:#eaf2ff;color:#214e9a;font-weight:700}
+.feedback{border-left:4px solid #ec7777;background:#fff4f4;padding:16px;border-radius:12px;margin:16px 0}.feedback.correct{background:#effcf4;border-left-color:#20a564}
+.choiceGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:11px;margin:18px 0}.choice{text-align:left;line-height:1.4;font-weight:650;min-height:65px;transition:background .15s,border-color .15s}
+.choice.picked{border-color:#447be4;background:#e9f1ff}.choice.answer{border-color:#30a16a;background:#effbf4}.choice.wrong{border-color:#f07878;background:#fff0f0}
+.explain{background:#f0f6ff;border-left:4px solid #3980ed;padding:15px;border-radius:11px;line-height:1.55;margin:18px 0}.explain strong{color:#173e87}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.legend button{border:1px solid #d4e2f1;border-radius:10px;background:#fff;color:#1c314b;min-height:44px;padding:9px 11px}.legend button.faded{opacity:.42}.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:7px}
+.timeline{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:13px 0}.timeline .active{background:#e7efff;border-color:#6b9de8;color:#1a4baf;font-weight:750}
+.viz{overflow:hidden;border-radius:18px;background:linear-gradient(180deg,#f8fbff,#edf4fd);border:1px solid #d8e4f2}
+.viz svg{display:block;width:100%;height:auto}.viz text.title{font-size:21px;font-weight:800;fill:#172e4d}.viz text.pitch{font-size:13px;font-weight:750;fill:#294262}.viz .guide{stroke:#d8e5f3;stroke-dasharray:5 7}.viz .path{fill:none;stroke-width:4;stroke-linecap:round}.viz .voice{stroke:white;stroke-width:3;filter:drop-shadow(0 3px 4px #263f6338)}
+/* Real piano: white keys form an uninterrupted keyboard; raised black keys overlap them instead of following in a flex row. */
+.piano-scroll{overflow-x:auto;overflow-y:hidden;padding:10px 0 15px;-webkit-overflow-scrolling:touch}
+.piano-rack{width:max-content;border-radius:13px;padding:13px 12px 16px;background:linear-gradient(180deg,#3c4e67 0,#142239 28%,#0c1726 100%);box-shadow:0 8px 24px #1227442b,inset 0 2px 0 #6f8194}
+.piano{position:relative;height:214px;user-select:none;-webkit-user-select:none;touch-action:pan-x}
+.pianoKey{position:absolute;margin:0;padding:0;display:flex;align-items:flex-end;justify-content:center;transition:filter .12s}
+.pianoKey.white{width:52px;height:207px;top:0;border:1px solid #9eacba;border-radius:0 0 8px 8px;background:linear-gradient(180deg,#fdfefe 2%,#fff 67%,#e8eef5 92%,#d5e0ea 100%);box-shadow:inset 0 -8px 12px #8c9bab29,inset 0 2px 1px #fff}
+.pianoKey.white:active{background:linear-gradient(#e3f3ff,#bddff7)}.pianoKey.white.selected{background:linear-gradient(180deg,#ebf7ff,#b7dfff);box-shadow:inset 0 0 0 2px #4484eb,inset 0 -8px 18px #2563eb3a}
+.pianoKey.black{width:36px;height:126px;z-index:2;border-radius:0 0 6px 6px;border:1px solid #060d16;background:linear-gradient(100deg,#243851 0%,#0b1421 23%,#182b40 65%,#05090f 100%);box-shadow:2px 5px 6px #14243b65,inset 1px 0 #7890a333}
+.pianoKey.black:active,.pianoKey.black.selected{background:linear-gradient(110deg,#3d73b9,#0a3c89)}
+.pianoKey.marked::after{content:"";position:absolute;bottom:33px;width:19px;height:19px;background:#a855f7;border:3px solid white;border-radius:50%;box-shadow:0 0 0 3px #a855f766;pointer-events:none}
+.pianoKey.black.marked::after{bottom:19px;width:15px;height:15px;background:#fbbf24}
+.keyText{font-size:11px;color:#71849a;font-weight:750;padding-bottom:9px;pointer-events:none}.black .keyText{color:#fff;font-size:10px;padding-bottom:8px}.selected .keyText{color:#194d92}
+.tip{margin-top:8px;font-size:13px;color:#697d92}.footer{color:#7a8ba1;font-size:12px;text-align:center;padding-top:14px}
+@media(max-width:650px){.wrap{padding:13px 9px 35px}.top{align-items:flex-start}.brand{font-size:22px}.nav{width:100%}.nav button{flex:1;font-size:13px;padding:9px}.card{border-radius:17px}.choiceGrid{grid-template-columns:1fr}.pianoKey.white{height:190px}.piano{height:195px}.pianoKey.black{height:115px}.score{font-size:48px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
