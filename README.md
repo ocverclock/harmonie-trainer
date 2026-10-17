@@ -114,6 +114,16 @@ Sur l'accueil, sélectionner une **difficulté** puis une **famille d'accords** 
 
 - **Découverte** : fondamentales usuelles (Do, Ré, Mi, Fa, Sol, La, Si♭), pas plus de deux touches noires par accord, rappel des degrés de construction et bouton pour écouter la fondamentale.
 - **Entraînement** : le comportement antérieur, sessions mélangées, 10 questions, tonalités variées, corrections après réponse.
-- **Défi** : mêmes familles harmoniques mais sélection renforcée de tonalités moins familières (notamment Ré♭, Mi♭, Sol♭, La♭, Si) et de touches noires, sans indice initial. Le score reste sur 100 et aucune sanction chronométrée n'est introduite.
+- **Défi** : construit de **nouvelles familles harmoniques** : (1) accords de sixte C6/Cm6 à **4 notes**, (2) neuvièmes C9/Cm9 à **4 notes** (voicing jazz sans quinte), (3) treizièmes C13 à **5 notes** (voicing sans quinte ni onzième). Tonalités variées et touches noires renforcées ; la validation exige le nombre de notes demandé. La correction précise la formule et les omissions. Le score reste sur 100.
 
 Les **trois familles existantes** (triades, 7e, avancés) restent séparées de la difficulté : jusqu'à **9 parcours de construction distincts**. Chaque nouveau score contient `difficulty` et `level` ; les sessions anciennes restent consultables comme « ancien » sans leur attribuer rétrospectivement une nouvelle difficulté. L'ancien appel `sessionFor(level)` fonctionne toujours avec `standard` par défaut. Le piano reste inchangé.
+
+## Correction Défi V0.11 — familles et nombre de notes
+
+La difficulté **Défi** sélectionne trois vraies catégories progressives indépendantes des familles classiques des modes Découverte et Entraînement :
+
+- **Niveau 1 — Sixte, 4 notes** : majeur 6 (1–3–5–6) et mineur 6 (1–♭3–5–6).
+- **Niveau 2 — Neuvième, 4 notes** : 9 (1–3–♭7–9), m9 (1–♭3–♭7–9). La quinte est volontairement omise dans ce voicing jazz ; l'accord 9 théorique peut comporter cinq notes, mais cet exercice demande une réalisation précise de quatre sons.
+- **Niveau 3 — Treizième, 5 notes** : dominante 13 (1–3–♭7–9–13), quinte et onzième omises. Exemple C13 : Do–Mi–Si♭–Ré–La.
+
+Chaque exercice affiche le nombre de notes attendu, sans dévoiler leurs hauteurs avant correction. La validation n'est possible que lorsque 4 ou 5 classes de notes distinctes ont été choisies. Les familles et scores classiques restent conservés ; les anciennes sessions de Défi restent dans l'historique comme enregistrements de leur version originale.
