@@ -91,22 +91,22 @@ export function randomizedChordSession(level,bank,qualities,random=Math.random,d
   const alternatives=eligible.filter(e=>!previous||e.expected[0]!==previous.expected[0]);
   const shortlist=alternatives.length?alternatives:eligible;
   const remaining=10-chosen.length;
-  const blackTarget=difficulty==="challenge"?8:difficulty==="standard"?5:0;
-  const rareTarget=difficulty==="challenge"?5:0;
   const blackSoFar=chosen.filter(e=>e.expected.some(n=>BLACK.has(n))).length;
   const rareSoFar=chosen.filter(e=>CHALLENGE_ROOTS.has(e.expected[0])).length;
-  const requireBlack=blackTarget-blackSoFar>=remaining;
-  const requireRare=rareTarget-rareSoFar>=remaining;
-  const matching=(predicate,list)=>{const found=list.filter(predicate);return found.length?found:list};
   let choices=shortlist;
-  if(requireRare)choices=matching(e=>CHALLENGE_ROOTS.has(e.expected[0]),choices);
-  if(requireBlack)choices=matching(e=>e.expected.some(n=>BLACK.has(n)),choices);
-  // For the harder modes, increase unfamiliar roots early even before a quota
-  // is mathematically urgent. The shuffle still decides which actual chord.
-  if(difficulty==="challenge"&&!requireRare&&chosen.length%2===0)
-   choices=matching(e=>CHALLENGE_ROOTS.has(e.expected[0]),choices);
-  if(difficulty==="challenge"&&!requireBlack&&chosen.length%3===0)
-   choices=matching(e=>e.expected.some(n=>BLACK.has(n)),choices);
+  if(difficulty==="challenge"){
+   // Prioritize *both* targets until five uncommon keys have been studied,
+   // and select black-key chords in every remaining slot if available.
+   // This avoids two competing last-minute quotas cancelling each other.
+   const both=choices.filter(e=>CHALLENGE_ROOTS.has(e.expected[0])&&e.expected.some(n=>BLACK.has(n)));
+   const black=choices.filter(e=>e.expected.some(n=>BLACK.has(n)));
+   if(rareSoFar<5&&both.length)choices=both;
+   else if(black.length)choices=black;
+  }else if(difficulty==="standard"){
+   const black=choices.filter(e=>e.expected.some(n=>BLACK.has(n)));
+   const needBlack=Math.max(0,5-blackSoFar);
+   if(needBlack>=remaining&&black.length)choices=black;
+  }
   const selected=choices[0];used.add(type+":"+selected.expected[0]);chosen.push(selected);
  }
  return chosen;
