@@ -60,7 +60,7 @@ test("P02 explains semitone, tone and leaps without claiming to track fingers",(
  const report=assessVoicingTransition("Cmaj7",cmaj,[48,52,59,67],true);
  assert.equal(report.harmony.correct,true);
  assert.equal(report.motion.leaps,1);
- assert.equal(report.motion.held,3);
+ assert.equal(report.motion.held,2,"Two voices stay at their bass-to-soprano ranks");
  const message=describeVoicingTransition(report);
  assert.match(message.movement,/saut\(s\) supérieur\(s\)/);
  assert.ok(message.shared.includes("E3"));
