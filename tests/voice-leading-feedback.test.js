@@ -17,8 +17,8 @@ test("P02 distinguishes pitch classes shared by chords from stationary rank-wise
  assert.equal(report.reference.midis.length,4);
  const text=describeVoicingTransition(report);
  assert.match(text.members,/2 note\(s\) commune/);
- assert.match(text.shared,/Sol3/);
- assert.match(text.shared,/Si3/);
+ assert.match(text.shared,/G3/);
+ assert.match(text.shared,/B3/);
  assert.match(text.movement,/grave → aigu/);
  assert.ok(text.comparison?.includes("Disposition alternative valide"));
 });
@@ -57,13 +57,13 @@ test("P02 retains perfect voicings and valid inversions without deductions",()=>
 });
 
 test("P02 explains semitone, tone and leaps without claiming to track fingers",()=>{
- const report=assessVoicingTransition("Cmaj7",[52,55,59,64],[52,55,59,72],true);
+ const report=assessVoicingTransition("Cmaj7",cmaj,[48,52,59,67],true);
  assert.equal(report.harmony.correct,true);
  assert.equal(report.motion.leaps,1);
  assert.equal(report.motion.held,3);
  const message=describeVoicingTransition(report);
  assert.match(message.movement,/saut\(s\) supérieur\(s\)/);
- assert.ok(message.shared.includes("Mi3"));
+ assert.ok(message.shared.includes("E3"));
  assert.throws(()=>assessVoicingTransition("G7",[48,48,55,59],g7));
  assert.throws(()=>assessVoicingTransition("G7",cmaj,[48,52,55,100]));
 });
