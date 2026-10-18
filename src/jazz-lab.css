@@ -64,3 +64,25 @@
 .lab-guide-keyboard .pianoKey.guide-error{outline:4px solid #cc3c45;outline-offset:-4px}
 .lab-guide-keyboard .pianoKey.guide-error::before{content:"×";position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#ffe9ea;color:#8e1520;font-size:15px;font-weight:800;z-index:5;pointer-events:none}
 @media(max-width:450px){.lab-guide-route>div{padding:10px 8px}.lab-guide-route strong{font-size:21px}.lab-guide-route div span{font-size:12px}}
+
+
+/* P04: player's validated four-voice trajectories and the piano use ONE
+   horizontal scroll container with the original rack width and key offsets. */
+.lab-motion-panel{margin:16px 0 12px}
+.lab-motion-panel h3{font-size:18px;margin:0 0 8px;color:#234468}
+.lab-motion-panel .subtle{line-height:1.5}
+.lab-motion-scroll .lab-voice-paths{height:var(--path-height);background:#f1f6ff;border-radius:13px 13px 0 0}
+.lab-motion-scroll .lab-voice-paths svg{display:block;width:1092px;height:var(--path-height)}
+.lab-motion-scroll .lab-path-guide{stroke:#c1d6ea;stroke-width:1;stroke-dasharray:3 8}
+.lab-motion-scroll .lab-path-row{fill:#e1ecf8;opacity:.9}
+.lab-motion-scroll .lab-path-chord{font-size:13px;fill:#254b7b;font-weight:800}
+.lab-motion-scroll .lab-path-line{fill:none;stroke-width:4;stroke-linecap:round;pointer-events:none}
+.lab-motion-scroll .lab-path-held{stroke-dasharray:5 6}
+.lab-motion-scroll .lab-path-node{stroke:#fff;stroke-width:3;pointer-events:none}
+.lab-motion-scroll .lab-path-number{fill:#fff;stroke:#183251;stroke-width:.45;paint-order:stroke;font-size:13px;font-weight:900;pointer-events:none}
+.lab-path-description{padding:12px 15px;background:#f7faff;border:1px solid #d5e2f0;border-radius:0 0 13px 13px}
+.lab-path-description p{margin:0 0 8px}
+.lab-path-description ol{padding-left:21px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;font-size:13px;margin:0}
+.lab-path-description li{line-height:1.5}
+.lab-path-swatch{display:inline-block;vertical-align:middle;width:11px;height:11px;border-radius:50%;background:var(--path-color);margin-right:5px;border:1px solid #8a9caf}
+@media(max-width:570px){.lab-path-description{padding:10px}.lab-path-description ol{grid-template-columns:1fr}.lab-motion-panel h3{font-size:16px}}
