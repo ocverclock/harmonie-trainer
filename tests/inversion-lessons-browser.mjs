@@ -10,6 +10,7 @@ try{
   page.on("pageerror",error=>errors.push(error.message));
   await page.goto("http://127.0.0.1:8765/",{waitUntil:"networkidle"});
   await page.getByRole("button",{name:"Atelier jazz : voix, oreille, harmonisation"}).click();
+  await page.locator('[data-lab-mode="inversions"]').waitFor({state:"visible",timeout:12000});
   assert.equal(await page.locator(".lab-tile").count(),5);
   await page.locator('[data-lab-mode="inversions"]').click();
   assert.match(await page.locator(".lab-panel h1").innerText(),/Cmaj7/);
