@@ -105,3 +105,13 @@
 .lab-ab-detail li{padding:4px 0}
 .lab-ab-status{padding:10px 12px;border-left:3px solid #6284ab;background:#eff5fd;border-radius:5px}
 @media(max-width:570px){.lab-ab{padding:11px}.lab-ab-grid{grid-template-columns:1fr}.lab-ab-actions .btn{flex:1 1 120px}}
+
+
+/* P06: select a theoretical target before starting, while keeping all
+   historical student IDs and the mobile piano unchanged. */
+.lab-cadence-choice{display:flex;flex-direction:column;gap:8px;margin:16px 0 19px;padding:13px 15px;border-radius:12px;border:1px solid #cddff0;background:#f5f9ff}
+.lab-cadence-choice label{font-size:15px;color:#23466d}
+.lab-cadence-choice select{font:inherit;color:#203a5a;border:1px solid #8bafda;border-radius:9px;padding:11px 12px;min-height:46px;background:white;width:100%;max-width:100%;text-overflow:ellipsis}
+.lab-cadence-choice select:focus-visible{outline:3px solid #6f98d2;outline-offset:2px}
+.lab-cadence-choice .subtle{margin:0;line-height:1.45;font-size:12px}
+@media(max-width:570px){.lab-cadence-choice{padding:10px}.lab-cadence-choice select{min-height:48px}}
