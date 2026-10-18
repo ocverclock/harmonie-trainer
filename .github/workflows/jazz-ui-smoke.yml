@@ -5,6 +5,7 @@ on:
       - 'index.html'
       - 'src/**'
       - 'tests/browser-smoke.mjs'
+      - 'tests/voice-leading-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
   push:
     branches: [main]
@@ -12,6 +13,7 @@ on:
       - 'index.html'
       - 'src/**'
       - 'tests/browser-smoke.mjs'
+      - 'tests/voice-leading-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
 permissions:
   contents: read
@@ -33,3 +35,4 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/harmonie-http.log 2>&1 &
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
           node tests/browser-smoke.mjs
+          node tests/voice-leading-browser.mjs
