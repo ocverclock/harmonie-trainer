@@ -5,6 +5,7 @@ import {readArchive,storeArchive,withAttempt,progressByExercise} from "./progres
 import {midiLabel} from "./voicing.js";
 import {previousVoicingNotes} from "./practice-random.js";
 import {noteX} from "./piano-layout.js";
+import {assessVoicingTransition,describeVoicingTransition} from "./voice-leading-feedback.js";
 
 export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive}){
  const e=escapeText;
@@ -86,8 +87,11 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
  function currentVoice(){
   const study=voiceStudies[voiceStudyIndex],frame=study.frames[step];
   const selected=new Set(voiceAnswers[step]),previous=previousVoicingNotes(voiceAnswers,step),grade=voiceGrades[step];
-  const motion=grade&&previous.length===4?analyzeVoiceLeading(previous,voiceAnswers[step]):null;
-  const suggestion=grade&&previous.length===4?closestValidVoicing(frame.symbol,previous):null;
+  const assessment=grade&&previous.length===4?
+   assessVoicingTransition(frame.symbol,previous,voiceAnswers[step],voiceGrades[step-1]?.correct===true):null;
+  const motion=assessment?.motion||null;
+  const guidance=assessment?describeVoicingTransition(assessment):null;
+  const suggestion=assessment?.reference||null;
   const last=step===2;
   let body=heading("Conduite des voix",study.title,
    "Construis les trois accords en gardant à l’esprit les déplacements depuis le précédent. Les anneaux en pointillés rappellent tes propres notes, pas la réponse.");
@@ -112,11 +116,14 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
       '<p>'+(missing.length?'Manquantes : '+e(missing.join(", "))+'. ':'')+
       (wrong.length?'En trop : '+e(wrong.join(", "))+'. ':'')+
       (grade.duplicateCount?'Une note est doublée dans une autre octave.':'')+'</p>')+
-    (motion?'<p><strong>Conduite des voix :</strong> '+motion.total+' demi-tons de déplacement au total, '+motion.held+' voix immobiles, '+motion.semitone+' déplacements d’un demi-ton et '+motion.leaps+' grands sauts.</p>'+
+    (guidance?'<div class="lab-transition" aria-label="Analyse des déplacements"><h4>Notes communes et mouvements</h4>'+
+     '<p>'+e(guidance.members)+' '+e(guidance.shared)+'</p>'+
+     '<p>'+e(guidance.movement)+'</p>'+
      '<p class="subtle">'+e(motionSentence(motion))+'</p>'+
-     '<p><strong>Comparaison :</strong> une disposition proposée de '+e(frame.symbol)+' se déplace de '+suggestion.motion.total+' demi-tons depuis ton accord précédent.'+
-     (suggestion.motion.total<motion.total?' Tu peux essayer de limiter les sauts, sans que ton accord soit considéré faux.':' Ta disposition est déjà aussi économe selon cette comparaison des voix grave–aigu.')+'</p>'+
-     '<div class="row">'+button("Écouter une disposition proche","labSuggestion","quiet")+'</div>':
+     '<p><strong>Conseil pédagogique :</strong> '+e(guidance.advice)+'</p>'+
+     (guidance.comparison?'<p>'+e(guidance.comparison)+'</p><div class="row">'+
+      button("Écouter une autre disposition juste","labSuggestion","quiet")+'</div>':'')+
+     '<p class="subtle">Les voix sont rapprochées dans l’ordre grave → aigu ; les doigtés et croisements réels ne sont pas détectés.</p></div>':
       '<p>Pour le premier accord, écoute son timbre et choisis un registre confortable. La comparaison commencera avec le suivant.</p>')+
     '<div class="row">'+button("Réessayer ce voicing","labRetry","quiet")+
     button(last?"Voir le bilan des 3 accords":"Construire l’accord suivant →","labNext","primary")+'</div></section>';
@@ -157,7 +164,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
     render();
    };
   }else{
-   document.getElementById("labSuggestion")?.addEventListener("click",()=>play(suggestion.midis));
+   if(suggestion)document.getElementById("labSuggestion")?.addEventListener("click",()=>play(suggestion.midis));
    document.getElementById("labRetry").onclick=()=>{voiceGrades[step]=null;render()};
    document.getElementById("labNext").onclick=()=>{
     if(!last){step++;scrollPos=null;render()}
