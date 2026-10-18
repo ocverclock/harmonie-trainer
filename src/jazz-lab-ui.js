@@ -129,6 +129,15 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
      {symbol:frame.symbol,midis:voiceAnswers[step],correct:grade.correct}]):null;
   let body=heading("Conduite des voix",study.title,
    "Construis les trois accords en gardant à l’esprit les déplacements depuis le précédent. Les anneaux en pointillés rappellent tes propres notes, pas la réponse.");
+  body+='<div class="lab-cadence-choice"><label for="cadenceTarget"><strong>Choisir la cadence et la tonalité</strong></label>'+
+    '<select id="cadenceTarget" aria-label="Cadence et tonalité à travailler">'+
+    '<optgroup label="Cadences initiales">'+
+    voiceStudies.filter(x=>!x.additional).map(x=>'<option value="'+e(x.id)+'"'+(x.id===study.id?' selected':'')+'>'+
+      e(x.tonality+' — '+x.frames.map(f=>f.symbol).join(" → "))+'</option>').join("")+'</optgroup>'+
+    '<optgroup label="Nouvelles transpositions">'+
+    voiceStudies.filter(x=>x.additional).map(x=>'<option value="'+e(x.id)+'"'+(x.id===study.id?' selected':'')+'>'+
+      e(x.tonality+' — '+x.frames.map(f=>f.symbol).join(" → "))+'</option>').join("")+'</optgroup></select>'+
+    '<p class="subtle">12 cadences · 7 transpositions supplémentaires · 4 notes par accord. Changer de cadence recommence ses trois étapes, sans effacer les résultats déjà sauvegardés.</p></div>';
   body+='<div class="lab-steps">'+study.frames.map((f,i)=>'<button class="btn '+(step===i?"active":"quiet")+'" data-step="'+i+'">'+(i+1)+'. '+e(f.symbol)+(voiceGrades[i]?.correct?" ✓":"")+'</button>').join("")+'</div>'+
    '<div class="row between"><div><p class="eyebrow">Accord '+(step+1)+' / 3 · '+e(study.tonality)+'</p>'+
    '<div class="symbol lab-symbol">'+e(frame.symbol)+'</div></div>'+
@@ -189,6 +198,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   if(voiceGrades.every(Boolean)){
    body+='<div class="explain" role="status"><h3>Bilan de la cadence</h3>'+
     '<p>'+voiceGrades.filter(g=>g.correct).length+' / 3 accords justes. Les déplacements et leurs corrections sont détaillés à chaque étape.</p>'+
+    '<p><strong>Pourquoi cette cadence ?</strong> '+e(study.explanation)+'</p>'+
     '<div class="row">'+button("Écouter les trois accords saisis","labHearAll","quiet")+
     button("Autre cadence","labNextStudy","primary")+'</div></div>';
   }
@@ -205,6 +215,16 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    key.setAttribute("aria-label",(key.getAttribute("aria-label")||"")+" — touchée à l’accord précédent");
    key.title="Accord précédent : "+midiLabel(midi);
   }
+  document.getElementById("cadenceTarget").onchange=function(){
+   const idx=voiceStudies.findIndex(x=>x.id===this.value);
+   if(idx<0)return;
+   if(idx===voiceStudyIndex)return;
+   if(voiceAnswers.some(notes=>notes.length)&&!voiceGrades.every(Boolean)&&
+     !confirm("Changer de cadence ? L’exercice en cours sera réinitialisé ; les tentatives déjà vérifiées resteront sauvegardées.")){
+    this.value=study.id;return;
+   }
+   chooseStudy(idx);
+  };
   app.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>{step=Number(b.dataset.step);scrollPos=null;render()});
   if(!grade){
    app.querySelectorAll("[data-midi]").forEach(b=>b.onclick=()=>{

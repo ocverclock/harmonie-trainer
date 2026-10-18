@@ -9,6 +9,7 @@ on:
       - 'tests/guide-tones-browser.mjs'
       - 'tests/voice-paths-browser.mjs'
       - 'tests/voicing-a-b-browser.mjs'
+      - 'tests/cadence-transpositions-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
   push:
     branches: [main]
@@ -20,6 +21,7 @@ on:
       - 'tests/guide-tones-browser.mjs'
       - 'tests/voice-paths-browser.mjs'
       - 'tests/voicing-a-b-browser.mjs'
+      - 'tests/cadence-transpositions-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
 permissions:
   contents: read
@@ -45,3 +47,4 @@ jobs:
           node tests/guide-tones-browser.mjs
           node tests/voice-paths-browser.mjs
           node tests/voicing-a-b-browser.mjs
+          node tests/cadence-transpositions-browser.mjs
