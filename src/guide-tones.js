@@ -54,8 +54,7 @@ export function checkGuideTone(study,index,selectedMidi){
 export function describeSemitones(n){
  if(n===0)return "note commune, aucun déplacement";
  const amount=Math.abs(n);
- return (n>0?"monte":"descend")+" de "+
-  (amount===1?"un demi-ton":amount===2?"un ton":amount+" demi-tons");
+ return (n>0?"monte":"descend")+(amount===1?" d’un demi-ton":amount===2?" d’un ton":" de "+amount+" demi-tons");
 }
 export function guideToneSummary(study,answers){
  if(!study||!Array.isArray(answers))throw Error("Bilan des notes-guides inconnu");
