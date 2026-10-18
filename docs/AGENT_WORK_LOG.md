@@ -67,6 +67,18 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P06 : sept cadences II–V–I transposées — PR #27, CI verte, non fusionnée
+- **[PR #27](https://github.com/ocverclock/harmonie-trainer/pull/27)** basée sur la branche P05 / [PR #26](https://github.com/ocverclock/harmonie-trainer/pull/26), à conserver en brouillon hors main jusqu'à autorisation explicite de publication. Les précédentes dépendances P02 à P05 restent intactes.
+- **7 nouveaux exercices de cadence originaux :** II–V–I vers **Si♭, Mi♭, La♭, Ré♭, Mi majeurs**, ainsi que **Do et Fa mineurs** ; ils rejoignent les 5 historiques, soit **12 tonalités de résolution** dans l'atelier de conduite des voix. Chaque cadence a 3 accords de 4 notes MIDI dans la tessiture autorisée et une explication des sensibles/tierces/septièmes.
+- Les accords de dominante en mineur contiennent la sensible introduite par l'harmonie mineure (Si naturel dans Sol7→Do mineur, Mi naturel dans Do7→Fa mineur). Toutes les notes affichées sont cohérentes avec leurs symboles d'accords et l'orthographe de la tonalité. Les transpositions n'imposent pas un unique renversement à l'élève.
+- **Interface :** liste accessible des cinq cadences originales et des sept nouvelles, identifiées par tonalité et symboles d'accords ; choix de nouvelle cadence sans supprimer les essais sauvegardés, avec confirmation si exercice partiellement effectué. L'explication de fonction harmonique s'affiche **après** l'évaluation des trois accords, sans divulguer la réponse à l'avance. Les tracés P04, feedback P02 et comparaison A/B P05 restent actifs.
+- **Compatibilité :** les cinq IDs historiques des QCM et les 20 exercices de notes-guides P03 ne sont pas déplacés/renommés ; le stockage des nouveaux essais suit `jazzlab:voice:cad-db:1` etc. Sauvegardes JSON V2 inchangées.
+- **Fichiers :** `src/cadence-transpositions.js`, adaptation `src/jazz-lab.js`, `src/jazz-lab-ui.js`, `src/jazz-lab.css`, `tests/cadence-transpositions.test.js`, `tests/cadence-transpositions-browser.mjs`, mise à jour des workflows et versions de cache uniquement sur la branche.
+- **Tests du dernier commit fonctionnel :** [Node run 39116607275](https://github.com/ocverclock/harmonie-trainer/actions/runs/39116607275) **success** ; [Chromium run 39116607261](https://github.com/ocverclock/harmonie-trainer/actions/runs/39116607261) **success**, ainsi que les contrôles P02–P05, sur écran téléphone 375×812 et tablette 1024×768. Les exemples en Ré♭ majeur sont construits intégralement, sauvegardés, puis le sélecteur passe en Do mineur. Le test sur appareil Safari réel reste à faire.
+- **Prochain lot : P07** — cours interactif des renversements de tétrades, avec basse mise en évidence et distinction entre renversement et position ; ne pas modifier main sans accord.
+
+
+
 ### 2026-10-18 — P05 : comparaison auditive A/B des voicings — PR #26, tests réussis, non fusionnée
 - **PR [#26](https://github.com/ocverclock/harmonie-trainer/pull/26)** empilée sur la PR #25 (P04), elle-même sur #24 (P03), puis #23 (P02) ; laisser en brouillon et ne pas intégrer dans `main` sans validation de publication. Le site GitHub Pages n'est **pas** modifié par cette PR.
 - **Comparaison A/B réelle** : si les deux accords sont justes et si une disposition calculée permet strictement de réduire les déplacements (mêmes quatre classes de notes, autre position MIDI), afficher A = ton voicing et B = une disposition valide plus proche. Afficher les quatre notes, distances totales en demi-tons et gain, puis le déplacement de chaque voix selon son rang grave→aigu. **Aucune pénalité sur le score harmonique** et aucune suggestion trompeuse lorsque l'élève est déjà aussi économique.
