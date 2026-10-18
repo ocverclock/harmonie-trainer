@@ -83,7 +83,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   app.querySelectorAll("[data-retry]").forEach(b=>b.onclick=()=>{
    const id=b.dataset.retry;
    if(id.startsWith("jazzlab:guides:")){
-    const match=/^jazzlab:guides:(.+):(\\d+)$/.exec(id);
+    const match=/^jazzlab:guides:(.+):(\d+)$/.exec(id);
     if(match){const index=guideToneStudies.findIndex(s=>s.id===match[1]);
      if(index>=0){chooseGuides(index);guideStep=Number(match[2]);render()}}
    }
