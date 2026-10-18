@@ -161,7 +161,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
      '<p>'+e(guidance.movement)+'</p>'+
      '<p class="subtle">'+e(motionSentence(motion))+'</p>'+
      '<p><strong>Conseil pédagogique :</strong> '+e(guidance.advice)+'</p>'+
-     (guidance.comparison?'<p>'+e(guidance.comparison)+'</p>':'')+
+     (guidance.comparison&&ab?.available?'<p>'+e(guidance.comparison)+'</p>':'')+
      (ab?.available?'<section class="lab-ab" aria-label="Comparer deux voicings corrects à l’oreille">'+
        '<h4>Écoute A/B · Même harmonie, deux trajets</h4>'+
        '<p>'+e(ab.explanation)+'</p>'+
