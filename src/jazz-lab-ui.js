@@ -327,7 +327,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   body+='</section>';shell(body);linkHome();
   function decorate(selector,midi,className,suffix){
    if(midi===null)return;
-   const key=app.querySelector(selector+' .pianoKey[data-midi="'+midi+'"]');
+   const key=app.querySelector(selector+' .pianoKey[data-midi="'+midi+'"], '+selector+' .pianoKey[data-preview="'+midi+'"]');
    if(key){key.classList.add(className);
     key.setAttribute("aria-label",(key.getAttribute("aria-label")||"")+" — "+suffix);
     key.title=suffix;}
