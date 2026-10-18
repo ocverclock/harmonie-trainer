@@ -67,6 +67,18 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P07 : cours interactif des quatre renversements de tétrades — PR #28, validations Node et Chromium vertes, non fusionnée
+- **[PR #28](https://github.com/ocverclock/harmonie-trainer/pull/28)** empilée sur la branche [PR #27 — P06](https://github.com/ocverclock/harmonie-trainer/pull/27), elle-même dépendante des PR P02–P05. **Publication et fusion dans main interdites sans autorisation explicite de l'utilisateur.**
+- **Mini-cours ajouté** dans un cinquième atelier « Renversements des tétrades » : fondamentale, tierce, quinte ou septième à la basse définissent respectivement l’état fondamental, premier, deuxième et troisième renversements d'un accord de quatre sons. Distinction essentielle du « voicing » : une disposition serrée, ouverte et divers renversements des voix aiguës sont acceptés dès lors que la **basse réelle** et les quatre classes de notes sont correctes.
+- **24 exercices** (6 accords × 4 états) : `Cmaj7`, `Dm7`, `G7`, `Bm7♭5`, `E♭maj7`, `A♭maj7`. Possibilité de changer d'accord, de sélectionner les notes sur le piano à octaves distinctes, d'écouter, de valider, de réessayer, de comparer le jeu et un exemple correct. La correction ne donne pas de note avant validation.
+- **Basse pédagogique** : touche grave réelle entourée en bleu pendant la construction, en rouge si basse incorrecte ; deuxième clavier en lecture seule exposant **un** exemple valide, avec la basse attendue entourée en vert et un label accessible. Le bug d'annotation des touches de prévisualisation découvert par la CI a été corrigé dans le code final.
+- **Évaluation séparée** : un accord parfaitement juste avec la mauvaise basse n'est pas déclaré « notes fausses », mais « inversion erronée » ; une bonne basse avec notes erronées reste fausse ; les autres voix peuvent changer d'octave si leur note est au-dessus de la basse.
+- **Acquis :** chaque essai utilise un ID stable (`jazzlab:inversions:cmaj7:1` etc.) au sein du stockage JSON V2 existant ; ancien historique conservé. Code ajouté `src/inversion-lessons.js`, `tests/inversion-lessons.test.js`, `tests/inversion-lessons-browser.mjs`, UI/CSS de l'atelier, adaptations des smoke-tests et versions de cache.
+- **Preuves CI finales :** [Node run 39118403238](https://github.com/ocverclock/harmonie-trainer/actions/runs/39118403238) **success**, [Chromium run 39118403223](https://github.com/ocverclock/harmonie-trainer/actions/runs/39118403223) **success** aux tailles 375×812 et 1024×768. Les suites P02–P06 ont également réussi. Note : Safari sur matériel iPhone/iPad réel non essayé.
+- **À suivre : P08**, enseigner la différence entre renversements, positions ouvertes/serrées et voicings sans fondamentale. Ne pas créer de contraintes de basses artificielles pour les véritables voicings rootless.
+
+
+
 ### 2026-10-18 — P06 : sept cadences II–V–I transposées — PR #27, CI verte, non fusionnée
 - **[PR #27](https://github.com/ocverclock/harmonie-trainer/pull/27)** basée sur la branche P05 / [PR #26](https://github.com/ocverclock/harmonie-trainer/pull/26), à conserver en brouillon hors main jusqu'à autorisation explicite de publication. Les précédentes dépendances P02 à P05 restent intactes.
 - **7 nouveaux exercices de cadence originaux :** II–V–I vers **Si♭, Mi♭, La♭, Ré♭, Mi majeurs**, ainsi que **Do et Fa mineurs** ; ils rejoignent les 5 historiques, soit **12 tonalités de résolution** dans l'atelier de conduite des voix. Chaque cadence a 3 accords de 4 notes MIDI dans la tessiture autorisée et une explication des sensibles/tierces/septièmes.

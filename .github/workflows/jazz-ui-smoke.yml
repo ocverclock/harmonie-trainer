@@ -10,6 +10,7 @@ on:
       - 'tests/voice-paths-browser.mjs'
       - 'tests/voicing-a-b-browser.mjs'
       - 'tests/cadence-transpositions-browser.mjs'
+      - 'tests/inversion-lessons-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
   push:
     branches: [main]
@@ -22,6 +23,7 @@ on:
       - 'tests/voice-paths-browser.mjs'
       - 'tests/voicing-a-b-browser.mjs'
       - 'tests/cadence-transpositions-browser.mjs'
+      - 'tests/inversion-lessons-browser.mjs'
       - '.github/workflows/jazz-ui-smoke.yml'
 permissions:
   contents: read
@@ -48,3 +50,4 @@ jobs:
           node tests/voice-paths-browser.mjs
           node tests/voicing-a-b-browser.mjs
           node tests/cadence-transpositions-browser.mjs
+          node tests/inversion-lessons-browser.mjs

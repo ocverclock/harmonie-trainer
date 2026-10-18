@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test && node --check src/app.js && node --check src/curriculum.js && node --check src/curriculum-ui.js && node --check src/voicing-ui.js && node --check src/voicing.js && node --check src/voices.js && node --check src/piano-layout.js && node --check src/course-notes.js && node --check src/tonality-variants.js && node --check src/progress-store.js && node --check src/practice-random.js && node --check src/jazz-lab.js && node --check src/jazz-lab-ui.js && node --check src/construction-setup.js && node --check src/voice-leading-feedback.js && node --check src/guide-tones.js && node --check src/voice-paths.js && node --check src/voicing-a-b.js && node --check src/cadence-transpositions.js"
+    "test": "node --test && node --check src/app.js && node --check src/curriculum.js && node --check src/curriculum-ui.js && node --check src/voicing-ui.js && node --check src/voicing.js && node --check src/voices.js && node --check src/piano-layout.js && node --check src/course-notes.js && node --check src/tonality-variants.js && node --check src/progress-store.js && node --check src/practice-random.js && node --check src/jazz-lab.js && node --check src/jazz-lab-ui.js && node --check src/construction-setup.js && node --check src/voice-leading-feedback.js && node --check src/guide-tones.js && node --check src/voice-paths.js && node --check src/voicing-a-b.js && node --check src/cadence-transpositions.js && node --check src/inversion-lessons.js"
   }
 }
