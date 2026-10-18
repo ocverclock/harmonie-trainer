@@ -11,6 +11,13 @@ try{
   const errors=[];page.on("pageerror",error=>errors.push(error.message));
   await page.goto("http://127.0.0.1:8765/",{waitUntil:"networkidle"});
   assert.equal(await page.locator(".brand").count(),1,"Home must load");
+  // Optional learning resource opens an independent tab; no progress is shared.
+  const resource=page.locator('a[href="https://ethanhein.com/scaledesigner.html"]');
+  assert.equal(await resource.count(),1,"Scale Designer must be linked from home");
+  assert.equal(await resource.getAttribute("target"),"_blank");
+  assert.match(await resource.getAttribute("rel"),/noopener/);
+  assert.match(await resource.getAttribute("rel"),/noreferrer/);
+  assert.match(await resource.innerText(),/Scale Designer/);
   await page.getByRole("button",{name:"Atelier jazz : voix, oreille, harmonisation"}).click();
   await page.locator(".lab-tile").first().waitFor({state:"visible",timeout:12000}).catch(async error=>{
    throw Error("Lab failed to load: "+errors.join(" | ")+"; page="+(await page.locator("main").innerText()).slice(0,400)+"; "+error.message);
