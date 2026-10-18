@@ -29,19 +29,19 @@ const specs=[
    ["A♭7",[54,56,60,63]],
    ["D♭maj7",[53,56,60,61]]]},
  {id:"cad-e",tonality:"Mi majeur",title:"Résolution vers Mi majeur",tonicPc:4,mode:"majeur",
-  explanation:"Fa♯m7 – Si7 – Mimaj7 : la tierce Ré♯ de Si7 est attirée vers Mi. La, septième de Si7, descend vers Sol♯, tierce de Mi majeur. Compare les demi-tons dans une tonalité à quatre dièses.",
+  explanation:"Fa♯ mineur 7 – Si7 – Mi majeur 7 : la tierce Ré♯ de Si7 est attirée vers Mi. La, septième de Si7, descend vers Sol♯, tierce de Mi majeur. Compare les demi-tons dans une tonalité à quatre dièses.",
   notes:[
    ["F♯m7",[54,57,61,64]],
    ["B7",[54,57,59,63]],
    ["Emaj7",[56,59,63,64]]]},
  {id:"cad-cm",tonality:"Do mineur",title:"Résolution vers Do mineur",tonicPc:0,mode:"mineur",
-  explanation:"Ré m7♭5 – Sol7 – Dom7 : le II est demi-diminué, tandis que Sol7 introduit Si naturel, sensible empruntée au mineur harmonique. Si monte vers Do ; Fa descend d’un ton vers Mi♭.",
+  explanation:"Ré demi-diminué – Sol7 – Do mineur 7 : le II est demi-diminué, tandis que Sol7 introduit Si naturel, sensible empruntée au mineur harmonique. Si monte vers Do ; Fa descend d’un ton vers Mi♭.",
   notes:[
    ["Dm7♭5",[53,56,60,62]],
    ["G7",[53,55,59,62]],
    ["Cm7",[51,55,58,60]]]},
  {id:"cad-fm",tonality:"Fa mineur",title:"Résolution vers Fa mineur",tonicPc:5,mode:"mineur",
-  explanation:"Sol m7♭5 – Do7 – Fam7 : le II demi-diminué mène à une dominante majeure portant Mi naturel, sensible de Fa mineur. Si♭, septième de Do7, descend d’un ton vers La♭.",
+  explanation:"Sol demi-diminué – Do7 – Fa mineur 7 : le II demi-diminué mène à une dominante majeure portant Mi naturel, sensible de Fa mineur. Si♭, septième de Do7, descend d’un ton vers La♭.",
   notes:[
    ["Gm7♭5",[53,58,61,67]],
    ["C7",[52,58,60,67]],
