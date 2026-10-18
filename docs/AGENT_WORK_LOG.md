@@ -67,6 +67,19 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P03 : notes-guides actives sur les cadences II–V–I — PR #24, non fusionnée
+- **PR [#24](https://github.com/ocverclock/harmonie-trainer/pull/24)** basée sur la branche P02 / [PR #23](https://github.com/ocverclock/harmonie-trainer/pull/23), pour éviter les collisions entre deux lots touchant le même atelier. Après éventuelle fusion autorisée de P02, cibler main et relancer la CI avant publication.
+- **Pédagogie réellement ajoutée :** 5 progressions II–V–I (G/F majeur, D/E/A mineur) × 4 mouvements de notes-guides (tierces et septièmes) = **20 exercices**. Les notes exactes et leur registre sont dérivés des accords/mélodies déjà présentes, avec assertions contre les exemples incohérents.
+- **Quatre mouvements par progression** : II tierce → V septième sans déplacement, II septième → V tierce en descendant d’un demi-ton, V tierce → fondamentale du I en montant d’un demi-ton, V septième → tierce du I en descendant d’un demi-ton en majeur ou d’un ton sur nos exemples mineurs. Les élèves doivent cliquer la touche attendue, écouter, vérifier, comprendre le nom de la note et le mouvement. Le réessai après erreur n'efface pas les tentatives antérieures.
+- **Interface :** quatrième carte « Notes-guides II–V–I » dans l'atelier jazz, clavier inchangé, source en pointillés, correction verte et erreur rouge avec signes distincts/labels ARIA, bilan par cadence. Écoute source et résolution. Les études utilisent des choix **MIDI précis** afin de vérifier le mouvement d'un demi-ton, contrairement au simple choix de classes de hauteurs.
+- **Sauvegarde :** tentatives ajoutées à `harmonie-progress-v2` avec IDs durables `jazzlab:guides:to-g:0` etc. Export JSON V2 conserve anciennes et nouvelles tentatives.
+- **Fichiers :** `src/guide-tones.js`, `src/jazz-lab-ui.js`, `src/jazz-lab.css`, `tests/guide-tones.test.js`, `tests/guide-tones-browser.mjs`, versions de cache et workflows test/Pages (pour publication future).
+- **Preuves CI :** tests Node [run 39111977358](https://github.com/ocverclock/harmonie-trainer/actions/runs/39111977358) **success** ; tests navigateur [run 39111977364](https://github.com/ocverclock/harmonie-trainer/actions/runs/39111977364) **success**, y compris les tests P02 et P03 à **375×812** et **1024×768**.
+- **Non publié** en production et **non testé sur Safari iPhone/iPad réel**. Ne pas compter comme mise en ligne tant que PR #23 puis #24 ne sont pas fusionnées sur autorisation.
+- **Prochain lot : P04** — trajets visuels des quatre voix entre accords sur une cadence.
+
+
+
 ### 2026-10-18 — P02 : évaluation pédagogique de la conduite des voix — PR prête pour revue, non fusionnée
 - **PR [#23](https://github.com/ocverclock/harmonie-trainer/pull/23)** sur branche `pedago/P02-conduite-voix-evaluation-20261018`, à conserver hors `main` jusqu'à validation explicite de publication.
 - L'atelier jazz distingue maintenant **justesse de l'accord**, notes communes par classe de hauteur, touches réellement communes dans le même registre et immobilité d'une voix selon son rang grave→aigu. Les déplacements d'un demi-ton, ton, et sauts supérieurs à la quinte sont expliqués, sans modifier la validité d'un renversement correct.
