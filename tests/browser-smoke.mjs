@@ -79,14 +79,36 @@ try{
   await page.locator('[data-level="6"]').click();
   await page.locator('[data-difficulty="standard"]').click();
   await page.locator("#startConstruction").click();
+  let visualCorrections=0;
   for(let i=0;i<10;i++){
    assert.equal(await page.locator("#validate").isDisabled(),true);
    for(const midi of [48,50,52,53])await page.locator('[data-midi="'+midi+'"]').click();
    assert.equal(await page.locator("#validate").isDisabled(),false);
    await page.locator("#validate").click();
    assert.equal(await page.locator(".feedback").count(),1);
+   if(await page.locator(".feedback.correct").count()===0){
+    visualCorrections++;
+    const red=page.locator(".construction-correction .pianoKey.construction-extra");
+    const green=page.locator(".construction-correction .pianoKey.construction-missing");
+    const blue=page.locator(".construction-correction .pianoKey.construction-correct");
+    assert.ok(await red.count()>0,"Wrong selection must be visible in red");
+    assert.ok(await green.count()>0,"Missing note must be visible in green");
+    assert.ok(await blue.count()>0,"Correct played notes must remain visible in blue");
+    assert.equal(await page.locator(".construction-legend").count(),1);
+    assert.match(await red.first().getAttribute("aria-label"),/jouée en trop/);
+    assert.match(await green.first().getAttribute("aria-label"),/manquante/);
+    assert.match(await blue.first().getAttribute("aria-label"),/jouée et juste/);
+    const before=await red.count();
+    await red.first().click();
+    assert.equal(await page.locator(".construction-correction .pianoKey.construction-extra").count(),before,
+     "Keyboard must stay frozen after validation");
+   }else{
+    assert.equal(await page.locator(".construction-marker").count(),0,
+     "Correct chord must not display correction markers");
+   }
    await page.locator("#next").click();
   }
+  assert.ok(visualCorrections>0,"At least one construction exercise should show corrections");
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem("harmonie-sessions-v2")||"[]"));
   const mostRecent=saved.at(-1);
   assert.equal(mostRecent.schemaVersion,3);
