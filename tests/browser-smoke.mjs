@@ -22,7 +22,7 @@ try{
   await page.locator(".lab-tile").first().waitFor({state:"visible",timeout:12000}).catch(async error=>{
    throw Error("Lab failed to load: "+errors.join(" | ")+"; page="+(await page.locator("main").innerText()).slice(0,400)+"; "+error.message);
   });
-  assert.equal(await page.locator(".lab-tile").count(),3);
+  assert.equal(await page.locator(".lab-tile").count(),4,"Four workshops including II–V–I guide tones");
   await page.locator('[data-lab-mode="voice"]').click();
   assert.ok((await page.locator(".lab-panel h1").innerText()).length>4);
   for(const midi of voiceStudies[0].frames[0].example){
