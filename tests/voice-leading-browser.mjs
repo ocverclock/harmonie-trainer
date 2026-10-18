@@ -24,7 +24,7 @@ try{
   assert.match(erroneous,/Accord à corriger/);
   assert.match(erroneous,/Notes communes et mouvements/);
   assert.match(erroneous,/corrige d’abord ses notes/);
-  assert.equal(await page.locator("#labSuggestion").count(),0,
+  assert.equal(await page.locator("#labListenB").count(),0,
    "A wrong chord must not be presented as an efficient voicing");
   await page.locator("#labRetry").click();
   await page.locator("#labClear").click();
@@ -34,8 +34,8 @@ try{
   assert.match(feedback,/Accord juste/);
   assert.match(feedback,/Touches communes conservées|Aucune touche exactement conservée/);
   assert.match(feedback,/grave → aigu/);
-  assert.match(feedback,/Disposition alternative valide/);
-  assert.equal(await page.locator("#labSuggestion").count(),1);
+  assert.match(feedback,/déjà aussi économique/);
+  assert.equal(await page.locator("#labListenB").count(),0,"No imaginary improvement when the pupil plays an efficient voicing");
   assert.deepEqual(errors,[]);
   console.log("P02 voicing evaluation browser test OK "+viewport.width+"×"+viewport.height);
   await context.close();
