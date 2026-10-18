@@ -115,7 +115,7 @@ async function beginCourse(){
 async function beginJazzLab(mode="home"){
  screen="jazz";
  try{
-  if(!jazzLabUI){const mod=await import("./jazz-lab-ui.js?v=2");jazzLabUI=mod.createJazzLabUI({
+  if(!jazzLabUI){const mod=await import("./jazz-lab-ui.js?v=3");jazzLabUI=mod.createJazzLabUI({
    app,shell,piano,play,escapeText,button,isActive:()=>screen==="jazz"
   });}
   if(screen==="jazz")jazzLabUI.start(mode);
