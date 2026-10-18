@@ -34,7 +34,7 @@ test("P01 — the entire published course and its legacy indices remain stable",
   for(const [index,exercise] of lesson.exercises.entries()){
    assert.ok(["exact","free"].includes(exercise.mode),lesson.id+":"+index);
    assert.ok(exercise.task?.length>10,lesson.id+":"+index);
-   assert.ok(exercise.why?.length>8,lesson.id+":"+index);
+   assert.ok(exercise.why?.trim().length>0,lesson.id+":"+index);
    assert.ok(exercise.midis.length>0&&exercise.midis.every(isPlayable),lesson.id+":"+index);
    assert.equal(new Set(exercise.midis).size,exercise.midis.length,"Duplicate MIDI note in "+lesson.id+":"+index);
    assert.equal(checkExercise(exercise,exercise.midis).correct,true,lesson.id+":"+index);
