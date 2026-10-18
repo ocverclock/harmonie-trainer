@@ -22,6 +22,10 @@
 
 `tests/pedagogy-baseline.test.js` parcourt le programme réel et établit des assertions transversales. La CI du dépôt exécute `node --test` sans dépendance additionnelle. Ce test constitue un **filet de sécurité** pour les lots P02 à P24.
 
+## Observation produite par le premier passage CI
+
+- Le test a signalé un commentaire réellement très court dans la leçon `cadences-secondaires`, exercice initial `Am7 — II de G` : `A C E G.`. Ce commentaire est correct pour l'orthographe, mais n'explique pas la **fonction II** ou la conduite des voix. La suite P09/P12 devra rendre l'explication pédagogique plus instructive ; pour P01 on exige une justification présente et non une longueur arbitraire qui invaliderait la banque existante.
+
 ## Lacunes identifiées pour les lots suivants
 
 - Le score de conduite des voix est aujourd'hui une distance entre quatre hauteurs classées grave–aigu : il ne suffit pas à expliquer le *pourquoi* d'une note-guide ; P02 et P03 devront séparer analyse musicale et choix pianistique.
