@@ -1,4 +1,5 @@
 import {secondary} from "./music.js";
+import {transposedVoiceStudies} from "./cadence-transpositions.js";
 import {chordTones,evaluateVoicing,midiLabel} from "./voicing.js";
 import {PIANO_START,PIANO_END} from "./piano-layout.js";
 
@@ -37,12 +38,16 @@ export function closestValidVoicing(symbol,previous){
  return {midis:best,motion:analyzeVoiceLeading(previous,best)};
 }
 export function checkJazzChord(symbol,midis){return evaluateVoicing(symbol,midis)}
-export const voiceStudies=secondary.map((question,i)=>({
- id:question.id,tonality:question.target,title:question.progression.title,
- explanation:question.explanation,frames:question.progression.frames.map(frame=>({
-  symbol:frame.symbol,example:frame.voices.map(v=>v.midi).sort((a,b)=>a-b)
- }))
-}));
+export const voiceStudies=[
+ ...secondary.map(question=>({
+  id:question.id,tonality:question.target,title:question.progression.title,
+  explanation:question.explanation,additional:false,mode:question.target.includes("mineur")?"mineur":"majeur",
+  frames:question.progression.frames.map(frame=>({
+   symbol:frame.symbol,example:frame.voices.map(v=>v.midi).sort((a,b)=>a-b)
+  }))
+ })),
+ ...transposedVoiceStudies
+];
 
 const earTypes=[
  {id:"maj7",label:"majeur 7",formula:[0,4,7,11],why:"La tierce est majeure et la septième est majeure : une couleur stable et lumineuse."},
