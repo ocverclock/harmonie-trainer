@@ -27,7 +27,7 @@ try{
   assert.equal(await page.locator(".lab-path-node").count(),8);
   assert.equal(await page.locator('.lab-path-node[data-note="48"]').count(),1);
   assert.equal(await page.locator(".lab-path-chord").count(),2);
-  assert.match(await page.locator(".lab-path-chord").last().innerText(),/à revoir/);
+  assert.match(await page.locator(".lab-path-chord").last().textContent(),/à revoir/);
   assert.equal(await page.locator(".lab-motion-scroll").count(),1);
   assert.equal(await page.locator(".piano-scroll").count(),1,"Diagram and piano must share one scroller");
   assert.equal(await page.locator(".pianoKey").count(),36,"Piano keys must remain unchanged");
