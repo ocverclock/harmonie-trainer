@@ -86,6 +86,7 @@ try{
   await page.locator('[data-level="6"]').click();
   await page.locator('[data-difficulty="standard"]').click();
   await page.locator("#startConstruction").click();
+  let visualCorrections=0;
   for(let i=0;i<10;i++){
    assert.equal(await page.locator("#validate").isDisabled(),true);
    for(const midi of [48,50,52,53])await page.locator('[data-midi="'+midi+'"]').click();
