@@ -5,12 +5,14 @@ import {readArchive,storeArchive,withAttempt,progressByExercise} from "./progres
 import {midiLabel} from "./voicing.js";
 import {previousVoicingNotes} from "./practice-random.js";
 import {noteX} from "./piano-layout.js";
+import {guideToneStudies,checkGuideTone,describeSemitones,guideToneSummary} from "./guide-tones.js";
 import {assessVoicingTransition,describeVoicingTransition} from "./voice-leading-feedback.js";
 
 export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive}){
  const e=escapeText;
  let mode="home",voiceStudyIndex=0,step=0,voiceAnswers=[[],[],[]],voiceGrades=[null,null,null],
-     earIndex=0,earAnswer=null,studioIndex=0,studioAnswer=null,scrollPos=null,notice="";
+     earIndex=0,earAnswer=null,studioIndex=0,studioAnswer=null,guideStudyIndex=0,guideStep=0,guideSelected=null,
+     guideResults=[null,null,null,null],scrollPos=null,notice="";
  const archive=()=>{try{return readArchive(localStorage,lessons)}catch(error){notice="Suivi indisponible : "+error.message;return null}};
  function save(type,id,tonality,notes,correct){
   try{
@@ -27,11 +29,14 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
  function linkHome(){const el=document.getElementById("labHome");if(el)el.onclick=()=>start("home")}
  function chooseStudy(index){voiceStudyIndex=(index+voiceStudies.length)%voiceStudies.length;step=0;voiceAnswers=[[],[],[]];voiceGrades=[null,null,null];scrollPos=null;mode="voice";render()}
  function chooseEar(index){earIndex=Math.max(0,index);earAnswer=null;mode="ear";render()}
+ function chooseGuides(index=0){guideStudyIndex=(index+guideToneStudies.length)%guideToneStudies.length;
+  guideStep=0;guideSelected=null;guideResults=[null,null,null,null];mode="guides";render()}
  function chooseStudio(index){studioIndex=(index+studioStudies.length)%studioStudies.length;studioAnswer=null;mode="studio";render()}
  function start(next="home"){
   mode=next;notice="";
   if(next==="voice"){chooseStudy(voiceStudyIndex);return}
   if(next==="ear"){chooseEar(earIndex);return}
+  if(next==="guides"){chooseGuides(guideStudyIndex);return}
   if(next==="studio"){chooseStudio(studioIndex);return}
   render();
  }
@@ -49,11 +54,12 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
  function showHome(){
   const stats=readStats();
   let body='<section class="card"><div class="eyebrow">École Ocverclock · mise en pratique</div>'+
-   '<h1>Atelier de jazz moderne</h1><p class="muted">Trois manières complémentaires d’apprendre : construire des cadences, reconnaître leurs couleurs à l’oreille et choisir une harmonisation fonctionnelle.</p>'+
+   '<h1>Atelier de jazz moderne</h1><p class="muted">Quatre manières complémentaires d’apprendre : construire des cadences, suivre les notes-guides, reconnaître les accords à l’oreille et harmoniser.</p>'+
    '<p class="lab-stat"><strong>'+stats.events.length+'</strong> tentatives enregistrées · <strong>'+stats.events.filter(x=>x.correct).length+'</strong> réussies</p>'+
    (notice?'<p role="alert" class="feedback">'+e(notice)+'</p>':'')+
    '<div class="lab-grid">'+[
     {id:"voice",title:"Conduite des voix",desc:lessonGoals.voicing},
+    {id:"guides",title:"Notes-guides II–V–I",desc:"Résoudre les tierces et septièmes sur le clavier, dans les cadences majeures et mineures."},
     {id:"ear",title:"Éducation de l’oreille",desc:lessonGoals.ear},
     {id:"studio",title:"Réarmoniser une phrase",desc:lessonGoals.studio}
    ].map(item=>'<button class="lab-tile" data-lab-mode="'+item.id+'"><strong>'+e(item.title)+'</strong><span>'+e(item.desc)+'</span></button>').join("")+'</div>'+
@@ -76,7 +82,12 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   document.getElementById("labTargetEar").onclick=()=>chooseEar(nextEarReview(archive(),-1));
   app.querySelectorAll("[data-retry]").forEach(b=>b.onclick=()=>{
    const id=b.dataset.retry;
-   if(id.startsWith("jazzlab:ear:ear-"))chooseEar(Number(id.slice("jazzlab:ear:ear-".length)));
+   if(id.startsWith("jazzlab:guides:")){
+    const match=/^jazzlab:guides:(.+):(\d+)$/.exec(id);
+    if(match){const index=guideToneStudies.findIndex(s=>s.id===match[1]);
+     if(index>=0){chooseGuides(index);guideStep=Number(match[2]);render()}}
+   }
+   else if(id.startsWith("jazzlab:ear:ear-"))chooseEar(Number(id.slice("jazzlab:ear:ear-".length)));
    else if(id.startsWith("jazzlab:studio:"))chooseStudio(studioStudies.findIndex(s=>s.id===id.slice("jazzlab:studio:".length)));
    else if(id.startsWith("jazzlab:voice:")){
     const found=voiceStudies.findIndex(s=>id.startsWith("jazzlab:voice:"+s.id+":"));
@@ -176,6 +187,98 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    document.getElementById("labNextStudy").onclick=()=>chooseStudy(voiceStudyIndex+1);
   }
  }
+ function showGuides(){
+  const study=guideToneStudies[guideStudyIndex],exercise=study.exercises[guideStep];
+  const response=guideResults[guideStep],chosen=new Set(guideSelected===null?[]:[guideSelected]);
+  let body=heading("Notes-guides",study.title,
+   "Dans les cadences II–V–I, suis la tierce et la septième d’un accord vers le suivant. Clique la touche de résolution dans l’octave indiquée par l’exemple.");
+  body+='<div class="lab-steps" aria-label="Quatre déplacements de notes-guides">'+
+    study.exercises.map((task,i)=>'<button class="btn '+(i===guideStep?'active':'quiet')+
+     '" data-guide-step="'+i+'">'+(i+1)+'. '+e(task.description)+(guideResults[i]?.correct?' ✓':'')+'</button>').join("")+'</div>'+
+   '<p class="eyebrow">'+e(study.tonality)+' · étape '+(guideStep+1)+' / 4</p>'+
+   '<div class="lab-guide-route"><div><small>Accord de départ</small><strong>'+e(exercise.sourceSymbol)+'</strong>'+
+   '<span>'+e(exercise.source.role)+' : '+e(exercise.source.name)+'</span></div>'+
+   '<span aria-hidden="true">→</span>'+
+   '<div><small>Accord d’arrivée</small><strong>'+e(exercise.targetSymbol)+'</strong>'+
+   '<span>'+e(exercise.target.role)+' : ?</span></div></div>'+
+   '<p><strong>À toi :</strong> trouve sur le clavier la '+e(exercise.target.role)+
+   ' de '+e(exercise.targetSymbol)+' qui résout '+e(exercise.source.name)+
+   '. La pastille en pointillés rappelle la note de départ ; la correction arrive après validation.</p>'+
+   '<div class="lab-guide-keyboard">'+piano(chosen,[],true,[],false,-1,"midi")+'</div>'+
+   '<p class="previous-voicing-legend"><span class="previous-voicing-symbol" aria-hidden="true"></span> Source : '+
+   e(exercise.source.name)+' · Sélection : '+(guideSelected===null?'aucune':e(midiLabel(guideSelected)))+'</p>'+
+   '<div class="row">'+button("Écouter la source","guideHearSource","quiet")+
+   button("Valider ma résolution","guideCheck","primary",guideSelected===null||!!response)+'</div>';
+  if(response){
+   body+='<section class="feedback '+(response.correct?'correct':'')+'" role="status">'+
+    '<h3>'+(response.correct?'Bonne résolution.':'Résolution à corriger.')+'</h3>'+
+    '<p>'+e(response.explanation)+'</p>'+
+    '<p><strong>'+e(exercise.source.name)+' → '+e(exercise.target.name)+'</strong> : '+
+    e(describeSemitones(exercise.semitones))+'.</p>'+
+    '<p class="subtle">La septième de dominante mène ici à la tierce de la tonique : compare les résolutions en majeur et en mineur.</p>'+
+    '<div class="row">'+button("Écouter la bonne résolution","guideHearCorrect","quiet")+
+    (!response.correct?button("Réessayer","guideRetry","quiet"):"")+
+    button(guideStep===3?"Cadence suivante →":"Déplacement suivant →","guideNext","primary")+'</div></section>';
+  }
+  if(guideResults.every(Boolean)){
+   const stats=guideToneSummary(study,guideResults);
+   body+='<div class="explain" role="status"><h3>Bilan notes-guides</h3><p>'+
+     stats.correct+' / '+stats.total+' résolutions réussies vers '+e(study.tonality)+
+     '. Reviens sur une étape pour réécouter et comprendre chaque mouvement.</p></div>';
+  }
+  body+='</section>';shell(body);linkHome();
+  const scroller=app.querySelector(".lab-guide-keyboard .piano-scroll");
+  if(scroller){
+   const midpoint=(noteX(exercise.source.midi)+noteX(exercise.target.midi))/2;
+   scroller.scrollLeft=Math.max(0,midpoint-scroller.clientWidth/2);
+  }
+  const src=app.querySelector('.lab-guide-keyboard .pianoKey[data-midi="'+exercise.source.midi+'"]');
+  if(src){
+   src.classList.add("previous-voicing");
+   src.setAttribute("aria-label",(src.getAttribute("aria-label")||"")+" — note-guide de départ");
+  }
+  if(response){
+   const correctKey=app.querySelector('.lab-guide-keyboard .pianoKey[data-midi="'+exercise.target.midi+'"]');
+   if(correctKey){
+    correctKey.classList.add("guide-expected");
+    correctKey.setAttribute("aria-label",(correctKey.getAttribute("aria-label")||"")+" — résolution attendue");
+   }
+   if(!response.correct){
+    const wrongKey=app.querySelector('.lab-guide-keyboard .pianoKey[data-midi="'+response.selectedMidi+'"]');
+    if(wrongKey){
+     wrongKey.classList.add("guide-error");
+     wrongKey.setAttribute("aria-label",(wrongKey.getAttribute("aria-label")||"")+" — ta réponse incorrecte");
+    }
+   }
+  }else{
+   app.querySelectorAll('.lab-guide-keyboard [data-midi]').forEach(key=>key.onclick=()=>{
+    guideSelected=Number(key.dataset.midi);render();
+   });
+  }
+  app.querySelectorAll("[data-guide-step]").forEach(b=>b.onclick=()=>{
+   guideStep=Number(b.dataset.guideStep);
+   guideSelected=guideResults[guideStep]?.selectedMidi??null;
+   render();
+  });
+  document.getElementById("guideHearSource").onclick=()=>play([exercise.source.midi]);
+  if(!response)document.getElementById("guideCheck").onclick=()=>{
+   if(guideSelected===null)return;
+   guideResults[guideStep]=checkGuideTone(study,guideStep,guideSelected);
+   save("guides",study.id+":"+guideStep,study.tonality,
+    [exercise.source.midi,guideSelected],guideResults[guideStep].correct);
+   render();
+  };
+  else{
+   document.getElementById("guideHearCorrect").onclick=()=>playSequence([[exercise.source.midi],[exercise.target.midi]]);
+   if(!response.correct)document.getElementById("guideRetry").onclick=()=>{
+    guideResults[guideStep]=null;guideSelected=null;render();
+   };
+   document.getElementById("guideNext").onclick=()=>{
+    if(guideStep===3)chooseGuides(guideStudyIndex+1);
+    else{guideStep++;guideSelected=guideResults[guideStep]?.selectedMidi??null;render()}
+   };
+  }
+ }
  function showEar(){
   const exercise=earQuestion(earIndex);
   let body=heading("Écoute", "Reconnaître une couleur sans voir les notes",
@@ -255,6 +358,6 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    document.getElementById("studioNext").onclick=()=>chooseStudio(studioIndex+1);
   }
  }
- function render(){if(mode==="voice")currentVoice();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
+ function render(){if(mode==="voice")currentVoice();else if(mode==="guides")showGuides();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
  return {start,render};
 }

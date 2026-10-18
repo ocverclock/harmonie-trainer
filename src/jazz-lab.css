@@ -49,3 +49,18 @@
 .lab-transition p{line-height:1.6;margin:0 0 10px}
 .lab-transition .subtle{font-size:13px}
 @media(max-width:570px){.lab-transition{padding:12px 11px}.lab-transition .btn{min-height:44px}}
+
+
+/* P03: real register guide-tone exercise, compatible with shared piano geometry. */
+.lab-guide-route{display:flex;align-items:center;gap:9px;margin:18px 0}
+.lab-guide-route>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding:13px 12px;background:#f0f6ff;border:1px solid #d5e2f2;border-radius:12px}
+.lab-guide-route>span{font-size:23px;color:#6687b4}
+.lab-guide-route small{color:#58718f;font-size:12px}
+.lab-guide-route strong{font-size:25px;color:#174979}
+.lab-guide-route div span{font-size:13px;color:#3b5574}
+.lab-guide-keyboard{margin-top:14px}
+.lab-guide-keyboard .pianoKey.guide-expected{outline:4px solid #278b59;outline-offset:-4px}
+.lab-guide-keyboard .pianoKey.guide-expected::before{content:"+";position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#e8fff0;color:#176b45;font-size:15px;font-weight:800;z-index:5;pointer-events:none}
+.lab-guide-keyboard .pianoKey.guide-error{outline:4px solid #cc3c45;outline-offset:-4px}
+.lab-guide-keyboard .pianoKey.guide-error::before{content:"×";position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#ffe9ea;color:#8e1520;font-size:15px;font-weight:800;z-index:5;pointer-events:none}
+@media(max-width:450px){.lab-guide-route>div{padding:10px 8px}.lab-guide-route strong{font-size:21px}.lab-guide-route div span{font-size:12px}}
