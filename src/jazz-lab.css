@@ -86,3 +86,22 @@
 .lab-path-description li{line-height:1.5}
 .lab-path-swatch{display:inline-block;vertical-align:middle;width:11px;height:11px;border-radius:50%;background:var(--path-color);margin-right:5px;border:1px solid #8a9caf}
 @media(max-width:570px){.lab-path-description{padding:10px}.lab-path-description ol{grid-template-columns:1fr}.lab-motion-panel h3{font-size:16px}}
+
+
+/* P05 — Ear comparison between TWO harmonically correct voicings.
+   Motion is explanatory, never an additional note-grade. */
+.lab-ab{margin:15px 0;padding:15px;border:1px solid #c8d8ec;border-radius:12px;background:#f7faff}
+.lab-ab h4{margin:0 0 9px;font-size:17px;color:#214a72}
+.lab-ab>p{margin:0 0 10px;line-height:1.55}
+.lab-ab-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.lab-ab-card{display:flex;flex-direction:column;gap:9px;min-width:0;padding:14px;border:1px solid #cfdbec;border-radius:10px;background:#fff}
+.lab-ab-card strong{font-size:14px;color:#234c79}
+.lab-ab-card span{font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.lab-ab-card b{font-size:13px;color:#405773}
+.lab-ab-actions{gap:9px;flex-wrap:wrap}
+.lab-ab-actions .btn{min-height:44px}
+.lab-ab-detail{margin-top:13px;font-size:13px;line-height:1.5}
+.lab-ab-detail summary{cursor:pointer;font-weight:700;color:#254f81;min-height:30px}
+.lab-ab-detail li{padding:4px 0}
+.lab-ab-status{padding:10px 12px;border-left:3px solid #6284ab;background:#eff5fd;border-radius:5px}
+@media(max-width:570px){.lab-ab{padding:11px}.lab-ab-grid{grid-template-columns:1fr}.lab-ab-actions .btn{flex:1 1 120px}}
