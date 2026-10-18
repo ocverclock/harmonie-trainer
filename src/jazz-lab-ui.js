@@ -7,6 +7,7 @@ import {previousVoicingNotes} from "./practice-random.js";
 import {noteX} from "./piano-layout.js";
 import {guideToneStudies,checkGuideTone,describeSemitones,guideToneSummary} from "./guide-tones.js";
 import {assessVoicingTransition,describeVoicingTransition} from "./voice-leading-feedback.js";
+import {renderVoicePaths,renderVoicePathLegend} from "./voice-paths.js";
 
 export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive}){
  const e=escapeText;
@@ -104,6 +105,13 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   const guidance=assessment?describeVoicingTransition(assessment):null;
   const suggestion=assessment?.reference||null;
   const last=step===2;
+  // Show only the positions played by the pupil, and only after the
+  // current chord has been checked: no advance display of the answer.
+  const pathFrames=grade&&previous.length===4?
+   (last&&voiceGrades.every(Boolean)?
+    study.frames.map((f,i)=>({symbol:f.symbol,midis:voiceAnswers[i],correct:voiceGrades[i].correct})):
+    [{symbol:study.frames[step-1].symbol,midis:previous,correct:voiceGrades[step-1]?.correct===true},
+     {symbol:frame.symbol,midis:voiceAnswers[step],correct:grade.correct}]):null;
   let body=heading("Conduite des voix",study.title,
    "Construis les trois accords en gardant à l’esprit les déplacements depuis le précédent. Les anneaux en pointillés rappellent tes propres notes, pas la réponse.");
   body+='<div class="lab-steps">'+study.frames.map((f,i)=>'<button class="btn '+(step===i?"active":"quiet")+'" data-step="'+i+'">'+(i+1)+'. '+e(f.symbol)+(voiceGrades[i]?.correct?" ✓":"")+'</button>').join("")+'</div>'+
@@ -112,7 +120,13 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    '<span class="badge">'+selected.size+' / 4 notes</span></div>'+
    '<p class="muted">La justesse des notes et la fluidité des voix sont évaluées séparément. Aucun renversement unique n’est obligatoire.</p>'+
    '<p>Ton accord : <strong>'+(selected.size?[...selected].sort((a,b)=>a-b).map(midiLabel).join(" · "):"aucune note sélectionnée")+'</strong></p>'+
-   piano(selected,[],true,[],false,-1,"midi")+
+   (pathFrames?
+    '<section class="lab-motion-panel"><h3>Trajets de tes quatre voix'+(pathFrames.length===3?' sur les trois accords':'')+'</h3>'+
+    '<p class="subtle">Chaque courbe relie les touches que tu as effectivement jouées. Le clavier garde exactement ses dimensions et ses touches.</p>'+
+    '<div class="piano-scroll aligned-scroll lab-motion-scroll" role="region" tabindex="0" aria-label="Trajets et clavier alignés : faire défiler horizontalement">'+
+    '<div class="aligned-lesson">'+renderVoicePaths(pathFrames)+piano(selected,[],true,[],true,-1,"midi")+
+    '</div></div>'+renderVoicePathLegend(pathFrames)+'</section>':
+    piano(selected,[],true,[],false,-1,"midi"))+
    (previous.length?'<p class="previous-voicing-legend"> <span class="previous-voicing-symbol" aria-hidden="true"></span>'+
      'Notes du voicing précédent : '+previous.map(midiLabel).join(" · ")+'. Cherche les notes communes et les petits mouvements.</p>':'<p class="subtle">Premier accord : choisis quatre hauteurs. Les notes seront mémorisées visuellement pour le suivant.</p>')+
    '<div class="row">'+button("Effacer","labClear","quiet",!!grade||!selected.size)+
