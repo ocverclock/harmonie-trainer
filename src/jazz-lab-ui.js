@@ -8,12 +8,13 @@ import {noteX} from "./piano-layout.js";
 import {guideToneStudies,checkGuideTone,describeSemitones,guideToneSummary} from "./guide-tones.js";
 import {assessVoicingTransition,describeVoicingTransition} from "./voice-leading-feedback.js";
 import {renderVoicePaths,renderVoicePathLegend} from "./voice-paths.js";
+import {buildVoicingComparison,comparisonPlayback} from "./voicing-a-b.js";
 
 export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive}){
  const e=escapeText;
  let mode="home",voiceStudyIndex=0,step=0,voiceAnswers=[[],[],[]],voiceGrades=[null,null,null],
      earIndex=0,earAnswer=null,studioIndex=0,studioAnswer=null,guideStudyIndex=0,guideStep=0,guideSelected=null,
-     guideResults=[null,null,null,null],scrollPos=null,notice="";
+     guideResults=[null,null,null,null],scrollPos=null,notice="",abTimers=[];
  const archive=()=>{try{return readArchive(localStorage,lessons)}catch(error){notice="Suivi indisponible : "+error.message;return null}};
  function save(type,id,tonality,notes,correct){
   try{
@@ -40,6 +41,19 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   if(next==="guides"){chooseGuides(guideStudyIndex);return}
   if(next==="studio"){chooseStudio(studioIndex);return}
   render();
+ }
+ function clearABPlayback(){for(const timer of abTimers)clearTimeout(timer);abTimers=[]}
+ function playVoicingAB(comparison,part){
+  clearABPlayback();
+  const studyIndex=voiceStudyIndex,stage=step,accepted=voiceGrades[step];
+  const sounds=comparisonPlayback(comparison,part);
+  sounds.forEach(item=>{
+   const perform=()=>{
+    if(isActive()&&mode==="voice"&&voiceStudyIndex===studyIndex&&step===stage&&voiceGrades[stage]===accepted)
+     play(item.midis);
+   };
+   if(item.at===0)perform();else abTimers.push(setTimeout(perform,item.at));
+  });
  }
  function playSequence(sequence){
   sequence.forEach((notes,i)=>{
@@ -104,6 +118,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   const motion=assessment?.motion||null;
   const guidance=assessment?describeVoicingTransition(assessment):null;
   const suggestion=assessment?.reference||null;
+  const ab=grade&&previous.length===4?buildVoicingComparison(previous,voiceAnswers[step],assessment):null;
   const last=step===2;
   // Show only the positions played by the pupil, and only after the
   // current chord has been checked: no advance display of the answer.
@@ -146,8 +161,26 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
      '<p>'+e(guidance.movement)+'</p>'+
      '<p class="subtle">'+e(motionSentence(motion))+'</p>'+
      '<p><strong>Conseil pédagogique :</strong> '+e(guidance.advice)+'</p>'+
-     (guidance.comparison?'<p>'+e(guidance.comparison)+'</p><div class="row">'+
-      button("Écouter une autre disposition juste","labSuggestion","quiet")+'</div>':'')+
+     (guidance.comparison&&ab?.available?'<p>'+e(guidance.comparison)+'</p>':'')+
+     (ab?.available?'<section class="lab-ab" aria-label="Comparer deux voicings corrects à l’oreille">'+
+       '<h4>Écoute A/B · Même harmonie, deux trajets</h4>'+
+       '<p>'+e(ab.explanation)+'</p>'+
+       '<div class="lab-ab-grid"><div class="lab-ab-card"><strong>A — Ton voicing</strong>'+
+       '<span>'+e(ab.played.map(midiLabel).join(" · "))+'</span>'+
+       '<b>'+ab.playedMotion+' demi-tons de déplacement</b></div>'+
+       '<div class="lab-ab-card"><strong>B — Autre disposition valide</strong>'+
+       '<span>'+e(ab.alternative.map(midiLabel).join(" · "))+'</span>'+
+       '<b>'+ab.alternativeMotion+' demi-tons de déplacement</b></div></div>'+
+       '<p class="subtle">Chaque écoute joue d’abord ton accord précédent, puis la version A ou B du nouvel accord. La comparaison A puis B ajoute une courte pause.</p>'+
+       '<div class="row lab-ab-actions">'+button("Écouter A","labListenA","quiet")+
+       button("Écouter B","labListenB","quiet")+
+       button("Comparer A puis B","labListenAB","primary")+'</div>'+
+       '<details class="lab-ab-detail"><summary>Afficher les déplacements de chaque voix</summary><ol>'+
+       ab.movements.map(m=>'<li>Voix '+m.voice+' : '+e(m.from)+' → A '+e(m.played)+
+        ' ('+(m.playedSemitones>0?'+':'')+m.playedSemitones+') / B '+e(m.alternative)+
+        ' ('+(m.alternativeSemitones>0?'+':'')+m.alternativeSemitones+') demi-tons</li>').join("")+
+       '</ol></details></section>':
+       ab?.correct?'<p class="lab-ab-status">'+e(ab.reason)+'</p>':'')+
      '<p class="subtle">Les voix sont rapprochées dans l’ordre grave → aigu ; les doigtés et croisements réels ne sont pas détectés.</p></div>':
       '<p>Pour le premier accord, écoute son timbre et choisis un registre confortable. La comparaison commencera avec le suivant.</p>')+
     '<div class="row">'+button("Réessayer ce voicing","labRetry","quiet")+
@@ -189,7 +222,11 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
     render();
    };
   }else{
-   if(suggestion)document.getElementById("labSuggestion")?.addEventListener("click",()=>play(suggestion.midis));
+   if(ab?.available){
+    document.getElementById("labListenA").onclick=()=>playVoicingAB(ab,"A");
+    document.getElementById("labListenB").onclick=()=>playVoicingAB(ab,"B");
+    document.getElementById("labListenAB").onclick=()=>playVoicingAB(ab,"AB");
+   }
    document.getElementById("labRetry").onclick=()=>{voiceGrades[step]=null;render()};
    document.getElementById("labNext").onclick=()=>{
     if(!last){step++;scrollPos=null;render()}
@@ -372,6 +409,6 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    document.getElementById("studioNext").onclick=()=>chooseStudio(studioIndex+1);
   }
  }
- function render(){if(mode==="voice")currentVoice();else if(mode==="guides")showGuides();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
+ function render(){clearABPlayback();if(mode==="voice")currentVoice();else if(mode==="guides")showGuides();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
  return {start,render};
 }

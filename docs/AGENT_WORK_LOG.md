@@ -67,6 +67,17 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P05 : comparaison auditive A/B des voicings — PR #26, tests réussis, non fusionnée
+- **PR [#26](https://github.com/ocverclock/harmonie-trainer/pull/26)** empilée sur la PR #25 (P04), elle-même sur #24 (P03), puis #23 (P02) ; laisser en brouillon et ne pas intégrer dans `main` sans validation de publication. Le site GitHub Pages n'est **pas** modifié par cette PR.
+- **Comparaison A/B réelle** : si les deux accords sont justes et si une disposition calculée permet strictement de réduire les déplacements (mêmes quatre classes de notes, autre position MIDI), afficher A = ton voicing et B = une disposition valide plus proche. Afficher les quatre notes, distances totales en demi-tons et gain, puis le déplacement de chaque voix selon son rang grave→aigu. **Aucune pénalité sur le score harmonique** et aucune suggestion trompeuse lorsque l'élève est déjà aussi économique.
+- **Audio** : boutons « Écouter A », « Écouter B », « Comparer A puis B ». Chaque séquence commence par le **même accord précédent**, puis l'accord A ou B. La lecture A puis B respecte une pause perceptible. Les minuteries sont annulées au changement d'étape ou au réessai ; aucune note retardée d'une ancienne écoute.
+- **Code et tests** : `src/voicing-a-b.js`, `src/jazz-lab-ui.js`, `src/jazz-lab.css`, `tests/voicing-a-b.test.js`, `tests/voicing-a-b-browser.mjs`, adaptation de `tests/voice-leading-browser.mjs`, mise à jour des versions de cache et workflows.
+- **Preuves CI sur commit fonctionnel** : [tests Node run 39115291352](https://github.com/ocverclock/harmonie-trainer/actions/runs/39115291352) **success**, [tests navigateur run 39115291388](https://github.com/ocverclock/harmonie-trainer/actions/runs/39115291388) **success**. Les deux tailles **375 × 812** et **1024 × 768** confirment les fréquences effectivement jouées dans le bon ordre, annulation après réessai et absence de fausse amélioration, ainsi que la non-régression P02/P03/P04.
+- **Limites** : Safari iPhone/iPad réel et latence audio sur matériel réel non vérifiés. Le suivi des voix est fait du grave à l'aigu par rang, pas selon le doigté ou les voix croisées. Les sauvegardes V2, accords de 9 à 4 notes et de 13 à 5 notes, 8 niveaux et 89 exercices ne sont pas modifiés.
+- **Suite : P06** — nouvelles cadences secondaires, transpositions et explications originales.
+
+
+
 ### 2026-10-18 — P04 : trajectoires des quatre voix réellement jouées — PR #25, non fusionnée
 - **PR [#25](https://github.com/ocverclock/harmonie-trainer/pull/25)** basée sur la branche P03 / [PR #24](https://github.com/ocverclock/harmonie-trainer/pull/24), elle-même basée sur P02 / PR #23. Ne pas fusionner directement dans main sans autorisation ; retargeter après intégration autorisée des dépendances, puis revalider les tests.
 - **Affichage pédagogique :** le laboratoire « Conduite des voix » montre, après validation du deuxième accord, quatre courbes reliant **les MIDI réellement joués** par rang grave→aigu ; après le troisième, une visualisation complète des trois accords (12 positions et 8 trajets). Les notes qui restent sur la même touche forment un tracé vertical pointillé, les mouvements chromatiques une courbe. Numéros/coloris et liste textuelle de quatre mouvements accessibles aux élèves ne distinguant pas les couleurs.
