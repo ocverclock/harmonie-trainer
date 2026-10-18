@@ -217,6 +217,7 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
     e(describeSemitones(exercise.semitones))+'.</p>'+
     '<p class="subtle">La septième de dominante mène ici à la tierce de la tonique : compare les résolutions en majeur et en mineur.</p>'+
     '<div class="row">'+button("Écouter la bonne résolution","guideHearCorrect","quiet")+
+    (!response.correct?button("Réessayer","guideRetry","quiet"):"")+
     button(guideStep===3?"Cadence suivante →":"Déplacement suivant →","guideNext","primary")+'</div></section>';
   }
   if(guideResults.every(Boolean)){
@@ -269,6 +270,9 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   };
   else{
    document.getElementById("guideHearCorrect").onclick=()=>playSequence([[exercise.source.midi],[exercise.target.midi]]);
+   if(!response.correct)document.getElementById("guideRetry").onclick=()=>{
+    guideResults[guideStep]=null;guideSelected=null;render();
+   };
    document.getElementById("guideNext").onclick=()=>{
     if(guideStep===3)chooseGuides(guideStudyIndex+1);
     else{guideStep++;guideSelected=guideResults[guideStep]?.selectedMidi??null;render()}
