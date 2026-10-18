@@ -9,12 +9,14 @@ import {guideToneStudies,checkGuideTone,describeSemitones,guideToneSummary} from
 import {assessVoicingTransition,describeVoicingTransition} from "./voice-leading-feedback.js";
 import {renderVoicePaths,renderVoicePathLegend} from "./voice-paths.js";
 import {buildVoicingComparison,comparisonPlayback} from "./voicing-a-b.js";
+import {inversionStudies,inversionNames,gradeInversion} from "./inversion-lessons.js";
 
 export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive}){
  const e=escapeText;
  let mode="home",voiceStudyIndex=0,step=0,voiceAnswers=[[],[],[]],voiceGrades=[null,null,null],
      earIndex=0,earAnswer=null,studioIndex=0,studioAnswer=null,guideStudyIndex=0,guideStep=0,guideSelected=null,
-     guideResults=[null,null,null,null],scrollPos=null,notice="",abTimers=[];
+     guideResults=[null,null,null,null],inversionStudyIndex=0,inversionStep=0,
+     inversionAnswers=[[],[],[],[]],inversionGrades=[null,null,null,null],scrollPos=null,notice="",abTimers=[];
  const archive=()=>{try{return readArchive(localStorage,lessons)}catch(error){notice="Suivi indisponible : "+error.message;return null}};
  function save(type,id,tonality,notes,correct){
   try{
@@ -33,12 +35,18 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
  function chooseEar(index){earIndex=Math.max(0,index);earAnswer=null;mode="ear";render()}
  function chooseGuides(index=0){guideStudyIndex=(index+guideToneStudies.length)%guideToneStudies.length;
   guideStep=0;guideSelected=null;guideResults=[null,null,null,null];mode="guides";render()}
+ function chooseInversions(index=0){
+  inversionStudyIndex=(index+inversionStudies.length)%inversionStudies.length;
+  inversionStep=0;inversionAnswers=[[],[],[],[]];inversionGrades=[null,null,null,null];
+  mode="inversions";render();
+ }
  function chooseStudio(index){studioIndex=(index+studioStudies.length)%studioStudies.length;studioAnswer=null;mode="studio";render()}
  function start(next="home"){
   mode=next;notice="";
   if(next==="voice"){chooseStudy(voiceStudyIndex);return}
   if(next==="ear"){chooseEar(earIndex);return}
   if(next==="guides"){chooseGuides(guideStudyIndex);return}
+  if(next==="inversions"){chooseInversions(inversionStudyIndex);return}
   if(next==="studio"){chooseStudio(studioIndex);return}
   render();
  }
@@ -69,12 +77,13 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
  function showHome(){
   const stats=readStats();
   let body='<section class="card"><div class="eyebrow">École Ocverclock · mise en pratique</div>'+
-   '<h1>Atelier de jazz moderne</h1><p class="muted">Quatre manières complémentaires d’apprendre : construire des cadences, suivre les notes-guides, reconnaître les accords à l’oreille et harmoniser.</p>'+
+   '<h1>Atelier de jazz moderne</h1><p class="muted">Cinq ateliers complémentaires : construire des cadences, apprendre les renversements, suivre les notes-guides, reconnaître les accords à l’oreille et harmoniser.</p>'+
    '<p class="lab-stat"><strong>'+stats.events.length+'</strong> tentatives enregistrées · <strong>'+stats.events.filter(x=>x.correct).length+'</strong> réussies</p>'+
    (notice?'<p role="alert" class="feedback">'+e(notice)+'</p>':'')+
    '<div class="lab-grid">'+[
     {id:"voice",title:"Conduite des voix",desc:lessonGoals.voicing},
     {id:"guides",title:"Notes-guides II–V–I",desc:"Résoudre les tierces et septièmes sur le clavier, dans les cadences majeures et mineures."},
+    {id:"inversions",title:"Renversements des tétrades",desc:"Repérer la basse : fondamentale, tierce, quinte ou septième, sur 6 accords."},
     {id:"ear",title:"Éducation de l’oreille",desc:lessonGoals.ear},
     {id:"studio",title:"Réarmoniser une phrase",desc:lessonGoals.studio}
    ].map(item=>'<button class="lab-tile" data-lab-mode="'+item.id+'"><strong>'+e(item.title)+'</strong><span>'+e(item.desc)+'</span></button>').join("")+'</div>'+
@@ -97,7 +106,12 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
   document.getElementById("labTargetEar").onclick=()=>chooseEar(nextEarReview(archive(),-1));
   app.querySelectorAll("[data-retry]").forEach(b=>b.onclick=()=>{
    const id=b.dataset.retry;
-   if(id.startsWith("jazzlab:guides:")){
+   if(id.startsWith("jazzlab:inversions:")){
+    const match=/^jazzlab:inversions:(.+):(\d+)$/.exec(id);
+    if(match){const found=inversionStudies.findIndex(s=>s.id===match[1]),position=Number(match[2]);
+     if(found>=0&&position>=0&&position<4){chooseInversions(found);inversionStep=position;render()}}
+   }
+   else if(id.startsWith("jazzlab:guides:")){
     const match=/^jazzlab:guides:(.+):(\d+)$/.exec(id);
     if(match){const index=guideToneStudies.findIndex(s=>s.id===match[1]);
      if(index>=0){chooseGuides(index);guideStep=Number(match[2]);render()}}
@@ -257,6 +271,102 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    document.getElementById("labHearAll").onclick=()=>playSequence(voiceAnswers);
    document.getElementById("labNextStudy").onclick=()=>chooseStudy(voiceStudyIndex+1);
   }
+ }
+ function showInversions(){
+  const study=inversionStudies[inversionStudyIndex],ex=study.exercises[inversionStep];
+  const notes=inversionAnswers[inversionStep],grade=inversionGrades[inversionStep];
+  const lowest=notes.length?Math.min(...notes):null;
+  let body=heading("Renversements des tétrades","Les quatre basses de "+study.symbol,
+   "Apprends à reconnaître un renversement : c’est la note la plus grave de l’accord qui le détermine, pas sa position serrée ou ouverte.");
+  body+='<div class="lab-inversion-lesson"><h3>Mini-cours : quelle note place-t-on à la basse ?</h3>'+
+   '<div class="lab-inversion-degrees">'+inversionNames.map((name,i)=>
+    '<div><strong>'+e(name)+'</strong><span>'+
+    e(["Fondamentale","Tierce","Quinte","Septième"][i])+' à la basse</span></div>').join("")+'</div>'+
+   '<p class="subtle">Exemple : Do–Mi–Sol–Si et Mi–Sol–Si–Do sont le même Cmaj7, mais le second est au premier renversement. Les quatre notes doivent rester présentes. Au-dessus de la basse, une disposition ouverte reste permise.</p></div>'+
+   '<div class="lab-inversion-selector"><label for="inversionChord"><strong>Accord à explorer</strong></label>'+
+   '<select id="inversionChord" aria-label="Choisir un accord de septième">'+
+   inversionStudies.map(x=>'<option value="'+e(x.id)+'"'+(x.id===study.id?' selected':'')+'>'+
+     e(x.symbol+' — '+x.tonality)+'</option>').join("")+'</select></div>'+
+   '<div class="lab-steps" aria-label="Les quatre renversements">'+study.exercises.map((item,i)=>
+    '<button class="btn '+(i===inversionStep?'active':'quiet')+'" data-inversion-step="'+i+'">'+
+    (i+1)+'. '+e(item.name)+(inversionGrades[i]?.correct?' ✓':'')+'</button>').join("")+'</div>'+
+   '<p class="eyebrow">Étape '+(inversionStep+1)+' / 4 · '+e(study.tonality)+'</p>'+
+   '<div class="symbol lab-symbol">'+e(study.symbol)+'</div>'+
+   '<p><strong>À jouer :</strong> '+e(ex.name.toLowerCase())+
+    ' : construis les quatre notes de '+e(study.symbol)+
+    ' avec <strong>la '+e(ex.role)+' à la basse</strong>. Les autres notes peuvent être dans l’octave de ton choix, à condition de rester au-dessus.</p>'+
+   '<p>Ton jeu : <strong>'+(notes.length?e([...notes].sort((a,b)=>a-b).map(midiLabel).join(" · ")):"aucune note sélectionnée")+
+   '</strong> · '+notes.length+'/4 notes</p>'+
+   '<div class="lab-inversion-keyboard inv-input">'+piano(new Set(notes),[],!grade,[],false,-1,"midi")+'</div>'+
+   '<p class="lab-inversion-legend"><span class="lab-inversion-symbol" aria-hidden="true">↓</span> La touche entourée indique la basse réellement jouée. <span class="subtle">Elle change si tu ajoutes une note plus grave.</span></p>'+
+   '<div class="row">'+button("Effacer","invClear","quiet",!!grade||!notes.length)+
+   button("Écouter mon accord","invHear","quiet",!notes.length)+
+   button("Vérifier le renversement","invCheck","primary",!!grade||notes.length!==4)+'</div>';
+  if(grade){
+   body+='<section class="feedback '+(grade.correct?'correct':'')+'" role="status">'+
+    '<h3>'+(grade.correct?'Renversement correct.':grade.harmonyCorrect?
+     'Accord juste, mais basse incorrecte.':'Notes de l’accord à corriger.')+'</h3>'+
+    '<p>'+e(grade.explanation)+'</p>'+
+    '<p><strong>Basse attendue : '+e(ex.bassName)+'</strong> — '+e(ex.role)+
+    '. L’état de l’accord dépend uniquement de cette note la plus grave.</p>'+
+    '<h4>Exemple correct sur le clavier</h4>'+
+    '<p class="subtle">Une disposition serrée possible, et non la seule bonne réponse :</p>'+
+    '<div class="lab-inversion-keyboard inv-example">'+
+     piano(new Set(),ex.reference,false,[],false,-1,"midi")+'</div>'+
+    '<p class="subtle"><span class="lab-inversion-symbol inv-example-symbol" aria-hidden="true">↓</span> Basse de cet exemple : '+e(ex.bassName)+
+    '. Compare sa touche avec la basse de ton jeu.</p>'+
+    '<div class="row">'+button("Écouter cet exemple","invHearExample","quiet")+
+    (!grade.correct?button("Réessayer","invRetry","quiet"):'')+
+    button(inversionStep===3?"Accord suivant →":"Renversement suivant →","invNext","primary")+'</div></section>';
+  }
+  if(inversionGrades.every(Boolean)){
+   body+='<div class="explain" role="status"><h3>Bilan des quatre renversements</h3><p>'+
+    inversionGrades.filter(g=>g.correct).length+' / 4 renversements réussis pour '+e(study.symbol)+
+    '. L’exactitude des notes et celle de la basse ont été vérifiées séparément.</p></div>';
+  }
+  body+='</section>';shell(body);linkHome();
+  function decorate(selector,midi,className,suffix){
+   if(midi===null)return;
+   const key=app.querySelector(selector+' .pianoKey[data-midi="'+midi+'"]');
+   if(key){key.classList.add(className);
+    key.setAttribute("aria-label",(key.getAttribute("aria-label")||"")+" — "+suffix);
+    key.title=suffix;}
+  }
+  decorate(".inv-input",lowest,grade&&!grade.bassCorrect?"inv-error-bass":"inv-played-bass",
+   grade&& !grade.bassCorrect?"ta basse, à corriger":"ta basse actuelle");
+  if(grade)decorate(".inv-example",ex.reference[0],"inv-expected-bass","basse de l’exemple juste : "+ex.bassName);
+  if(!grade){
+   app.querySelectorAll(".inv-input .pianoKey[data-midi]").forEach(key=>key.onclick=()=>{
+    const midi=Number(key.dataset.midi),index=notes.indexOf(midi);
+    if(index>=0)notes.splice(index,1);else if(notes.length<4)notes.push(midi);
+    render();
+   });
+   document.getElementById("invClear").onclick=()=>{inversionAnswers[inversionStep]=[];render()};
+   document.getElementById("invHear").onclick=()=>play(notes);
+   document.getElementById("invCheck").onclick=()=>{
+    if(notes.length!==4)return;
+    const result=gradeInversion(study,inversionStep,notes);
+    inversionGrades[inversionStep]=result;
+    save("inversions",ex.id,study.tonality,notes,result.correct);
+    render();
+   };
+  }else{
+   document.getElementById("invHearExample").onclick=()=>play(ex.reference);
+   if(!grade.correct)document.getElementById("invRetry").onclick=()=>{
+    inversionGrades[inversionStep]=null;inversionAnswers[inversionStep]=[];render();
+   };
+   document.getElementById("invNext").onclick=()=>{
+    if(inversionStep===3)chooseInversions(inversionStudyIndex+1);
+    else{inversionStep++;render()}
+   };
+  }
+  app.querySelectorAll("[data-inversion-step]").forEach(btn=>btn.onclick=()=>{
+   inversionStep=Number(btn.dataset.inversionStep);render();
+  });
+  document.getElementById("inversionChord").onchange=function(){
+   const index=inversionStudies.findIndex(x=>x.id===this.value);
+   if(index>=0)chooseInversions(index);
+  };
  }
  function showGuides(){
   const study=guideToneStudies[guideStudyIndex],exercise=study.exercises[guideStep];
@@ -429,6 +539,6 @@ export function createJazzLabUI({app,shell,piano,play,escapeText,button,isActive
    document.getElementById("studioNext").onclick=()=>chooseStudio(studioIndex+1);
   }
  }
- function render(){clearABPlayback();if(mode==="voice")currentVoice();else if(mode==="guides")showGuides();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
+ function render(){clearABPlayback();if(mode==="voice")currentVoice();else if(mode==="inversions")showInversions();else if(mode==="guides")showGuides();else if(mode==="ear")showEar();else if(mode==="studio")showStudio();else showHome()}
  return {start,render};
 }
