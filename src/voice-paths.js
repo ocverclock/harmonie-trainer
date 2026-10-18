@@ -67,11 +67,14 @@ export function renderVoicePaths(frames){
    '" text-anchor="middle">'+(note.voice+1)+'</text>';
  }
  svg+='</svg></div>';
- // Written register-by-register summary makes motion accessible without relying on colors.
- const entries=data.moves.filter(m=>m.row===last-1);
- const legend='<div class="lab-path-description"><p class="subtle">Les quatre couleurs désignent les rangs de notes du grave vers l’aigu, <strong>pas les doigts</strong>. Les trajectoires montrent ton jeu réel, même si un accord est faux ; elles ne dévoilent aucune réponse avant validation.</p>'+
+ return svg;
+}
+/** Textual movement list outside the shared keyboard scroller. */
+export function renderVoicePathLegend(frames){
+ const data=voicePathModel(frames);
+ const entries=data.moves.filter(m=>m.row===data.rows.length-2);
+ return '<div class="lab-path-description"><p class="subtle">Les quatre couleurs désignent les rangs de notes du grave vers l’aigu, <strong>pas les doigts</strong>. Les trajectoires montrent ton jeu réel, même si un accord est faux ; elles ne dévoilent aucune réponse avant validation.</p>'+
   '<ol>'+entries.map(m=>'<li><span class="lab-path-swatch" style="--path-color:'+
    voiceColors[m.voice]+'"></span><strong>Voix '+(m.voice+1)+'</strong> : '+esc(m.from.label)+
    ' → '+esc(m.to.label)+' — '+movement(m)+'</li>').join("")+'</ol></div>';
- return svg+legend;
 }
