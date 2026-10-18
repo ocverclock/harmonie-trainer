@@ -164,3 +164,7 @@ La validation demande exactement 4 ou 5 notes distinctes selon la famille. La co
 - Les anciennes questions et leurs scores sont conservés dans `harmonie-sessions-v2`. Les nouvelles sessions enregistrent `schemaVersion:3`, `familyId`, `realizationId`, `difficulty` et `level` ; les anciennes restent étiquetées « famille non enregistrée » sans leur attribuer rétroactivement une nouvelle signification.
 - Les démonstrations des nouvelles extensions sont jouées dans un registre musical réparti sur les octaves, et non empilées dans la même octave.
 - Tests unitaires : toutes les 8 familles et 3 difficultés, théorie des notes et progression des tonalités ; tests Chromium mobile/tablette des choix indépendants et des 10 exercices jusqu'à l'enregistrement du résultat.
+
+## Outil complémentaire externe — Scale Designer
+
+La page **Accueil** contient un lien visible vers [Scale Designer d’Ethan Hein](https://ethanhein.com/scaledesigner.html), qui permet de construire et écouter des gammes et des accords. Le lien s'ouvre dans un nouvel onglet, sans transmettre les résultats locaux de Harmonie Trainer à cet outil. Ressource externe indépendante, sans intégration ni synchronisation de données.
