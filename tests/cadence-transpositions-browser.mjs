@@ -24,7 +24,7 @@ try{
   assert.equal(await page.locator(".lab-panel").innerText().then(x=>x.includes("sensible de Ré♭")),false,
    "Theory explanation must not give away the answer before the learner plays");
   for(const [i,frame] of db.frames.entries()){
-   assert.match(await page.locator(".lab-symbol").innerText(),new RegExp(frame.symbol.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));
+   assert.equal(await page.locator(".lab-symbol").innerText(),frame.symbol);
    for(const midi of frame.example)await page.locator('[data-midi="'+midi+'"]').click();
    assert.equal(await page.locator("#labCheck").isDisabled(),false);
    await page.locator("#labCheck").click();
