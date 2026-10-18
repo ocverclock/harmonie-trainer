@@ -40,3 +40,12 @@
 .lab-master-item span{font-size:12px;color:#4c6280;line-height:1.5}
 .lab-mastery{margin-top:23px}
 .lab-mastery h2{font-size:19px}
+
+
+/* P02: teach pitch continuity and rank-wise motion without judging a wrong
+   chord as a better voicing merely because it uses shorter movements. */
+.lab-transition{margin:16px 0;padding:15px 17px;border:1px solid #cadbed;border-radius:13px;background:#f4f8fe}
+.lab-transition h4{font-size:16px;color:#173d67;margin:0 0 10px}
+.lab-transition p{line-height:1.6;margin:0 0 10px}
+.lab-transition .subtle{font-size:13px}
+@media(max-width:570px){.lab-transition{padding:12px 11px}.lab-transition .btn{min-height:44px}}
