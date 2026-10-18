@@ -93,11 +93,17 @@ try{
     const blue=page.locator(".construction-correction .pianoKey.construction-correct");
     assert.ok(await red.count()>0,"Wrong selection must be visible in red");
     assert.ok(await green.count()>0,"Missing note must be visible in green");
-    assert.ok(await blue.count()>0,"Correct played notes must remain visible in blue");
+    // Four selected pitch classes can all be wrong: no blue note is then expected.
+    const pitchClasses=async locator=>locator.evaluateAll(keys=>
+      [...new Set(keys.map(key=>Number(key.dataset.midi)%12))].length);
+    const correctCount=await pitchClasses(blue);
+    const extraCount=await pitchClasses(red);
+    assert.equal(correctCount+extraCount,4,
+      "Every played pitch class must be classified as correct (blue) or extra (red)");
     assert.equal(await page.locator(".construction-legend").count(),1);
     assert.match(await red.first().getAttribute("aria-label"),/jouée en trop/);
     assert.match(await green.first().getAttribute("aria-label"),/manquante/);
-    assert.match(await blue.first().getAttribute("aria-label"),/jouée et juste/);
+    if(correctCount>0)assert.match(await blue.first().getAttribute("aria-label"),/jouée et juste/);
     const before=await red.count();
     await red.first().click();
     assert.equal(await page.locator(".construction-correction .pianoKey.construction-extra").count(),before,
