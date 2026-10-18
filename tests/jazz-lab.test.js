@@ -31,7 +31,9 @@ test("invalid or repeated MIDI values cannot influence voice analysis",()=>{
  }
 });
 test("every secondary target can be built with correct chord tones and a closer alternative",()=>{
- assert.equal(voiceStudies.length,secondary.length);
+ assert.equal(voiceStudies.length,secondary.length+7,"Five historical studies plus seven new keys");
+ assert.deepEqual(voiceStudies.slice(0,secondary.length).map(s=>s.id),secondary.map(s=>s.id),
+   "Original study IDs must not move or change");
  for(const study of voiceStudies){
   assert.equal(study.frames.length,3);
   for(let i=0;i<3;i++){
