@@ -120,3 +120,54 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(29px,4vw,48px);letter-spacing:-1.3px;
 .construction-level-choice strong{font-size:13px}
 .construction-level-choice span{font-size:12px}
 .construction-recap{margin-top:16px;padding:13px}}
+
+
+/* Accord construction: keep the learner's actual choice while showing the answer.
+   Scope these markers so voicings, jazz lab and the curriculum are unaffected. */
+.construction-correction .pianoKey.construction-extra{
+ background:linear-gradient(180deg,#ffe5e5,#f8a9a9);
+ border-color:#c22536;
+ box-shadow:inset 0 0 0 3px #b91c1c,inset 0 -6px 12px #7f1d1d30;
+}
+.construction-correction .pianoKey.black.construction-extra{
+ background:linear-gradient(110deg,#a63340,#581521);
+ border-color:#ff9fa5;
+ box-shadow:inset 0 0 0 2px #ff9fa5,2px 5px 6px #14243b65;
+}
+.construction-correction .pianoKey.construction-missing{
+ background:linear-gradient(180deg,#e5fff1,#a4eac4);
+ border-color:#15803d;
+ box-shadow:inset 0 0 0 3px #15803d,inset 0 -6px 12px #16653425;
+}
+.construction-correction .pianoKey.black.construction-missing{
+ background:linear-gradient(110deg,#218a56,#0e5137);
+ border-color:#b5fbd2;
+ box-shadow:inset 0 0 0 2px #b5fbd2,2px 5px 6px #14243b65;
+}
+.construction-correction .pianoKey.construction-correct{
+ box-shadow:inset 0 0 0 2px #2563eb,inset 0 -8px 18px #2563eb3a;
+}
+.construction-correction .pianoKey.black.construction-correct{
+ box-shadow:inset 0 0 0 2px #93c5fd,2px 5px 6px #14243b65;
+}
+.construction-correction .pianoKey .construction-marker{
+ position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+ display:flex;align-items:center;justify-content:center;
+ width:25px;height:25px;border:2px solid #fff;border-radius:50%;
+ background:#2563eb;color:#fff;font-size:17px;font-weight:900;line-height:1;
+ box-shadow:0 0 0 1px #19344f55;pointer-events:none;z-index:3;
+}
+.construction-correction .pianoKey.black .construction-marker{
+ width:21px;height:21px;bottom:26px;font-size:15px;
+}
+.construction-correction .pianoKey.construction-extra .construction-marker{background:#b91c1c}
+.construction-correction .pianoKey.construction-missing .construction-marker{background:#15803d}
+.construction-correction .pianoKey.white.construction-extra .keyText,
+.construction-correction .pianoKey.white.construction-missing .keyText{color:#172b46}
+.construction-legend{display:flex;align-items:center;flex-wrap:wrap;gap:9px 16px;margin:2px 0 13px;font-size:13px;color:#273f5f}
+.construction-legend span{display:inline-flex;align-items:center;gap:6px}
+.construction-legend b{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:50%;font-size:15px;color:#fff}
+.construction-legend .legend-correct{background:#2563eb}
+.construction-legend .legend-extra{background:#b91c1c}
+.construction-legend .legend-missing{background:#15803d}
+.construction-legend small{flex-basis:100%;color:#60748d;font-size:12px}
