@@ -18,8 +18,13 @@ try{
   assert.equal(await page.locator("#inversionChord option").count(),inversionStudies.length);
   assert.equal(await page.locator(".inv-example").count(),0,"Do not reveal example before validation");
   const study=inversionStudies[0];
+  // Complete the root-position lesson first.
+  for(const midi of study.exercises[0].reference)
+   await page.locator('.inv-input [data-midi="'+midi+'"]').click();
+  await page.locator("#invCheck").click();
+  assert.match(await page.locator(".feedback").innerText(),/Renversement correct/);
+  await page.locator("#invNext").click();
   // First inversion includes a harmonic error (good bass, missing pitch).
-  await page.locator('[data-inversion-step="1"]').click();
   for(const midi of [52,55,59,73])await page.locator('.inv-input [data-midi="'+midi+'"]').click();
   assert.equal(await page.locator(".inv-played-bass").count(),1);
   assert.equal(await page.locator('.inv-played-bass[data-midi="52"]').count(),1);
@@ -54,12 +59,12 @@ try{
    assert.match(await page.locator(".feedback").innerText(),/Renversement correct/);
    if(step===2)await page.locator("#invNext").click();
   }
-  assert.match(await page.locator(".explain").innerText(),/3 \/ 4 renversements réussis/);
+  assert.match(await page.locator(".explain").innerText(),/4 \/ 4 renversements réussis/);
   const saved=JSON.parse(await page.evaluate(()=>localStorage.getItem("harmonie-progress-v2")));
   const records=saved.events.filter(ev=>ev.exerciseId.startsWith("jazzlab:inversions:cmaj7:"));
-  assert.equal(records.length,5,"Two wrong attempts and three correct answers");
+  assert.equal(records.length,6,"Two wrong attempts and four correct answers");
   assert.equal(records.filter(ev=>!ev.correct).length,2);
-  assert.equal(records.filter(ev=>ev.correct).length,3);
+  assert.equal(records.filter(ev=>ev.correct).length,4);
   await page.locator("#inversionChord").selectOption("ebmaj7");
   assert.match(await page.locator(".lab-panel h1").innerText(),/E♭maj7/);
   assert.equal(await page.locator(".feedback").count(),0);
