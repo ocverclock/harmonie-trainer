@@ -2,6 +2,7 @@ import {names,exercises,degrees,grade,sessionFor,secondary,validateBank} from ".
 import {PIANO_KEYS,PIANO_WIDTH,noteX} from "./piano-layout.js";
 import {constructionLevels,constructionDifficulties,difficultyOf,levelOf,demonstrationMidis} from "./practice-random.js?v=4";
 import {constructionSetupHTML} from "./construction-setup.js?v=1";
+import {constructionKeyState} from "./construction-feedback.js?v=1";
 
 const app=document.getElementById("app");
 if(!validateBank())throw new Error("Corpus musical invalide");
@@ -45,7 +46,7 @@ function shell(body){
   if(n==="quiz"){screen="home";render()}else if(n==="voicings"){beginVoicing()}else if(n==="course"){beginCourse()}else if(n==="jazz"){beginJazzLab()}else{screen=n;render()}
  }});
 }
-function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1,selectionMode="pitchClass",voicePalette=[]){
+function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1,selectionMode="pitchClass",voicePalette=[],constructionCorrection=null){
  const visibleVoices=voices.filter(function(v){return solo===-1||solo===v.id});
  const byMidi=new Map(visibleVoices.map(function(v){return [v.midi,v]}));
  const white=[],black=[];
@@ -53,13 +54,16 @@ function piano(chosen,highlight,live,voices=[],embedded=false,solo=-1,selectionM
   const midi=key.midi,pc=key.pc,voice=byMidi.get(midi);
   const highlighted=voices.length?!!voice:highlight.includes(midi);
   const selected=selectionMode==="midi"?chosen.has(midi):chosen.has(pc);
+  const correction=selectionMode==="pitchClass"?constructionKeyState(pc,chosen,constructionCorrection):"";
   const note=names[pc]+(Math.floor(midi/12)-1);
   const label=key.black?names[pc]:(pc===0?'C'+(Math.floor(midi/12)-1):names[pc]);
   const color=voice?(voicePalette[voice.id]||(voiceModule?voiceModule.voiceColors[voice.id]:null)):null;
   const marker=color?'<span class="keyVoice" style="--voice-color:'+color+'" aria-hidden="true">'+(voice.id+1)+'</span>':'';
-  const aria=' aria-label="'+escapeText(note+(voice?' — voix '+(voice.id+1):''))+'" aria-pressed="'+(selected?'true':'false')+'"';
+  const correctionLabels={correct:"jouée et juste",extra:"jouée en trop",missing:"manquante"};
+  const correctionBadge=correction?'<span class="construction-marker" aria-hidden="true">'+({correct:"✓",extra:"×",missing:"+"}[correction])+'</span>':"";
+  const aria=' aria-label="'+escapeText(note+(voice?' — voix '+(voice.id+1):'')+(correction?' — '+correctionLabels[correction]:''))+'" aria-pressed="'+(selected?'true':'false')+'"';
   const click=live?' data-midi="'+midi+'"':' data-preview="'+midi+'"';
-  const result='<button class="pianoKey '+(key.black?'black ':'white ')+(selected?'selected ':'')+(highlighted?'marked':'')+'" style="left:'+key.left+'px"'+aria+click+'><span class="keyText">'+label+'</span>'+marker+'</button>';
+  const result='<button class="pianoKey '+(key.black?'black ':'white ')+(selected?'selected ':'')+(highlighted?'marked ':'')+(correction?'construction-'+correction:'')+'" style="left:'+key.left+'px"'+aria+click+'><span class="keyText">'+label+'</span>'+marker+correctionBadge+'</button>';
   (key.black?black:white).push(result);
  });
  const rack='<div class="piano-rack"><div class="piano" style="width:'+PIANO_WIDTH+'px">'+white.join('')+black.join('')+'</div></div>';
@@ -139,7 +143,9 @@ function quiz(){
    '. Commence par la fondamentale '+escapeText(ex.root.replaceAll("b","♭").replaceAll("#","♯"))+
    ', puis trouve les autres degrés.<div class="row" style="margin-top:10px">'+button("Écouter la fondamentale","hearRoot","quiet")+'</div></div>':'')+
  (constructionDifficulty!=="guided"?'<p class="subtle">'+escapeText(difficultyOf(constructionDifficulty).description)+'</p>':'')+
- piano(selected,[],true)+'<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider ("+ex.expected.length+" notes)","validate","primary",!!checked||selected.size!==ex.expected.length)+button("Changer de niveau","backToLevels","quiet")+'</div>';
+ '<div class="construction-correction">'+piano(selected,[],true,[],false,-1,"pitchClass",[],checked)+'</div>'+
+ (checked&&!checked.correct?'<div class="construction-legend" role="note" aria-label="Légende de correction"><span><b class="legend-correct">✓</b> Jouée et juste</span><span><b class="legend-extra">×</b> Jouée en trop</span><span><b class="legend-missing">+</b> Manquante</span><small>Repères sur chaque octave : l’octave ne compte pas dans la réponse.</small></div>':'')+
+ '<div class="row">'+button("Effacer","clear","quiet",!!checked)+button("Écouter mon choix","hear","quiet",!selected.size)+button("Valider ("+ex.expected.length+" notes)","validate","primary",!!checked||selected.size!==ex.expected.length)+button("Changer de niveau","backToLevels","quiet")+'</div>';
  if(checked){
   let missing=checked.missing.map(noteLabel).join(", "),extra=checked.extra.map(noteLabel).join(", ");
   body+='<div class="feedback '+(checked.correct?'correct':'')+'" role="status"><strong>'+(checked.correct?'Exact !':'Pas encore.')+'</strong>'+
