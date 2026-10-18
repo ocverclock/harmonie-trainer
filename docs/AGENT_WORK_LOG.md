@@ -67,6 +67,17 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P02 : évaluation pédagogique de la conduite des voix — PR prête pour revue, non fusionnée
+- **PR [#23](https://github.com/ocverclock/harmonie-trainer/pull/23)** sur branche `pedago/P02-conduite-voix-evaluation-20261018`, à conserver hors `main` jusqu'à validation explicite de publication.
+- L'atelier jazz distingue maintenant **justesse de l'accord**, notes communes par classe de hauteur, touches réellement communes dans le même registre et immobilité d'une voix selon son rang grave→aigu. Les déplacements d'un demi-ton, ton, et sauts supérieurs à la quinte sont expliqués, sans modifier la validité d'un renversement correct.
+- **Défaut corrigé :** un accord faux ou précédé d'un accord non validé comme juste ne reçoit plus de comparaison le présentant comme aussi économe qu'une bonne disposition. Le bouton pour écouter une autre disposition valide est proposé uniquement lorsque les deux accords sont justes.
+- Code : `src/voice-leading-feedback.js`, `src/jazz-lab-ui.js`, CSS de l'atelier, tests unitaires `tests/voice-leading-feedback.test.js`, tests Chromium `tests/voice-leading-browser.mjs` à 375×812 et 1024×768.
+- **Preuves :** [CI musicale run 39110967980](https://github.com/ocverclock/harmonie-trainer/actions/runs/39110967980) **success** ; [test navigateur run 39110967964](https://github.com/ocverclock/harmonie-trainer/actions/runs/39110967964) **success** avec les deux cas de largeur. Tests Safari iPhone/iPad réels toujours absents.
+- Aucun changement des touches MIDI, exercices, huit niveaux, notes des neuvièmes/treizièmes, progression V2 ou scores. Nouveau chargement avec cache `jazz-lab-ui.js?v=2`.
+- **Suite :** P03 — notes-guides tierces et septièmes en situation. Ne pas confondre résultats verts sur PR et version publiée : `main` reste inchangé.
+
+
+
 ### 2026-10-17 — V0.12 publiée : 8 niveaux et tonalités indépendantes
 - **Demande validée :** « Accords de 9 · 4 notes, avec difficulté intermédiaire. Applique la refonte en respectant les 8 niveaux et la séparation entre structure et tonalité. »
 - **[PR #17](https://github.com/ocverclock/harmonie-trainer/pull/17)** fusionnée, commit `18b287567f076ac1f68394db1284284cdd97c20d`. Suit l'audit [issue #16](https://github.com/ocverclock/harmonie-trainer/issues/16).
