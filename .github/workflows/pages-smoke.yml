@@ -26,7 +26,7 @@ jobs:
           ok=0
           for attempt in $(seq 1 24); do
             if curl -fsSL --connect-timeout 10 --max-time 20 -H "Cache-Control: no-cache" "$root/?commit=$GITHUB_SHA&attempt=$attempt" -o "$html"; then
-              if grep -Fq './src/app.js?v=14' "$html" && grep -Fq './src/style.css?v=7' "$html"; then
+              if grep -Fq './src/app.js?v=15' "$html" && grep -Fq './src/style.css?v=7' "$html"; then
                 echo "GitHub Pages serves the expected HTML with Scale Designer link (attempt $attempt)"
                 ok=1
                 break
@@ -40,15 +40,16 @@ jobs:
             exit 1
           fi
           for asset in \
-            'src/app.js?v=14' \
+            'src/app.js?v=15' \
             'src/curriculum-ui.js?v=5' \
             'src/voicing-ui.js?v=3' \
             'src/practice-random.js?v=4' \
             'src/construction-setup.js?v=1' \
             'src/music.js?v=4' \
             'src/jazz-lab.js' \
-            'src/jazz-lab-ui.js?v=1' \
-            'src/jazz-lab.css?v=1' \
+            'src/voice-leading-feedback.js' \
+            'src/jazz-lab-ui.js?v=2' \
+            'src/jazz-lab.css?v=2' \
             'src/curriculum.js' \
             'src/course-notes.js' \
             'src/tonality-variants.js' \
