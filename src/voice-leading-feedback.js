@@ -26,7 +26,7 @@ export function describeVoicingTransition(analysis){
  const shared=commonMidis.length?
   "Touches communes conservées : "+commonMidis.map(midiLabel).join(", ")+".":"Aucune touche exactement conservée dans le même registre.";
  const members=commonPitchClasses.length?
-  commonPitchClasses.length+" note(s) commune(s) par nom de note (octave libre).":"Aucune note commune par nom de note.";
+  commonPitchClasses.length+" note(s) commune(s) par classe de hauteur (octave libre).":"Aucune note commune par nom de note.";
  const movement="Par comparaison des voix grave → aigu : "+motion.total+" demi-tons parcourus, "+
   motion.held+" voix au même rang immobiles, "+motion.semitone+" déplacement(s) d’un demi-ton, "+
   wholeTone+" d’un ton et "+motion.leaps+" saut(s) supérieur(s) à une quinte juste.";
