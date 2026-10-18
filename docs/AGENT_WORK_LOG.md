@@ -67,6 +67,19 @@ Copier ce bloc **à chaque jalon significatif** et le compléter avec des élém
 
 ## Journal chronologique
 
+### 2026-10-18 — P04 : trajectoires des quatre voix réellement jouées — PR #25, non fusionnée
+- **PR [#25](https://github.com/ocverclock/harmonie-trainer/pull/25)** basée sur la branche P03 / [PR #24](https://github.com/ocverclock/harmonie-trainer/pull/24), elle-même basée sur P02 / PR #23. Ne pas fusionner directement dans main sans autorisation ; retargeter après intégration autorisée des dépendances, puis revalider les tests.
+- **Affichage pédagogique :** le laboratoire « Conduite des voix » montre, après validation du deuxième accord, quatre courbes reliant **les MIDI réellement joués** par rang grave→aigu ; après le troisième, une visualisation complète des trois accords (12 positions et 8 trajets). Les notes qui restent sur la même touche forment un tracé vertical pointillé, les mouvements chromatiques une courbe. Numéros/coloris et liste textuelle de quatre mouvements accessibles aux élèves ne distinguant pas les couleurs.
+- **Pas de divulgation prématurée** : graphique entièrement absent avant contrôle de l'accord en cours ; en cas de fausse note il représente la réponse fausse, marquée « à revoir », **jamais la correction déguisée en jeu de l'élève**. Une nouvelle tentative masque le graphique jusqu'à sa prochaine validation.
+- **Géométrie piano inchangée** : rendu SVG fondé sur `noteX` et `PIANO_WIDTH` de `src/piano-layout.js`, couplé au même conteneur de défilement que les touches MIDI du piano actuel. Aucun changement de dimensions ni de touch mapping.
+- **Limite expliquée** : « voix 1 à 4 » = rang grave à aigu à chaque accord, **pas doigté ni identité d'une voix traversant un croisement** ; score de justesse indépendant des trajectoires selon le lot P02.
+- **Nouveaux modules / tests** : `src/voice-paths.js`, `tests/voice-paths.test.js`, `tests/voice-paths-browser.mjs`, intégration `src/jazz-lab-ui.js`, CSS et versions de cache; workflow Chromium téléphone/tablette étendu.
+- **CI vérifiée** : [tests Node run 39113934308](https://github.com/ocverclock/harmonie-trainer/actions/runs/39113934308) **success** ; [Chromium run 39113934317](https://github.com/ocverclock/harmonie-trainer/actions/runs/39113934317) **success** avec preuve explicite « P04 real-voicing trajectory browser OK » aux formats 375×812 et 1024×768, et suites P02/P03 également vertes.
+- **Aucune publication** sur GitHub Pages, pas de recette Safari iPhone/iPad physique. Aucun impact sur anciens scores, 89 exercices, 8 niveaux, 9 à 4 sons, 13 à 5 sons, ou export V2.
+- **Prochain lot P05** : comparaison auditive A/B du voicing joué et d'une alternative valide, sans noter la justesse selon la fluidité.
+
+
+
 ### 2026-10-18 — P03 : notes-guides actives sur les cadences II–V–I — PR #24, non fusionnée
 - **PR [#24](https://github.com/ocverclock/harmonie-trainer/pull/24)** basée sur la branche P02 / [PR #23](https://github.com/ocverclock/harmonie-trainer/pull/23), pour éviter les collisions entre deux lots touchant le même atelier. Après éventuelle fusion autorisée de P02, cibler main et relancer la CI avant publication.
 - **Pédagogie réellement ajoutée :** 5 progressions II–V–I (G/F majeur, D/E/A mineur) × 4 mouvements de notes-guides (tierces et septièmes) = **20 exercices**. Les notes exactes et leur registre sont dérivés des accords/mélodies déjà présentes, avec assertions contre les exemples incohérents.
