@@ -115,3 +115,27 @@
 .lab-cadence-choice select:focus-visible{outline:3px solid #6f98d2;outline-offset:2px}
 .lab-cadence-choice .subtle{margin:0;line-height:1.45;font-size:12px}
 @media(max-width:570px){.lab-cadence-choice{padding:10px}.lab-cadence-choice select{min-height:48px}}
+
+
+/* P07 — Inversion is a BASS ROLE, separate from note identity and voicing spread. */
+.lab-inversion-lesson{background:#f1f6ff;border:1px solid #d0dff2;border-radius:13px;margin:15px 0;padding:15px}
+.lab-inversion-lesson h3{font-size:17px;margin:0 0 12px;color:#254e79}
+.lab-inversion-degrees{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:11px 0}
+.lab-inversion-degrees>div{padding:10px;background:#fff;border:1px solid #d5e0f0;border-radius:9px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.lab-inversion-degrees strong{font-size:13px;color:#24527e}
+.lab-inversion-degrees span{font-size:12px;line-height:1.4;color:#365876}
+.lab-inversion-lesson .subtle{line-height:1.6}
+.lab-inversion-selector{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.lab-inversion-selector select{width:100%;font:inherit;border:1px solid #90aece;border-radius:9px;padding:11px;min-height:45px;background:white;color:#204466}
+.lab-inversion-keyboard{margin:14px 0 6px}
+.lab-inversion-keyboard .pianoKey.inv-played-bass{outline:4px solid #245aa5;outline-offset:-4px}
+.lab-inversion-keyboard .pianoKey.inv-error-bass{outline:4px solid #be3344;outline-offset:-4px}
+.lab-inversion-keyboard .pianoKey.inv-expected-bass{outline:4px solid #248557;outline-offset:-4px}
+.lab-inversion-keyboard .pianoKey:is(.inv-played-bass,.inv-error-bass,.inv-expected-bass)::after{content:"↓";position:absolute;top:25%;left:50%;transform:translate(-50%,-50%);border-radius:50%;font-weight:900;font-size:15px;width:22px;height:22px;display:grid;place-items:center;background:#e4edff;color:#194e89;pointer-events:none;z-index:4}
+.lab-inversion-keyboard .pianoKey.inv-error-bass::after{background:#ffe6e9;color:#8b2130}
+.lab-inversion-keyboard .pianoKey.inv-expected-bass::after{background:#e0ffe9;color:#12643b}
+.lab-inversion-legend{font-size:13px;line-height:1.6}
+.lab-inversion-symbol{color:#194f8a;font-weight:900;font-size:17px}
+.inv-example-symbol{color:#12643b}
+.lab-inversion-keyboard .pianoKey:focus-visible{outline:4px solid #e49a23;outline-offset:-4px}
+@media(max-width:690px){.lab-inversion-degrees{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-inversion-lesson{padding:12px}}
