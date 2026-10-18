@@ -37,7 +37,7 @@ test("P03 specifically distinguishes major and minor seventh resolution",()=>{
  assert.equal(describeSemitones(0),"note commune, aucun déplacement");
  assert.equal(describeSemitones(-1),"descend d’un demi-ton");
  assert.equal(describeSemitones(1),"monte d’un demi-ton");
- assert.equal(describeSemitones(-2),"descend de un ton");
+ assert.equal(describeSemitones(-2),"descend d’un ton");
 });
 
 test("P03 wrong note feedback gives spelled correction and never confuses an octave",()=>{
