@@ -34,7 +34,7 @@ test("P04 complete cadence has three rows and eight connections, including chrom
  assert.equal(model.moves.length,8);
  assert.equal(model.moves.filter(m=>m.row===0).length,4);
  assert.equal(model.moves.filter(m=>m.row===1).length,4);
- assert.equal(model.total,8);
+ assert.equal(model.total,12);
  const html=renderVoicePaths([a,b,c]);
  assert.equal((html.match(/class="lab-path-line/g)||[]).length,8);
  assert.equal((html.match(/class="lab-path-node"/g)||[]).length,12);
