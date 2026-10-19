@@ -90,9 +90,10 @@ test("P01 — exact position and free chord construction are assessed differentl
  assert.equal(checkExercise(ninth,ninth.midis.slice(0,-1)).correct,false);
 });
 
-test("P01 — five II–V–I studies preserve three playable harmonic frames",()=>{
+test("P01 — five original II–V–I studies remain valid alongside added cadences",()=>{
  assert.equal(secondary.length,5);
- assert.equal(voiceStudies.length,secondary.length);
+ assert.equal(voiceStudies.length,12,"P06 adds seven cadences to the five original studies");
+ assert.deepEqual(voiceStudies.slice(0,secondary.length).map(x=>x.id),secondary.map(x=>x.id));
  for(const study of voiceStudies){
   assert.equal(study.frames.length,3);
   for(let i=0;i<3;i++){
