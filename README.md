@@ -40,6 +40,7 @@ Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](
 - La publication GitHub Pages doit être activée dans Settings → Pages (Deploy from main /root).
 
 ## Documents de projet
+- [Références MIDI et voicings jazz — Tonal et Piano Trainer Studio](docs/REFERENCES_MIDI_VOICINGS.md)
 - [Spécifications](https://docs.google.com/document/d/1NvPK5SX2wOk-WMPpHHmQ7TeAMdlAHomV5AcD_FoYZjc/edit)
 - [Consignes de développement pour IA](https://docs.google.com/document/d/1NxDHTKqsd39_yGCiLv1mVcA8gNan3oXxYHmoTXdmSaY/edit)
 
