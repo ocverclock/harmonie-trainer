@@ -89,9 +89,9 @@ La progression est II demi-diminué → V7♭9 → I mineur 6/9, puis le I devie
 
 | Accord | Main gauche | Main droite, du grave vers l'aigu |
 | --- | --- | --- |
-| Dm7♭5 | Ré2–La♭2 | Fa3–La♭3–Do4–Fa4 |
-| G7♭9 | Sol2–Ré3 | Fa3–La♭3–Si3–Ré4 |
-| Cm6/9 | Do2–Sol2 | Mi♭3–Sol3–La3–Ré4 |
+| Dm7♭5 | Ré3–La♭3 | Fa4–La♭4–Do5–Fa5 |
+| G7♭9 | Sol3–Ré4 | Fa4–La♭4–Si4–Ré5 |
+| Cm6/9 | Do3–Sol3 | Mi♭4–Sol4–La4–Ré5 |
 
 Le II contient la quinte diminuée, y compris à la main gauche : aucune quinte juste n'est ajoutée. Le V contient la tierce majeure et la neuvième mineure. Le I choisi contient une sixte majeure et une neuvième, sans septième ; par exemple La naturel et Ré dans Cm6/9. Une tonique mineure avec septième majeure sera une autre réalisation à étudier, et n'est pas mélangée à celle-ci.
 
@@ -118,24 +118,14 @@ Le générateur mineur est séparé pour conserver les exemples majeurs à l'ide
 
 Contrôles : reproduction exacte, notes et durées des deux portées, basses justes/diminuées, orthographes enharmoniques avec octaves réelles (dont Do♭ et Fa♭), couverture des douze fondamentales, lecture et rendu OSMD. L'import et l'attente sur un piano physique restent à vérifier. Les variantes A/B ne constituent pas le chantier de cette série.
 
-## Versions de lecture — octave supérieure, 22 octobre 2026
+## Registre de lecture retenu — 22 octobre 2026
 
-Toutes les notes des deux mains sont transposées ensemble de **+12 demi-tons**. Ce déplacement uniforme conserve exactement les voicings, les intervalles entre les mains, les basses, les renversements, les conduites des voix, les tonalités et les durées. Il ne s'agit ni d'une nouvelle harmonisation ni d'un déplacement indépendant des notes.
+Les quatre fichiers de référence ci-dessus utilisent désormais la version plus lisible, à la demande de l'utilisateur. Ils remplacent les premières versions sous les mêmes noms et aux mêmes liens ; les doublons suffixés `_lecture` sont retirés.
 
-- [Majeur : test court, lecture](../samples/ii-v-i/II-V-I_test_court_lecture.musicxml).
-- [Majeur : douze tonalités, lecture](../samples/ii-v-i/II-V-I_12_tonalites_lecture.musicxml).
-- [Mineur : test court, lecture](../samples/ii-v-i/II-V-I_mineur_test_court_lecture.musicxml).
-- [Mineur : douze tonalités, lecture](../samples/ii-v-i/II-V-I_mineur_12_tonalites_lecture.musicxml).
+Toutes les notes des deux mains sont décalées ensemble de **+12 demi-tons par rapport au premier essai**. Les voicings, intervalles entre les mains, basses, renversements, conduites des voix, tonalités et durées sont strictement conservés. Les clés restent sol à droite et fa à gauche, sans clé transpositrice : PTS attend les touches une octave au-dessus du premier essai.
 
-Les originaux sont conservés. Les clés restent sol à droite et fa à gauche ; aucune clé transpositrice n'est utilisée. PTS doit donc attendre les touches situées une octave au-dessus des versions initiales.
+Maximum de lignes supplémentaires par note : une dans la série majeure, deux dans la série mineure complète, une dans les deux tests courts, contre quatre dans les premières versions.
 
-Sur les deux séries complètes, le nombre maximal de lignes supplémentaires nécessaires à une note passe de quatre à une en majeur et à deux en mineur. Les deux tests courts n'en demandent jamais plus d'une.
+Les générateurs majeur et mineur conservent leur sélection de positions puis relèvent uniformément l'octave à l'écriture des hauteurs MusicXML. Il n'y a aucun second traitement à appliquer aux fichiers de référence. Les commandes habituelles `generate:all` et `check` produisent et vérifient directement ces quatre fichiers.
 
-Le script `tools/voicing-lab/generate-readable.cjs` transforme les quatre fichiers sources sans relancer le choix des voicings. Il vérifie qu'en annulant uniquement son déplacement d'octave, on retrouve exactement chaque source avant ajout du titre et de la mention explicative.
-
-```bash
-npm run generate:lecture --prefix tools/voicing-lab
-npm run check:lecture --prefix tools/voicing-lab
-```
-
-`generate:all` et `check` incluent désormais les versions de lecture. Contrôles de ces versions : transposition exacte de +12 pour chaque note, conservation des harmonies et durées, structure XML et rendu OSMD. Aucun essai sur l'iPad ou un piano physique n'est revendiqué.
+Les premiers essais restent consultables dans l'historique Git avant le remplacement. Contrôles : reproduction exacte des quatre partitions de lecture déjà validées, transposition de +12 pour chaque note par rapport au premier essai, conservation des harmonies et durées, structure XML et rendu OSMD. Aucun essai sur l'iPad ou un piano physique n'est revendiqué.

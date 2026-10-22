@@ -6,6 +6,8 @@ const assert=require('node:assert/strict');
 const {Voicing,Note}=require('tonal');
 const out=path.resolve(__dirname,'../../samples/ii-v-i');
 const checkOnly=process.argv.includes('--check');
+// Le choix des positions reste identique ; seule leur octave de sortie est relevée.
+const notationOctaveShift=1;
 const dict={m7b5:['3m 5d 7m 10m','7m 10m 12d 14m'],'7b9':['3M 5P 7m 9m','7m 9m 10M 12P'],m69:['3m 5P 6M 9M','6M 9M 10m 12P']};
 const chains=[
  [['C',-3,'Do'],['Bb',-5,'Si bémol'],['Ab',-7,'La bémol'],['F#',3,'Fa dièse'],['E',1,'Mi'],['D',-1,'Ré']],
@@ -72,7 +74,7 @@ function generateChain(keys,chainIndex){
 }
 const cycles=chains.flatMap(generateChain);
 assert.equal(new Set(cycles.map(c=>Note.chroma(c.tonic))).size,12);
-function pitch(name){const n=Note.get(name);return `<pitch><step>${n.letter}</step>${n.alt?`<alter>${n.alt}</alter>`:''}<octave>${n.oct}</octave></pitch>`;}
+function pitch(name){const n=Note.get(name);return `<pitch><step>${n.letter}</step>${n.alt?`<alter>${n.alt}</alter>`:''}<octave>${n.oct+notationOctaveShift}</octave></pitch>`;}
 function notes(names,staff){return names.map((n,i)=>`<note>${i?'<chord/>':''}${pitch(n)}<duration>16</duration><voice>${staff}</voice><type>whole</type><staff>${staff}</staff></note>`).join('');}
 function harmony(c,j){
  const n=Note.get(c.roots[j]);
@@ -92,10 +94,10 @@ function score(selected,title,name){
   measures.push(`<measure number="${number}" width="260">${j===0&&i>0?'<print new-system="yes"/>':''}${attrs}${label}${tempo}${harmony(c,j)}${notes(rh,1)}<backup><duration>16</duration></backup>${notes(c.lh[j],2)}${end}</measure>`);
  }));
  const s=`<?xml version="1.0" encoding="utf-8"?>
-<score-partwise version="4.0"><work><work-title>${esc(title)}</work-title></work><identification><creator type="composer">Harmonie Trainer — exercices originaux</creator><encoding><software>Tonal ${require('tonal/package.json').version} + générateur Harmonie Trainer</software><encoding-date>2026-10-22</encoding-date><encoding-description>Cycle mineur : II demi-diminué, V7 bémol 9, I mineur 6/9. MG fondamentale et quinte diminuée sur II, quinte juste sur V et I ; MD quatre notes, avec doublure sur II et V. La fondamentale du I devient celle du II suivant. Deux boucles de six tonalités.</encoding-description></encoding></identification><defaults><scaling><millimeters>7</millimeters><tenths>40</tenths></scaling></defaults><part-list><score-part id="P1"><part-name>Piano</part-name><part-abbreviation>Pno.</part-abbreviation><score-instrument id="I1"><instrument-name>Piano</instrument-name></score-instrument><midi-instrument id="I1"><midi-channel>1</midi-channel><midi-program>1</midi-program></midi-instrument></score-part></part-list><part id="P1">${measures.join('\n')}</part></score-partwise>\n`;
+<score-partwise version="4.0"><work><work-title>${esc(title)}</work-title></work><identification><creator type="composer">Harmonie Trainer — exercices originaux</creator><encoding><software>Tonal ${require('tonal/package.json').version} + générateur Harmonie Trainer</software><encoding-date>2026-10-22</encoding-date><encoding-description>Cycle mineur : II demi-diminué, V7 bémol 9, I mineur 6/9. MG fondamentale et quinte diminuée sur II, quinte juste sur V et I ; MD quatre notes, avec doublure sur II et V. La fondamentale du I devient celle du II suivant. Deux boucles de six tonalités. Version de lecture : toutes les notes des deux mains sont transposées exactement une octave vers l’aigu ; intervalles, voicings, tonalités, rythmes et enchaînements conservés.</encoding-description></encoding></identification><defaults><scaling><millimeters>7</millimeters><tenths>40</tenths></scaling></defaults><part-list><score-part id="P1"><part-name>Piano</part-name><part-abbreviation>Pno.</part-abbreviation><score-instrument id="I1"><instrument-name>Piano</instrument-name></score-instrument><midi-instrument id="I1"><midi-channel>1</midi-channel><midi-program>1</midi-program></midi-instrument></score-part></part-list><part id="P1">${measures.join('\n')}</part></score-partwise>\n`;
  if(checkOnly)assert.equal(fs.readFileSync(path.join(out,name),'utf8'),s,`Partition non reproductible : ${name}`);
  else fs.writeFileSync(path.join(out,name),s);
  return {name,cadences:selected.length,measures:measures.length,notes:measures.length*6};
 }
-const files=[score(cycles.slice(0,3),'II-V-I mineurs avec basses - test','II-V-I_mineur_test_court.musicxml'),score(cycles,'II-V-I mineurs avec basses - douze tonalités','II-V-I_mineur_12_tonalites.musicxml')];
+const files=[score(cycles.slice(0,3),'II-V-I mineurs - test court (+1 octave)','II-V-I_mineur_test_court.musicxml'),score(cycles,'II-V-I mineurs - 12 tonalités (+1 octave)','II-V-I_mineur_12_tonalites.musicxml')];
 console.log(JSON.stringify({mode:checkOnly?'check':'generate',tonal:require('tonal/package.json').version,files},null,2));
