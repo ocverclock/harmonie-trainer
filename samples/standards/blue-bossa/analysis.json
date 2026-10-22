@@ -1,0 +1,314 @@
+{
+  "source": {
+    "url": "https://ai-muzic.github.io/clamp/mxls/Blue%20Bossa.mxl",
+    "sha256": "946d5e222dc56f3d25b6cc29534ab05b176ad7f34de922f4d6f1ae54ae66a0db",
+    "composer": "Kenny Dorham",
+    "sourceMeasureCount": 38,
+    "keySignature": {
+      "fifths": -3,
+      "modeAsWritten": "major"
+    }
+  },
+  "selection": {
+    "firstWrittenMeasure": 4,
+    "lastWrittenMeasure": 19,
+    "headMeasures": 16,
+    "unfoldRepeats": false
+  },
+  "timeline": [
+    {
+      "headMeasure": 1,
+      "sourceMeasure": "4",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 2,
+      "sourceMeasure": "5",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": true,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 3,
+      "sourceMeasure": "6",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "F",
+      "kind": "minor-seventh",
+      "text": "m7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 4,
+      "sourceMeasure": "7",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "Bb",
+      "kind": "dominant",
+      "text": "7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 5,
+      "sourceMeasure": "8",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "D",
+      "kind": "half-diminished",
+      "text": "m7b5",
+      "degrees": []
+    },
+    {
+      "headMeasure": 6,
+      "sourceMeasure": "9",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "G",
+      "kind": "dominant",
+      "text": "7#9",
+      "degrees": [
+        {
+          "value": 9,
+          "alter": 1,
+          "type": "add"
+        }
+      ]
+    },
+    {
+      "headMeasure": 7,
+      "sourceMeasure": "10",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 8,
+      "sourceMeasure": "11",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": true,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 9,
+      "sourceMeasure": "12",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "Eb",
+      "kind": "minor-seventh",
+      "text": "m7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 10,
+      "sourceMeasure": "13",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "Ab",
+      "kind": "dominant",
+      "text": "7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 11,
+      "sourceMeasure": "14",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "Db",
+      "kind": "major-seventh",
+      "text": "Maj7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 12,
+      "sourceMeasure": "15",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": true,
+      "root": "Db",
+      "kind": "major-seventh",
+      "text": "Maj7",
+      "degrees": []
+    },
+    {
+      "headMeasure": 13,
+      "sourceMeasure": "16",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "D",
+      "kind": "half-diminished",
+      "text": "m7b5",
+      "degrees": []
+    },
+    {
+      "headMeasure": 14,
+      "sourceMeasure": "17",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "G",
+      "kind": "dominant",
+      "text": "7#9",
+      "degrees": [
+        {
+          "value": 9,
+          "alter": 1,
+          "type": "add"
+        }
+      ]
+    },
+    {
+      "headMeasure": 15,
+      "sourceMeasure": "18",
+      "beat": 1.0,
+      "durationQuarters": 4.0,
+      "inherited": false,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 16,
+      "sourceMeasure": "19",
+      "beat": 1.0,
+      "durationQuarters": 3.0,
+      "inherited": true,
+      "root": "C",
+      "kind": "minor-sixth",
+      "text": "m6",
+      "degrees": []
+    },
+    {
+      "headMeasure": 16,
+      "sourceMeasure": "19",
+      "beat": 4.0,
+      "durationQuarters": 1.0,
+      "inherited": false,
+      "root": "G",
+      "kind": "dominant",
+      "text": "7",
+      "degrees": []
+    }
+  ],
+  "melodySummary": {
+    "pitchSegments": 62,
+    "attacksExcludingTieStops": 48,
+    "tieStopSegments": 14,
+    "additionalChordNotes": 12,
+    "lowestMidi": 62,
+    "highestMidi": 79
+  },
+  "navigationAsWritten": [
+    {
+      "sourceMeasure": "1",
+      "repeats": [
+        {
+          "direction": "forward"
+        }
+      ],
+      "words": [
+        "Sample Bass Line"
+      ]
+    },
+    {
+      "sourceMeasure": "2",
+      "repeats": [
+        {
+          "direction": "backward"
+        }
+      ],
+      "words": []
+    },
+    {
+      "sourceMeasure": "4",
+      "repeats": [
+        {
+          "direction": "forward"
+        }
+      ],
+      "words": []
+    },
+    {
+      "sourceMeasure": "19",
+      "repeats": [
+        {
+          "direction": "backward"
+        }
+      ],
+      "words": [
+        "Play head twice, solo on A\nAfter Solos continue to B"
+      ]
+    },
+    {
+      "sourceMeasure": "20",
+      "repeats": [
+        {
+          "direction": "forward"
+        }
+      ],
+      "words": [
+        ""
+      ]
+    },
+    {
+      "sourceMeasure": "35",
+      "repeats": [
+        {
+          "direction": "backward"
+        }
+      ],
+      "words": []
+    },
+    {
+      "sourceMeasure": "36",
+      "repeats": [],
+      "words": [
+        "D.S. al Coda"
+      ]
+    },
+    {
+      "sourceMeasure": "37",
+      "repeats": [
+        {
+          "direction": "forward"
+        }
+      ],
+      "words": []
+    },
+    {
+      "sourceMeasure": "38",
+      "repeats": [
+        {
+          "direction": "backward"
+        }
+      ],
+      "words": []
+    }
+  ]
+}

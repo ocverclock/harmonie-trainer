@@ -54,3 +54,10 @@ Sélection issue des grilles effectivement lues dans le Treebank ; elle ne garan
 Progression proposée : cadence isolée ; passage contextualisé avec une mesure avant et après ; passage de huit mesures ; jeu avec voicings écrits puis grille seule ; réintégration dans le morceau. Conserver forme, rythme harmonique et variante de la source.
 
 Toute analyse harmonique automatique sera une proposition à vérifier, notamment en cas de modulation ou de lecture ambiguë. Le transfert musical devra être évalué séparément de la seule reconnaissance des bonnes notes.
+
+## Premier pilote sur un MusicXML réel : Blue Bossa
+
+Le [pilote Blue Bossa](BLUE_BOSSA_PILOTE_PEDAGOGIQUE.md) utilise l'[exemple MXL publié par le projet de recherche CLaMP](https://ai-muzic.github.io/clamp/mxls/Blue%20Bossa.mxl), lié depuis sa [page officielle](https://ai-muzic.github.io/clamp/). Les mesures écrites 4 à 19 ont été lues pour extraire la grille et examiner la mélodie. Les variations de grille, les données de mode et un accord de coda incohérent sont documentés dans la fiche.
+
+Le source complet et la mélodie ne sont pas importés dans le dépôt. L'analyse exportée conserve provenance, empreinte, chronologie des accords et statistiques ; trois études originales de grille seule sont proposées en MusicXML. La disponibilité du source ne constitue pas une licence générale de redistribution de Blue Bossa.
+

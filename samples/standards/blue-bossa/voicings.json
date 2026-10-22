@@ -1,0 +1,690 @@
+{
+  "generated": [
+    {
+      "name": "Blue_Bossa_01_notes_guides.musicxml",
+      "measures": 16,
+      "events": [
+        {
+          "measure": 1,
+          "beat": 1,
+          "sourceMeasure": "4",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 2,
+          "beat": 1,
+          "sourceMeasure": "5",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 3,
+          "beat": 1,
+          "sourceMeasure": "6",
+          "chord": "Fm7",
+          "left": [
+            "F3"
+          ],
+          "right": [
+            "Eb4",
+            "Ab4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 4,
+          "beat": 1,
+          "sourceMeasure": "7",
+          "chord": "Bb7",
+          "left": [
+            "Bb2"
+          ],
+          "right": [
+            "D4",
+            "Ab4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 5,
+          "beat": 1,
+          "sourceMeasure": "8",
+          "chord": "Dm7b5",
+          "left": [
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 6,
+          "beat": 1,
+          "sourceMeasure": "9",
+          "chord": "G7#9",
+          "left": [
+            "G2"
+          ],
+          "right": [
+            "F4",
+            "B4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 7,
+          "beat": 1,
+          "sourceMeasure": "10",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 8,
+          "beat": 1,
+          "sourceMeasure": "11",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 9,
+          "beat": 1,
+          "sourceMeasure": "12",
+          "chord": "Ebm7",
+          "left": [
+            "Eb3"
+          ],
+          "right": [
+            "Gb4",
+            "Db5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 10,
+          "beat": 1,
+          "sourceMeasure": "13",
+          "chord": "Ab7",
+          "left": [
+            "Ab2"
+          ],
+          "right": [
+            "Gb4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 11,
+          "beat": 1,
+          "sourceMeasure": "14",
+          "chord": "DbMaj7",
+          "left": [
+            "Db3"
+          ],
+          "right": [
+            "F4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 12,
+          "beat": 1,
+          "sourceMeasure": "15",
+          "chord": "DbMaj7",
+          "left": [
+            "Db3"
+          ],
+          "right": [
+            "F4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 13,
+          "beat": 1,
+          "sourceMeasure": "16",
+          "chord": "Dm7b5",
+          "left": [
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 14,
+          "beat": 1,
+          "sourceMeasure": "17",
+          "chord": "G7#9",
+          "left": [
+            "G2"
+          ],
+          "right": [
+            "F4",
+            "B4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 15,
+          "beat": 1,
+          "sourceMeasure": "18",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 16,
+          "beat": 1,
+          "sourceMeasure": "19",
+          "chord": "Cm6",
+          "left": [
+            "C3"
+          ],
+          "right": [
+            "Eb4",
+            "A4"
+          ],
+          "duration": 3
+        },
+        {
+          "measure": 16,
+          "beat": 4,
+          "sourceMeasure": "19",
+          "chord": "G7",
+          "left": [
+            "G2"
+          ],
+          "right": [
+            "F4",
+            "B4"
+          ],
+          "duration": 1
+        }
+      ],
+      "maxLedgerLines": 0
+    },
+    {
+      "name": "Blue_Bossa_02_voicings.musicxml",
+      "measures": 16,
+      "events": [
+        {
+          "measure": 1,
+          "beat": 1,
+          "sourceMeasure": "4",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 2,
+          "beat": 1,
+          "sourceMeasure": "5",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 3,
+          "beat": 1,
+          "sourceMeasure": "6",
+          "chord": "Fm9",
+          "left": [
+            "F3",
+            "C4"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "Ab4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 4,
+          "beat": 1,
+          "sourceMeasure": "7",
+          "chord": "Bb13",
+          "left": [
+            "Bb2",
+            "F3"
+          ],
+          "right": [
+            "D4",
+            "G4",
+            "Ab4",
+            "C5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 5,
+          "beat": 1,
+          "sourceMeasure": "8",
+          "chord": "Dm7(b5)",
+          "left": [
+            "D3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 6,
+          "beat": 1,
+          "sourceMeasure": "9",
+          "chord": "G7(#9)",
+          "left": [
+            "G2",
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "Bb4",
+            "B4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 7,
+          "beat": 1,
+          "sourceMeasure": "10",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 8,
+          "beat": 1,
+          "sourceMeasure": "11",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 9,
+          "beat": 1,
+          "sourceMeasure": "12",
+          "chord": "Ebm9",
+          "left": [
+            "Eb3",
+            "Bb3"
+          ],
+          "right": [
+            "Gb4",
+            "Bb4",
+            "Db5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 10,
+          "beat": 1,
+          "sourceMeasure": "13",
+          "chord": "Ab13",
+          "left": [
+            "Ab2",
+            "Eb3"
+          ],
+          "right": [
+            "Gb4",
+            "Bb4",
+            "C5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 11,
+          "beat": 1,
+          "sourceMeasure": "14",
+          "chord": "Dbmaj9",
+          "left": [
+            "Db3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "Eb5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 12,
+          "beat": 1,
+          "sourceMeasure": "15",
+          "chord": "Dbmaj9",
+          "left": [
+            "Db3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "Eb5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 13,
+          "beat": 1,
+          "sourceMeasure": "16",
+          "chord": "Dm7(b5)",
+          "left": [
+            "D3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 14,
+          "beat": 1,
+          "sourceMeasure": "17",
+          "chord": "G7(#9)",
+          "left": [
+            "G2",
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "Bb4",
+            "B4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 15,
+          "beat": 1,
+          "sourceMeasure": "18",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 16,
+          "beat": 1,
+          "sourceMeasure": "19",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 3
+        },
+        {
+          "measure": 16,
+          "beat": 4,
+          "sourceMeasure": "19",
+          "chord": "G7",
+          "left": [
+            "G2",
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "B4",
+            "D5",
+            "F5"
+          ],
+          "duration": 1
+        }
+      ],
+      "maxLedgerLines": 1
+    },
+    {
+      "name": "Blue_Bossa_03_cadences.musicxml",
+      "measures": 8,
+      "events": [
+        {
+          "measure": 1,
+          "beat": 1,
+          "sourceMeasure": "8",
+          "chord": "Dm7(b5)",
+          "left": [
+            "D3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 2,
+          "beat": 1,
+          "sourceMeasure": "9",
+          "chord": "G7(#9)",
+          "left": [
+            "G2",
+            "D3"
+          ],
+          "right": [
+            "F4",
+            "Bb4",
+            "B4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 3,
+          "beat": 1,
+          "sourceMeasure": "10",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 4,
+          "beat": 1,
+          "sourceMeasure": "11",
+          "chord": "Cm6/9",
+          "left": [
+            "C3",
+            "G3"
+          ],
+          "right": [
+            "Eb4",
+            "G4",
+            "A4",
+            "D5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 5,
+          "beat": 1,
+          "sourceMeasure": "12",
+          "chord": "Ebm9",
+          "left": [
+            "Eb3",
+            "Bb3"
+          ],
+          "right": [
+            "Gb4",
+            "Bb4",
+            "Db5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 6,
+          "beat": 1,
+          "sourceMeasure": "13",
+          "chord": "Ab13",
+          "left": [
+            "Ab2",
+            "Eb3"
+          ],
+          "right": [
+            "Gb4",
+            "Bb4",
+            "C5",
+            "F5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 7,
+          "beat": 1,
+          "sourceMeasure": "14",
+          "chord": "Dbmaj9",
+          "left": [
+            "Db3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "Eb5"
+          ],
+          "duration": 4
+        },
+        {
+          "measure": 8,
+          "beat": 1,
+          "sourceMeasure": "15",
+          "chord": "Dbmaj9",
+          "left": [
+            "Db3",
+            "Ab3"
+          ],
+          "right": [
+            "F4",
+            "Ab4",
+            "C5",
+            "Eb5"
+          ],
+          "duration": 4
+        }
+      ],
+      "maxLedgerLines": 0
+    }
+  ],
+  "melodyIncluded": false,
+  "analysisStatus": "Harmonic functions and teaching objectives are human-validated pilot annotations, not automatic Tonal analysis."
+}
