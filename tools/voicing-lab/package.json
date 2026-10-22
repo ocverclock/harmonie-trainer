@@ -5,7 +5,10 @@
   "description": "Génération reproductible des exercices II-V-I avec Tonal",
   "scripts": {
     "generate": "node generate.cjs",
-    "check": "node generate.cjs --check"
+    "check": "node generate.cjs --check && node generate-minor.cjs --check",
+    "generate:minor": "node generate-minor.cjs",
+    "check:minor": "node generate-minor.cjs --check",
+    "generate:all": "node generate.cjs && node generate-minor.cjs"
   },
   "dependencies": {
     "tonal": "6.5.1"
