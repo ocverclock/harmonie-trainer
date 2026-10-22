@@ -82,3 +82,7 @@ Préserver :
 Piste prioritaire à éprouver : enrichir Harmonie Trainer avec une entrée MIDI et un moteur de validation du jeu, utiliser Tonal pour les calculs utiles et étudier les mécanismes de PTS. La reprise complète de PTS n'est pas décidée.
 
 Premier jalon proposé : une leçon existante menée de bout en bout, de l'explication à la construction tactile, puis au jeu MIDI, à la correction et à la sauvegarde du résultat. La partition ne remplace pas les règles de l'exercice.
+
+## Standards et transfert vers le jeu
+
+Voir [Sources de standards et transfert vers le jeu](SOURCES_STANDARDS_ET_TRANSFERT.md) : JAZZMUS, Jazz Harmony Treebank, OpenEWLD et sources complémentaires, formats, conditions d'accès, limites et premiers cas pédagogiques. Ce document distingue grille, arrangement écrit et voicings générés.
