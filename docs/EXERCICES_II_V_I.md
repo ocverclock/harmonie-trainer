@@ -117,3 +117,25 @@ npm run check:minor --prefix tools/voicing-lab
 Le générateur mineur est séparé pour conserver les exemples majeurs à l'identique. Tonal utilise le symbole interne `m69` ; la partition porte une harmonie MusicXML « minor-sixth » avec neuvième ajoutée. Les harmonies de II et V sont encodées comme demi-diminué et dominante avec neuvième abaissée.
 
 Contrôles : reproduction exacte, notes et durées des deux portées, basses justes/diminuées, orthographes enharmoniques avec octaves réelles (dont Do♭ et Fa♭), couverture des douze fondamentales, lecture et rendu OSMD. L'import et l'attente sur un piano physique restent à vérifier. Les variantes A/B ne constituent pas le chantier de cette série.
+
+## Versions de lecture — octave supérieure, 22 octobre 2026
+
+Toutes les notes des deux mains sont transposées ensemble de **+12 demi-tons**. Ce déplacement uniforme conserve exactement les voicings, les intervalles entre les mains, les basses, les renversements, les conduites des voix, les tonalités et les durées. Il ne s'agit ni d'une nouvelle harmonisation ni d'un déplacement indépendant des notes.
+
+- [Majeur : test court, lecture](../samples/ii-v-i/II-V-I_test_court_lecture.musicxml).
+- [Majeur : douze tonalités, lecture](../samples/ii-v-i/II-V-I_12_tonalites_lecture.musicxml).
+- [Mineur : test court, lecture](../samples/ii-v-i/II-V-I_mineur_test_court_lecture.musicxml).
+- [Mineur : douze tonalités, lecture](../samples/ii-v-i/II-V-I_mineur_12_tonalites_lecture.musicxml).
+
+Les originaux sont conservés. Les clés restent sol à droite et fa à gauche ; aucune clé transpositrice n'est utilisée. PTS doit donc attendre les touches situées une octave au-dessus des versions initiales.
+
+Sur les deux séries complètes, le nombre maximal de lignes supplémentaires nécessaires à une note passe de quatre à une en majeur et à deux en mineur. Les deux tests courts n'en demandent jamais plus d'une.
+
+Le script `tools/voicing-lab/generate-readable.cjs` transforme les quatre fichiers sources sans relancer le choix des voicings. Il vérifie qu'en annulant uniquement son déplacement d'octave, on retrouve exactement chaque source avant ajout du titre et de la mention explicative.
+
+```bash
+npm run generate:lecture --prefix tools/voicing-lab
+npm run check:lecture --prefix tools/voicing-lab
+```
+
+`generate:all` et `check` incluent désormais les versions de lecture. Contrôles de ces versions : transposition exacte de +12 pour chaque note, conservation des harmonies et durées, structure XML et rendu OSMD. Aucun essai sur l'iPad ou un piano physique n'est revendiqué.
