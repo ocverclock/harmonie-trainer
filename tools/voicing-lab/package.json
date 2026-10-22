@@ -1,0 +1,16 @@
+{
+  "name": "harmonie-trainer-voicing-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Génération reproductible des exercices II-V-I avec Tonal",
+  "scripts": {
+    "generate": "node generate.cjs",
+    "check": "node generate.cjs --check"
+  },
+  "dependencies": {
+    "tonal": "6.5.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
