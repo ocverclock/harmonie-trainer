@@ -175,3 +175,10 @@ La page **Accueil** contient un lien visible vers [Scale Designer d’Ethan Hein
 ## Outil complémentaire externe — PianoML
 
 La page **Accueil** propose également [PianoML](https://pianoml.org/) : pratique de partitions au clavier MIDI, attente des notes, mains séparées, boucles, tempo et exercices techniques. Voir les [références et limites observées](docs/REFERENCES_MIDI_VOICINGS.md#pianoml--pratique-dune-partition-et-cycles-techniques). Le lien ouvre un site indépendant dans un nouvel onglet ; aucun résultat local n'est synchronisé avec ce service.
+
+## Base PianoML intégrée
+
+Le lecteur PianoML et ses sources sont dans [`apps/pianoml`](apps/pianoml).
+Accueil sans animation et doigtés MusicXML sur le clavier : voir
+[installation, changements et limites](docs/INTEGRATION_PIANOML.md).
+Le raccordement au parcours harmonique reste à réaliser.

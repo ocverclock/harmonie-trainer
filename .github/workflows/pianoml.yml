@@ -1,0 +1,30 @@
+name: Check PianoML integration
+on:
+  push:
+    branches: [main]
+    paths: ['apps/pianoml/**', '.github/workflows/pianoml.yml']
+  pull_request:
+    paths: ['apps/pianoml/**', '.github/workflows/pianoml.yml']
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/pianoml/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: apps/pianoml/frontend/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npm ci --ignore-scripts
+      - run: npm run test:integration
+      - run: npm run build:prod

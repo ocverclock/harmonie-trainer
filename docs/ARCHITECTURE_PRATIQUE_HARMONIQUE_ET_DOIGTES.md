@@ -1,3 +1,5 @@
+> Mise à jour : la base PianoML est désormais importée et les premiers changements sont implémentés. Voir [l’état réel de l’intégration](INTEGRATION_PIANOML.md). Les mentions ci-dessous d’un fork futur décrivent le cadrage initial.
+
 # Direction de travail : pratique harmonique, Tonal et doigtés
 
 Consolidation des décisions du 23 octobre 2026. Document de conception validé dans la conversation ; il ne constitue pas une intégration déjà réalisée.
