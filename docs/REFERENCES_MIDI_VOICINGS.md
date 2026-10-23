@@ -114,3 +114,7 @@ Premier jalon proposé : une leçon existante menée de bout en bout, de l'expli
 ## Standards et transfert vers le jeu
 
 Voir [Sources de standards et transfert vers le jeu](SOURCES_STANDARDS_ET_TRANSFERT.md) : JAZZMUS, Jazz Harmony Treebank, OpenEWLD et sources complémentaires, formats, conditions d'accès, limites et premiers cas pédagogiques. Ce document distingue grille, arrangement écrit et voicings générés.
+
+## Architecture de pratique et doigtés
+
+La [direction de travail consolidée](ARCHITECTURE_PRATIQUE_HARMONIQUE_ET_DOIGTES.md) distingue les générateurs Tonal, la pratique inspirée de PianoML, les doigtés proposés et vérifiés, et l'éventuelle harmonisation automatique. Elle fixe l'affichage des doigts sur le clavier, les trois axes de choix d'exercices et les étapes de transfert vers un standard. Elle documente aussi les rôles réels des scripts AutoHarmonizer et PianoPlayer consultés.

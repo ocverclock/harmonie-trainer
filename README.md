@@ -41,6 +41,7 @@ Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](
 
 ## Documents de projet
 - [Références MIDI et voicings jazz — Tonal, PTS et PianoML](docs/REFERENCES_MIDI_VOICINGS.md)
+- [Conception : pratique harmonique, génération Tonal et doigtés sur le clavier](docs/ARCHITECTURE_PRATIQUE_HARMONIQUE_ET_DOIGTES.md)
 - [Exercices II–V–I avec basses : partitions MusicXML et générateur Tonal](docs/EXERCICES_II_V_I.md)
 - [Spécifications](https://docs.google.com/document/d/1NvPK5SX2wOk-WMPpHHmQ7TeAMdlAHomV5AcD_FoYZjc/edit)
 - [Consignes de développement pour IA](https://docs.google.com/document/d/1NxDHTKqsd39_yGCiLv1mVcA8gNan3oXxYHmoTXdmSaY/edit)
