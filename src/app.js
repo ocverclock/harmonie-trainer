@@ -90,7 +90,8 @@ function home(){
  let a=readScores();
  shell('<section class="card"><div class="eyebrow">Harmonie en pratique</div><h1>Comprendre les accords.<br>Voir comment les voix bougent.</h1><p class="muted">Réponds d’abord à une question pour trouver le II–V–I secondaire. Ensuite, découvre la solution en couleurs, avec les traits de déplacement au-dessus du clavier.</p>'+
  '<div class="row">'+button("Parcours complet d’harmonisation","openCourse","primary")+button("Identifier les II–V–I (QCM)","openSecondary","quiet")+button("Construire mes voicings","openVoicings","quiet")+button("Atelier jazz : voix, oreille, harmonisation","openJazzLab","quiet")+button("Construire les accords","openChords","quiet")+'</div>'+
- '<p class="subtle">Outil complémentaire externe : <a href="https://ethanhein.com/scaledesigner.html" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Scale Designer d’Ethan Hein dans un nouvel onglet">Scale Designer — explorer et écouter les gammes et accords ↗</a></p></section>'+
+ '<p class="subtle">Outil complémentaire externe : <a href="https://ethanhein.com/scaledesigner.html" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir Scale Designer d’Ethan Hein dans un nouvel onglet">Scale Designer — explorer et écouter les gammes et accords ↗</a></p>'+
+ '<p class="subtle">Pratique au piano : <a href="https://pianoml.org/" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir PianoML dans un nouvel onglet">PianoML — partitions et exercices avec clavier MIDI ↗</a></p></section>'+
  '<section class="card"><h2>Un vrai clavier interactif</h2><p class="muted">Touches blanches et noires superposées comme sur un piano. L’affichage s’adapte au téléphone et à la tablette.</p>'+
  piano(new Set(),[],false)+'</section>'+
  constructionSetupHTML(level,constructionDifficulty,a.length,escapeText));

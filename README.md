@@ -40,7 +40,7 @@ Le [sommaire public des « Bases de l’harmonisation » d’Étienne Guéreau](
 - La publication GitHub Pages doit être activée dans Settings → Pages (Deploy from main /root).
 
 ## Documents de projet
-- [Références MIDI et voicings jazz — Tonal et Piano Trainer Studio](docs/REFERENCES_MIDI_VOICINGS.md)
+- [Références MIDI et voicings jazz — Tonal, PTS et PianoML](docs/REFERENCES_MIDI_VOICINGS.md)
 - [Exercices II–V–I avec basses : partitions MusicXML et générateur Tonal](docs/EXERCICES_II_V_I.md)
 - [Spécifications](https://docs.google.com/document/d/1NvPK5SX2wOk-WMPpHHmQ7TeAMdlAHomV5AcD_FoYZjc/edit)
 - [Consignes de développement pour IA](https://docs.google.com/document/d/1NxDHTKqsd39_yGCiLv1mVcA8gNan3oXxYHmoTXdmSaY/edit)
@@ -170,3 +170,7 @@ La validation demande exactement 4 ou 5 notes distinctes selon la famille. La co
 ## Outil complémentaire externe — Scale Designer
 
 La page **Accueil** contient un lien visible vers [Scale Designer d’Ethan Hein](https://ethanhein.com/scaledesigner.html), qui permet de construire et écouter des gammes et des accords. Le lien s'ouvre dans un nouvel onglet, sans transmettre les résultats locaux de Harmonie Trainer à cet outil. Ressource externe indépendante, sans intégration ni synchronisation de données.
+
+## Outil complémentaire externe — PianoML
+
+La page **Accueil** propose également [PianoML](https://pianoml.org/) : pratique de partitions au clavier MIDI, attente des notes, mains séparées, boucles, tempo et exercices techniques. Voir les [références et limites observées](docs/REFERENCES_MIDI_VOICINGS.md#pianoml--pratique-dune-partition-et-cycles-techniques). Le lien ouvre un site indépendant dans un nouvel onglet ; aucun résultat local n'est synchronisé avec ce service.

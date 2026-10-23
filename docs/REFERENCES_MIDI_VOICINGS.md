@@ -6,7 +6,7 @@ Date d'ajout : 22 octobre 2026.
 
 Direction retenue : application Android interactive, reliée à un piano MIDI, en continuité avec Harmonie Trainer / Tetra et son programme pédagogique.
 
-Tonal et Piano Trainer Studio (PTS) sont enregistrés ici comme références techniques à évaluer. Cette modification documentaire n'installe aucune dépendance, n'importe aucun code tiers et ne constitue ni une intégration MIDI ni une version Android.
+Tonal, Piano Trainer Studio (PTS) et PianoML sont enregistrés ici comme références techniques à évaluer. Cette modification documentaire n'installe aucune dépendance, n'importe aucun code tiers et ne constitue ni une intégration MIDI ni une version Android.
 
 Le choix du modèle de piano et de tablette appartient à la recette matérielle ; il ne conditionne pas cette analyse du projet.
 
@@ -16,6 +16,7 @@ Le choix du modèle de piano et de tablette appartient à la recette matérielle
 | --- | --- | --- | --- |
 | Tonal | https://github.com/tonaljs/tonal | e555422aef910daa87cb924028f71f0a013f3ed7 | MIT |
 | Piano Trainer Studio | https://github.com/ztbishop/piano-trainer-studio | 6c215c3c975285da86e9ab804b488f1085d96922 | AGPL-3.0 |
+| PianoML | https://github.com/piano-ml/piano-ml | 174bc7abffaef62095ee056d40c61da614eaec9c | GPL-3.0 |
 
 Conserver les mentions de licence et vérifier les conditions applicables avant toute reprise de code. L'ajout de liens n'importe pas ces projets dans Harmonie Trainer.
 
@@ -67,6 +68,33 @@ Format de partition privilégié : MusicXML (`.musicxml`, `.xml`) ou MusicXML co
 PTS utilise déjà OpenSheetMusicDisplay (OSMD) pour le rendu des partitions, et Tone.js pour l'audio et la planification. OSMD n'est pas une deuxième application à juxtaposer à PTS. Une utilisation dans un APK Android reste un travail d'intégration à concevoir et à valider.
 
 Aucun comportement de PTS n'a encore été vérifié ici sur un piano physique.
+
+## PianoML : pratique d'une partition et cycles techniques
+
+Ajout et consultation : 23 octobre 2026. Le lien est accessible depuis l'accueil de Harmonie Trainer et s'ouvre dans un nouvel onglet. Ressource externe, sans intégration, import automatique ou synchronisation des résultats.
+
+Sources :
+- [Application](https://pianoml.org/).
+- [Dépôt et présentation](https://github.com/piano-ml/piano-ml).
+- [Guide des commandes Practice / Workbench](https://github.com/piano-ml/piano-ml/blob/174bc7abffaef62095ee056d40c61da614eaec9c/frontend/src/app/desktop/components/workbench/workbench.tour.ts).
+- [Cycles d'exercices](https://github.com/piano-ml/piano-ml/blob/174bc7abffaef62095ee056d40c61da614eaec9c/frontend/src/app/exercises/home/home.component.html).
+- [Évaluation des notes](https://github.com/piano-ml/piano-ml/blob/174bc7abffaef62095ee056d40c61da614eaec9c/frontend/src/app/desktop/service/player-assess.service.ts).
+
+Dans le code public consulté, « Practice » ouvre l'espace de travail d'une partition : lecture, connexion MIDI, attente sélectionnable pour la main droite, la main gauche ou les deux, tempo, métronome, sélection de mesures et boucle. Le projet annonce l'import MusicXML et MIDI ; l'OMR est une voie distincte pour les PDF et images, avec une qualité à vérifier.
+
+Le parcours de travail que nous en retenons : écouter un passage ; sélectionner quelques mesures ; déchiffrer avec attente, éventuellement mains séparées ; réunir les mains ; répéter ; éprouver la continuité au tempo sans dépendre des pauses. Cette dernière progression est notre proposition pédagogique, pas une affirmation de paliers automatiquement imposés par le site.
+
+« Exercises » propose des générateurs de gammes et des exercices d'agilité/accords/arpèges, avec choix de tonalité et de motif. Sa page présente des cycles explicites :
+- Niveau 1 : deux tonalités par jour, sur douze jours pour les douze majeures et les douze mineures.
+- Niveau 2 : relatives majeures et mineures regroupées sur six jours.
+- Niveau 3 : tonalités parallèles majeures et mineures sur deux jours, après mémorisation des motifs précédents.
+- Niveau 4 : tour complet en quintes ascendantes ou descendantes sur une journée. Il s'agit d'une proposition avancée, pas de notre objectif initial pour David.
+
+Ces cycles sont un programme proposé dans la page ; ils ne prouvent pas une adaptation automatique aux acquis. La méthode est principalement orientée réalisation écrite, technique et répétition. Pour notre projet, la reconnaissance des fonctions, le choix de plusieurs voicings valides et le transfert vers un standard restent des objectifs à construire explicitement.
+
+Limite observée dans le code d'attente : les hauteurs attendues sont retirées au fil des frappes, puis la lecture reprend lorsque l'ensemble des attentes est vide. Cela ne certifie pas à lui seul une attaque parfaitement simultanée du voicing ou une tenue complète. Ne pas confondre cette vérification avec l'évaluation d'un geste pianistique, d'un doigté, du son ou du swing.
+
+Cette consultation porte sur la documentation et la révision publique indiquée ; aucune session de jeu physique, validation de nos MusicXML dans PianoML ou conformité de cette révision avec le déploiement courant n'est revendiquée.
 
 ## Continuité avec notre pédagogie
 
